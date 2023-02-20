@@ -5,7 +5,6 @@ import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import java.util.List;
@@ -18,7 +17,8 @@ import com.google.common.collect.ImmutableList;
  * @implNote Created on 06-Feb-2022, Sunday
  */
 @Environment(EnvType.CLIENT)
-public interface PositionedTooltip extends TooltipAccessor
+//TODO
+public interface PositionedTooltip/* extends TooltipAccessor*/
 {
 	int getTooltipWidth();
 	int getTooltipHeight();

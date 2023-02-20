@@ -2,12 +2,14 @@ package jugglestruggle.timechangerstruggle.client.util.render;
 
 import jugglestruggle.timechangerstruggle.TimeChangerStruggle;
 import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import java.io.IOException;
 import java.util.Optional;
+
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -69,7 +71,8 @@ public class RainbowShader extends ShaderInstance
 			{
 				if (id.getPath().contains("shaders/core")) 
 				{
-				    return Optional.of(new Resource(TimeChangerStruggle.MOD_ID, 
+				    //TODO
+				    return Optional.of(new Resource(Minecraft.getInstance().getVanillaPackResources(), 
 				        () -> TimeChangerStruggleClient.class.getResourceAsStream(BASE_LOCATION + id.getPath())));
 				}
 			}

@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 public class GameRendererMixin
 {
-	@Inject(method = "getNightVisionStrength", at = @At(value = "HEAD"), cancellable = true)
+	@Inject(method = "getNightVisionScale", at = @At(value = "HEAD"), cancellable = true)
 	private static void nightVisionStrengthCheck(LivingEntity entity, float delta, CallbackInfoReturnable<Float> info)
 	{
 		if (TimeChangerStruggleClient.disableNightVisionEffect) {

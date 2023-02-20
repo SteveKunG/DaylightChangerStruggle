@@ -24,7 +24,7 @@ implements PositionedTooltip, SelfWidgetRendererInheritor<ButtonWidgetEx>
 	public ButtonWidgetEx(int width, int height, Component message, Component tooltipDescText, Component tooltipText, 
 		Font renderer, OnPress onPress)
 	{
-		super(0, 0, width, height, message, onPress, Button.NO_TOOLTIP);
+		super(0, 0, width, height, message, onPress, DEFAULT_NARRATION);
 		this.updateTooltip(tooltipDescText, tooltipText, renderer);
 		this.renderer = new SelfWidgetRender<>(this, renderer);
 	}
@@ -46,10 +46,10 @@ implements PositionedTooltip, SelfWidgetRendererInheritor<ButtonWidgetEx>
 		this.tooltipHeight = height;
 	}
 	
-	@Override
-	public List<FormattedCharSequence> getTooltip() {
-		return this.compiledTooltipText;
-	}
+//	@Override
+//	public List<FormattedCharSequence> getTooltip() {
+//		return this.compiledTooltipText;
+//	}
 	@Override
 	public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
 		this.compiledTooltipText = textToSet;

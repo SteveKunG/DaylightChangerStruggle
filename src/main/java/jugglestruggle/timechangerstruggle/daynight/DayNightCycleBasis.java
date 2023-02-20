@@ -188,11 +188,13 @@ public interface DayNightCycleBasis
 				if (elem instanceof AbstractWidget) 
 				{
 					AbstractWidget elemClickable = (AbstractWidget)elem;
-					elemClickable.x = xCentered - (halfWidth - 4); elemClickable.y = y + 2;
+					elemClickable.setX(xCentered - (halfWidth - 4));
+					elemClickable.setY(y + 2);
 					
 					if (elemClickable instanceof EditBox)
 					{
-						elemClickable.x += 1; elemClickable.y += 1;
+						elemClickable.setX(elemClickable.getX() + 1);
+						elemClickable.setY(elemClickable.getY() + 1);
 						elemClickable.setWidth(entryWidth - 12);
 					}
 					else
@@ -213,18 +215,18 @@ public interface DayNightCycleBasis
 					{
 						AbstractWidget elemClickable = (AbstractWidget)elem;
 //						elemClickable.x = xCentered - (halfWidth - 4) + (i * entryWidthDiv); 
-						elemClickable.x = xCentered + 1;
-						elemClickable.y = y + 2;
+						elemClickable.setX(xCentered + 1);
+						elemClickable.setY(y + 2);
 						
 						if (i % 2 == 0) {
-							elemClickable.x -= (halfWidth - 4);
+							elemClickable.setX(elemClickable.getX() - (halfWidth - 4));
 						} else { // 1
-							elemClickable.x += 2;
+							elemClickable.setX(elemClickable.getX() + 2);
 						}
 						
 						if (elemClickable instanceof EditBox)
 						{
-							elemClickable.x += 1; elemClickable.y += 1;
+							elemClickable.setX(elemClickable.getX() + 1); elemClickable.setY(elemClickable.getY() + 1);
 							elemClickable.setWidth(entryWidthDiv - 2);
 						}
 						else
@@ -250,12 +252,12 @@ public interface DayNightCycleBasis
 						
 						int xOffset = entryWidthDivSeparator * i;
 						
-						elemClickable.x = xCentered + xOffset - (int)((float)entryWidthDivSeparator * 1.5f);
-						elemClickable.y = y + 2;
+						elemClickable.setX(xCentered + xOffset - (int)((float)entryWidthDivSeparator * 1.5f));
+						elemClickable.setY(y + 2);
 						
 						if (elemClickable instanceof EditBox)
 						{
-							elemClickable.x += 1; elemClickable.y += 1;
+							elemClickable.setX(elemClickable.getX() + 1); elemClickable.setY(elemClickable.getY() + 1);
 							elemClickable.setWidth(entryWidthDiv - 2);
 						}
 						else

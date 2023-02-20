@@ -132,10 +132,10 @@ implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
 		this.tooltipHeight = height;
 	}
 	
-	@Override
-	public List<FormattedCharSequence> getTooltip() {
-		return this.compiledTooltipText;
-	}
+//	@Override
+//	public List<FormattedCharSequence> getTooltip() {
+//		return this.compiledTooltipText;
+//	}
 	@Override
 	public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
 		this.compiledTooltipText = textToSet;

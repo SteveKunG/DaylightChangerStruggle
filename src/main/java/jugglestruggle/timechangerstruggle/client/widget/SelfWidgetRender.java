@@ -121,9 +121,9 @@ public class SelfWidgetRender<W extends AbstractWidget>
 //				textColor = this.textColoring.getInterpolatedColor(delta);
 				textColor = 0xFF000000;
 				
-				GuiComponent.fill(matrices, this.widget.x, this.widget.y, 
-					this.widget.x + this.widget.getWidth(), 
-					this.widget.y + this.widget.getHeight(), textColor);
+				GuiComponent.fill(matrices, this.widget.getX(), this.widget.getY(), 
+					this.widget.getX() + this.widget.getWidth(), 
+					this.widget.getY() + this.widget.getHeight(), textColor);
 				
 			}
 			else
@@ -138,15 +138,15 @@ public class SelfWidgetRender<W extends AbstractWidget>
 			       textColor = this.widget.active ? 0xFFFFFF : 0xA0A0A0;
 			int enabledColor = this.widget.active ? 0xCC888888 : 0xCC333333;
 			
-			GuiComponent.fill(matrices, this.widget.x, this.widget.y, 
-				this.widget.x + this.widget.getWidth(), this.widget.y + this.widget.getHeight(), enabledColor);
+			GuiComponent.fill(matrices, this.widget.getX(), this.widget.getY(), 
+				this.widget.getX() + this.widget.getWidth(), this.widget.getY() + this.widget.getHeight(), enabledColor);
 		}
 		
 		FormattedCharSequence message = this.widget.getMessage().getVisualOrderText();
 		int messageWidth = this.textRenderer.width(message);
 		
-		final float x = this.widget.x + (this.widget.getWidth() / 2) - (messageWidth / 2);
-		final float y = this.widget.y + ((this.widget.getHeight() - (this.textRenderer.lineHeight - 1)) / 2);
+		final float x = this.widget.getX() + (this.widget.getWidth() / 2) - (messageWidth / 2);
+		final float y = this.widget.getY() + ((this.widget.getHeight() - (this.textRenderer.lineHeight - 1)) / 2);
 		
 		if (!stcwr)
 			this.textRenderer.drawShadow(matrices, message, x, y, textColor);
@@ -160,10 +160,10 @@ public class SelfWidgetRender<W extends AbstractWidget>
 		(
 			matrices, 
 			
-			this.widget.x, this.widget.y, 
+			this.widget.getX(), this.widget.getY(), 
 			
-			this.widget.x + this.widget.getWidth(), 
-			this.widget.y + this.widget.getHeight(), 
+			this.widget.getX() + this.widget.getWidth(), 
+			this.widget.getY() + this.widget.getHeight(), 
 			
 			this.widget.getBlitOffset(),
 			
