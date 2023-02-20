@@ -1,25 +1,23 @@
 package jugglestruggle.timechangerstruggle.client.widget;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import jugglestruggle.timechangerstruggle.client.util.color.AbstractRGB;
 import jugglestruggle.timechangerstruggle.client.util.color.RainbowRGB;
 import jugglestruggle.timechangerstruggle.client.util.render.RenderUtils;
-
-import net.minecraft.text.OrderedText;
-
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.util.FormattedCharSequence;
 
 /**
  *
  * @author JuggleStruggle
  * @implNote Created on 13-Feb-2022, Sunday
  */
-public class SelfWidgetRender<W extends ClickableWidget>
+public class SelfWidgetRender<W extends AbstractWidget>
 {
 	private final W widget;
-	private TextRenderer textRenderer;
+	private Font textRenderer;
 
 	private AbstractRGB textColoring;
 	
@@ -32,7 +30,7 @@ public class SelfWidgetRender<W extends ClickableWidget>
 	public boolean swapTextColoringWithRainbow;
 //	private AbstractRGB[] hoveredColor;
 	
-	public SelfWidgetRender(W widget, TextRenderer textRenderer)
+	public SelfWidgetRender(W widget, Font textRenderer)
 	{
 		this.widget = widget;
 		this.textRenderer = textRenderer;
@@ -63,13 +61,13 @@ public class SelfWidgetRender<W extends ClickableWidget>
 		 */
 	}
 	
-	public void setTextRendering(TextRenderer renderer) {
+	public void setTextRendering(Font renderer) {
 		this.textRenderer = renderer;
 	}
 	
 	public void tick()
 	{
-		if (this.widget.active && this.widget.isHovered())
+		if (this.widget.active && this.widget.isHoveredOrFocused())
 		{
 			this.textColoring.tick();
 			
@@ -100,12 +98,12 @@ public class SelfWidgetRender<W extends ClickableWidget>
 		}
 	}
 	
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta)
 	{
 		boolean stcwr = false;	
 		int textColor;
 		
-		if (this.widget.active && this.widget.isHovered())
+		if (this.widget.active && this.widget.isHoveredOrFocused())
 		{
 			/*
 			textColor = this.hoveredColor[0].getInterpolatedColor(delta);
@@ -123,7 +121,7 @@ public class SelfWidgetRender<W extends ClickableWidget>
 //				textColor = this.textColoring.getInterpolatedColor(delta);
 				textColor = 0xFF000000;
 				
-				DrawableHelper.fill(matrices, this.widget.x, this.widget.y, 
+				GuiComponent.fill(matrices, this.widget.x, this.widget.y, 
 					this.widget.x + this.widget.getWidth(), 
 					this.widget.y + this.widget.getHeight(), textColor);
 				
@@ -140,21 +138,21 @@ public class SelfWidgetRender<W extends ClickableWidget>
 			       textColor = this.widget.active ? 0xFFFFFF : 0xA0A0A0;
 			int enabledColor = this.widget.active ? 0xCC888888 : 0xCC333333;
 			
-			DrawableHelper.fill(matrices, this.widget.x, this.widget.y, 
+			GuiComponent.fill(matrices, this.widget.x, this.widget.y, 
 				this.widget.x + this.widget.getWidth(), this.widget.y + this.widget.getHeight(), enabledColor);
 		}
 		
-		OrderedText message = this.widget.getMessage().asOrderedText();
-		int messageWidth = this.textRenderer.getWidth(message);
+		FormattedCharSequence message = this.widget.getMessage().getVisualOrderText();
+		int messageWidth = this.textRenderer.width(message);
 		
 		final float x = this.widget.x + (this.widget.getWidth() / 2) - (messageWidth / 2);
-		final float y = this.widget.y + ((this.widget.getHeight() - (this.textRenderer.fontHeight - 1)) / 2);
+		final float y = this.widget.y + ((this.widget.getHeight() - (this.textRenderer.lineHeight - 1)) / 2);
 		
 		if (!stcwr)
-			this.textRenderer.drawWithShadow(matrices, message, x, y, textColor);
+			this.textRenderer.drawShadow(matrices, message, x, y, textColor);
 	}
 	
-	private void fillMyRainbow(MatrixStack matrices, float delta, boolean adv)
+	private void fillMyRainbow(PoseStack matrices, float delta, boolean adv)
 	{
 		RenderUtils.rainbowAllTheWay.stripeScale.set(50.0f / 2.0f * this.stripeScale);
 		
@@ -167,7 +165,7 @@ public class SelfWidgetRender<W extends ClickableWidget>
 			this.widget.x + this.widget.getWidth(), 
 			this.widget.y + this.widget.getHeight(), 
 			
-			this.widget.getZOffset(),
+			this.widget.getBlitOffset(),
 			
 			0.0f, 0.0f, 0.0f, 
 			

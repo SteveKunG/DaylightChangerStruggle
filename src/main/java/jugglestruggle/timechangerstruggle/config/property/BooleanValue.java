@@ -9,16 +9,12 @@ import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import java.util.Locale;
-
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
-import net.minecraft.client.gui.screen.ScreenTexts;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -33,11 +29,11 @@ import com.mojang.brigadier.context.CommandContext;
 @Environment(EnvType.CLIENT)
 public class BooleanValue extends BaseProperty<BooleanValue, Boolean>
 {
-	private Text trueText = ScreenTexts.ON;
-	private Text falseText = ScreenTexts.OFF;
-	private Text propertyText;
+	private Component trueText = CommonComponents.OPTION_ON;
+	private Component falseText = CommonComponents.OPTION_OFF;
+	private Component propertyText;
 	
-	private final CyclingButtonWidget.UpdateCallback<Boolean> callback = (button, value) -> { 
+	private final CycleButton.OnValueChange<Boolean> callback = (button, value) -> { 
 		if (super.consumer != null)
 			super.consumer.consume(this, value);
 	};
@@ -51,13 +47,13 @@ public class BooleanValue extends BaseProperty<BooleanValue, Boolean>
 		super.value = (value == null) ? false : value;
 	}
 	
-	public BooleanValue setTrueText(Text text) {
+	public BooleanValue setTrueText(Component text) {
 		this.trueText = text; return this;
 	}
-	public BooleanValue setFalseText(Text text) {
+	public BooleanValue setFalseText(Component text) {
 		this.falseText = text; return this;
 	}
-	public BooleanValue setText(Text text) {
+	public BooleanValue setText(Component text) {
 		this.propertyText = text; return this;
 	}
 	
@@ -68,7 +64,7 @@ public class BooleanValue extends BaseProperty<BooleanValue, Boolean>
 		WidgetConfigBuilderBoolean builder = 
 			CyclingWidgetConfig.booleanCycle(this, this.trueText, this.falseText);
 		
-		Text optionText;
+		Component optionText;
 		
 		if (this.propertyText == null)
 		{
@@ -76,17 +72,17 @@ public class BooleanValue extends BaseProperty<BooleanValue, Boolean>
 			
 			if (owningSection != null)
 			{
-				Text sectionText = owningSection.get();
+				Component sectionText = owningSection.get();
 				
-				if (sectionText != null && sectionText instanceof TranslatableText)
+				if (sectionText != null && sectionText instanceof TranslatableComponent)
 				{
-					optionText = new TranslatableText(String.format("%1$s.%2$s",
-						((TranslatableText)sectionText).getKey(), this.property().toLowerCase(Locale.ROOT)));
+					optionText = new TranslatableComponent(String.format("%1$s.%2$s",
+						((TranslatableComponent)sectionText).getKey(), this.property().toLowerCase(Locale.ROOT)));
 				}
 			}
 			
 			if (optionText == null)
-				optionText = new LiteralText(this.property());
+				optionText = new TextComponent(this.property());
 		}
 		else
 			optionText = this.propertyText;

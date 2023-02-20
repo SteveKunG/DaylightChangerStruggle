@@ -9,18 +9,14 @@ import jugglestruggle.timechangerstruggle.config.property.StringValue;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.Mth;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import net.minecraft.util.math.MathHelper;
-
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.world.ClientWorld;
-
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -46,7 +42,7 @@ public interface DayNightCycleBasis
 	 * 
 	 * @return a {@code long} value representing the game time
 	 */
-	long getModifiedTime(ClientWorld world, DayNightGetterType executor, boolean previous);
+	long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous);
 	
 	/**
 	 * Returns the cached time provided by the cycle itself. 
@@ -94,7 +90,7 @@ public interface DayNightCycleBasis
 	 * 
 	 * @return a list of elements to create.
 	 */
-	default Element[] createQuickOptionElements(TimeChangerScreen screen) {
+	default GuiEventListener[] createQuickOptionElements(TimeChangerScreen screen) {
 		return null;
 	}
 	
@@ -143,7 +139,7 @@ public interface DayNightCycleBasis
 	 * @param elementsPerRow how many elements will there be for 
 	 *         each row
 	 * 
-	 * @return a doubled array of {@link Element} which represents
+	 * @return a doubled array of {@link GuiEventListener} which represents
 	 * the following:
 	 * <ul>
 	 * <li> First array:  the row for the list when creating the row
@@ -158,7 +154,7 @@ public interface DayNightCycleBasis
 //		elementsPerRow = 2;
 
 		final int sectionElements = elements.size();
-		final int sectionElementsHalf = MathHelper.ceil((float)sectionElements / (float)elementsPerRow);
+		final int sectionElementsHalf = Mth.ceil((float)sectionElements / (float)elementsPerRow);
 		
 		WidgetConfigInterface<?, ?>[][] sectionPartsToCreate = 
 			new WidgetConfigInterface<?, ?>[sectionElementsHalf][elementsPerRow];
@@ -189,12 +185,12 @@ public interface DayNightCycleBasis
 			{
 				WidgetConfigInterface<?, ?> elem = myConfigElements.get(0);
 				
-				if (elem instanceof ClickableWidget) 
+				if (elem instanceof AbstractWidget) 
 				{
-					ClickableWidget elemClickable = (ClickableWidget)elem;
+					AbstractWidget elemClickable = (AbstractWidget)elem;
 					elemClickable.x = xCentered - (halfWidth - 4); elemClickable.y = y + 2;
 					
-					if (elemClickable instanceof TextFieldWidget)
+					if (elemClickable instanceof EditBox)
 					{
 						elemClickable.x += 1; elemClickable.y += 1;
 						elemClickable.setWidth(entryWidth - 12);
@@ -213,9 +209,9 @@ public interface DayNightCycleBasis
 				{
 					WidgetConfigInterface<?, ?> elem = myConfigElements.get(i);
 					
-					if (elem instanceof ClickableWidget) 
+					if (elem instanceof AbstractWidget) 
 					{
-						ClickableWidget elemClickable = (ClickableWidget)elem;
+						AbstractWidget elemClickable = (AbstractWidget)elem;
 //						elemClickable.x = xCentered - (halfWidth - 4) + (i * entryWidthDiv); 
 						elemClickable.x = xCentered + 1;
 						elemClickable.y = y + 2;
@@ -226,7 +222,7 @@ public interface DayNightCycleBasis
 							elemClickable.x += 2;
 						}
 						
-						if (elemClickable instanceof TextFieldWidget)
+						if (elemClickable instanceof EditBox)
 						{
 							elemClickable.x += 1; elemClickable.y += 1;
 							elemClickable.setWidth(entryWidthDiv - 2);
@@ -248,16 +244,16 @@ public interface DayNightCycleBasis
 				{
 					WidgetConfigInterface<?, ?> elem = myConfigElements.get(i);
 					
-					if (elem instanceof ClickableWidget) 
+					if (elem instanceof AbstractWidget) 
 					{
-						ClickableWidget elemClickable = (ClickableWidget)elem;
+						AbstractWidget elemClickable = (AbstractWidget)elem;
 						
 						int xOffset = entryWidthDivSeparator * i;
 						
 						elemClickable.x = xCentered + xOffset - (int)((float)entryWidthDivSeparator * 1.5f);
 						elemClickable.y = y + 2;
 						
-						if (elemClickable instanceof TextFieldWidget)
+						if (elemClickable instanceof EditBox)
 						{
 							elemClickable.x += 1; elemClickable.y += 1;
 							elemClickable.setWidth(entryWidthDiv - 2);

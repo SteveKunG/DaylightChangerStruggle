@@ -4,8 +4,7 @@ import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
 import jugglestruggle.timechangerstruggle.util.EasingType;
 import jugglestruggle.timechangerstruggle.util.Easings;
-
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
 
 /**
  * A class which handles smooth transitions and includes easing for
@@ -113,7 +112,7 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
 	}
 	
 	@Override
-	public long getModifiedTime(ClientWorld world, DayNightGetterType executor, boolean previous) {
+	public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous) {
 		return previous ? this.previousCachedTime : this.cachedTime;
 	}
 	@Override

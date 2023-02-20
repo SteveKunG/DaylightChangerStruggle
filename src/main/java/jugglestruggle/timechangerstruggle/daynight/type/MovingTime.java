@@ -12,12 +12,9 @@ import jugglestruggle.timechangerstruggle.util.Easings;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import java.util.Set;
-
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -66,14 +63,14 @@ public class MovingTime extends MovingTimeBasis
 		
 		final String sectLang = "jugglestruggle.tcs.dnt.movingtime.properties.";
 		
-		prop.add(new FancySectionProperty("updating", new TranslatableText(sectLang+"updating")));
+		prop.add(new FancySectionProperty("updating", new TranslatableComponent(sectLang+"updating")));
 		prop.add(new LongValue("ticksUntilNextUpdate", super.ticksUntilNextCall, 0L, Long.MAX_VALUE));
 		
-		prop.add(new FancySectionProperty("speed", new TranslatableText(sectLang+"speed")));
+		prop.add(new FancySectionProperty("speed", new TranslatableComponent(sectLang+"speed")));
 		prop.add(new IntValue("immediateSpeed", this.speedForImmediateCalls, Integer.MIN_VALUE, Integer.MAX_VALUE));
 		prop.add(new IntValue("pausedSpeed", this.speedForLaterCalls, Integer.MIN_VALUE, Integer.MAX_VALUE));
 
-		prop.add(new FancySectionProperty("easings", new TranslatableText(sectLang+"easings")));
+		prop.add(new FancySectionProperty("easings", new TranslatableComponent(sectLang+"easings")));
 		prop.add(new EnumValue<>("easingBetweenTicks", this.easingBetweenTicks, Easings.LINEAR, Easings.values())
 			.setVTT(easing -> easing.getFormattedText()));
 		prop.add(new EnumValue<>("easingTypeBetweenTicks", this.easingType, EasingType.BETWEEN, EasingType.values())
@@ -147,12 +144,12 @@ public class MovingTime extends MovingTimeBasis
 		}
 		
 		@Override
-		public Text getTranslatableName() {
-			return new TranslatableText("jugglestruggle.tcs.dnt.movingtime");
+		public Component getTranslatableName() {
+			return new TranslatableComponent("jugglestruggle.tcs.dnt.movingtime");
 		}
 		@Override
-		public Text getTranslatableDescription() {
-			return new TranslatableText("jugglestruggle.tcs.dnt.movingtime.description");
+		public Component getTranslatableDescription() {
+			return new TranslatableComponent("jugglestruggle.tcs.dnt.movingtime.description");
 		}
 		
 		@Override

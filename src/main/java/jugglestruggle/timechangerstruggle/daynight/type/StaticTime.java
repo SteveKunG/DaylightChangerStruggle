@@ -12,22 +12,18 @@ import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
-
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.world.ClientWorld;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
@@ -47,7 +43,7 @@ public class StaticTime implements DayNightCycleBasis
 	public long timeSet = 0;
 
 	@Override
-	public long getModifiedTime(ClientWorld world, DayNightGetterType executor, boolean previous) {
+	public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous) {
 		return this.timeSet;
 	}
 	@Override
@@ -61,12 +57,12 @@ public class StaticTime implements DayNightCycleBasis
 	}
 	
 	@Override
-	public Element[] createQuickOptionElements(TimeChangerScreen screen)
+	public GuiEventListener[] createQuickOptionElements(TimeChangerScreen screen)
 	{
 		final Iterator<BaseProperty<?, ?>> propsCreated = this.createProperties().iterator();
 
 		final FancySectionProperty sectionProp = (FancySectionProperty)propsCreated.next();
-		final String sectionRoughLang = ((TranslatableText)sectionProp.get()).getKey();
+		final String sectionRoughLang = ((TranslatableComponent)sectionProp.get()).getKey();
 
 		final NumericFieldWidgetConfig<Long> worldTimeProp = (NumericFieldWidgetConfig<Long>)
 			((LongValue)propsCreated.next()).createConfigElement(screen, sectionProp);
@@ -85,13 +81,13 @@ public class StaticTime implements DayNightCycleBasis
 		while (setTimesIterator.hasNext())
 		{
 			final PresetSetTimes entry = setTimesIterator.next();
-			final Text displayText = entry.getQuickOptionsText();
+			final Component displayText = entry.getQuickOptionsText();
 			final String cycleName = entry.name().toLowerCase(Locale.ROOT);
 			
 			dayCycles[i] = new ButtonWidgetEx
 			(
 				20, 20, displayText, 
-				new TranslatableText(sectionRoughLang+".worldtime."+cycleName), 
+				new TranslatableComponent(sectionRoughLang+".worldtime."+cycleName), 
 				null, screen.getTextRenderer(), b -> 
 				{
 					Long value = entry.getTime();
@@ -115,7 +111,7 @@ public class StaticTime implements DayNightCycleBasis
 					}
 					
 					final Long finalValue = baseTime + value;
-					worldTimeProp.setText(finalValue.toString()); 
+					worldTimeProp.setValue(finalValue.toString()); 
 				}
 			);
 			
@@ -123,7 +119,7 @@ public class StaticTime implements DayNightCycleBasis
 		}
 		worldTimeProp.setWidth(148 - (20 * setTimesSize));
 		
-		Element[] itemsToAdd = new Element[1 + setTimesSize];
+		GuiEventListener[] itemsToAdd = new GuiEventListener[1 + setTimesSize];
 		itemsToAdd[0] = worldTimeProp;
 		
 		return ArrayUtils.insert(1, itemsToAdd, dayCycles);
@@ -136,7 +132,7 @@ public class StaticTime implements DayNightCycleBasis
 		
 		final String sectLang = "jugglestruggle.tcs.dnt.statictime.properties.";
 
-		prop.add(new FancySectionProperty("time", new TranslatableText(sectLang+"time")));
+		prop.add(new FancySectionProperty("time", new TranslatableComponent(sectLang+"time")));
 		prop.add(new LongValue("worldtime", this.timeSet, null, null));
 
 		return prop.build();
@@ -182,16 +178,16 @@ public class StaticTime implements DayNightCycleBasis
 			return showInQuickOptions;
 		}
 		
-		public Text getQuickOptionsText()
+		public Component getQuickOptionsText()
 		{
 			return switch (this)
 			{
-				case NOON -> new LiteralText("\u2600");
-				case MIDNIGHT -> new LiteralText("\u263D");
-				case SUNRISE -> new LiteralText("\u25D3");
-				case SUNSET -> new LiteralText("\u25D2");
+				case NOON -> new TextComponent("\u2600");
+				case MIDNIGHT -> new TextComponent("\u263D");
+				case SUNRISE -> new TextComponent("\u25D3");
+				case SUNSET -> new TextComponent("\u25D2");
 				
-				default -> LiteralText.EMPTY;
+				default -> TextComponent.EMPTY;
 			};
 		}
 	}
@@ -209,12 +205,12 @@ public class StaticTime implements DayNightCycleBasis
 		}
 
 		@Override
-		public Text getTranslatableName() {
-			return new TranslatableText("jugglestruggle.tcs.dnt.statictime");
+		public Component getTranslatableName() {
+			return new TranslatableComponent("jugglestruggle.tcs.dnt.statictime");
 		}
 		@Override
-		public Text getTranslatableDescription() {
-			return new TranslatableText("jugglestruggle.tcs.dnt.statictime.description");
+		public Component getTranslatableDescription() {
+			return new TranslatableComponent("jugglestruggle.tcs.dnt.statictime.description");
 		}
 		
 		@Override

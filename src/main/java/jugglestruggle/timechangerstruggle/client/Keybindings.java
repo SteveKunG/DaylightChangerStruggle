@@ -1,9 +1,8 @@
 package jugglestruggle.timechangerstruggle.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping;
 
 /**
  *
@@ -13,8 +12,8 @@ import net.minecraft.client.util.InputUtil;
  */
 public class Keybindings
 {
-	public static KeyBinding timeChangerMenuKey;
-	public static KeyBinding toggleWorldTimeKey;
+	public static KeyMapping timeChangerMenuKey;
+	public static KeyMapping toggleWorldTimeKey;
 	
 	public static void registerKeybindings() 
 	{
@@ -25,17 +24,17 @@ public class Keybindings
 		Keybindings.toggleWorldTimeKey = Keybindings.registerBinding("toggleworldtime");
 	}
 	
-	private static KeyBinding registerBinding(String keyName) {
+	private static KeyMapping registerBinding(String keyName) {
 		return Keybindings.registerBinding(keyName, "timechanger");
 	}
-	private static KeyBinding registerBinding(String keyName, String category)
+	private static KeyMapping registerBinding(String keyName, String category)
 	{
 		return KeyBindingHelper.registerKeyBinding
 		(
-			new KeyBinding
+			new KeyMapping
 			(
 				"jugglestruggle.tcs.key." + keyName, 
-				InputUtil.Type.KEYSYM, -1,
+				InputConstants.Type.KEYSYM, -1,
 				"jugglestruggle.tcs.keycategory." + category
 			)
 		);

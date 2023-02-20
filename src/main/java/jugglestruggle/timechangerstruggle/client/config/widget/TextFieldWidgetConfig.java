@@ -6,15 +6,12 @@ import jugglestruggle.timechangerstruggle.config.property.BaseProperty.ValueCons
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.FormattedCharSequence;
 import java.util.List;
 import java.util.function.Consumer;
-
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.OrderedText;
-
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 
 /**
  *
@@ -22,7 +19,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
  * @implNote Created on 30-Jan-2022, Sunday
  */
 @Environment(EnvType.CLIENT)
-public class TextFieldWidgetConfig extends TextFieldWidget 
+public class TextFieldWidgetConfig extends EditBox 
 implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
 {
 	String initialText;
@@ -31,27 +28,27 @@ implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
 
 	private int tooltipWidth;
 	private int tooltipHeight;
-	private List<OrderedText> compiledTooltipText;
+	private List<FormattedCharSequence> compiledTooltipText;
 	private Consumer<String> textChangedListener;
 	
-	public TextFieldWidgetConfig(TextRenderer textRenderer, int width, int height, 
+	public TextFieldWidgetConfig(Font textRenderer, int width, int height, 
 		StringValue property, boolean allowEmptyText) 
 	{
-		super(textRenderer, 0, 0, width, height, LiteralText.EMPTY);
+		super(textRenderer, 0, 0, width, height, TextComponent.EMPTY);
 		
 		this.property = property;
 		this.allowEmptyText = allowEmptyText;
 		this.initialText = property.get();
 		
-		this.setText(this.initialText);
-		this.setChangedListener(null);
+		this.setValue(this.initialText);
+		this.setResponder(null);
 		
-		this.setCursorToStart();
+		this.moveCursorToStart();
 	}
 
 	@Override
 	public boolean isValid() {
-		return this.allowEmptyText ? true : !this.getText().isBlank();
+		return this.allowEmptyText ? true : !this.getValue().isBlank();
 	}
 	
 	@Override
@@ -74,12 +71,12 @@ implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
 	public void forceSetWidgetValueToDefault(boolean justInitial)
 	{
 		if (justInitial) {
-			super.setText((this.initialText == null) ? "" : this.initialText);
+			super.setValue((this.initialText == null) ? "" : this.initialText);
 		} 
 		else 
 		{
 			String def = this.property.getDefaultValue();
-			super.setText((def == null) ? "" : def);
+			super.setValue((def == null) ? "" : def);
 		}
 	}
 	@Override
@@ -96,10 +93,10 @@ implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
 	}
 
 	@Override
-	public void setChangedListener(Consumer<String> changedListener)
+	public void setResponder(Consumer<String> changedListener)
 	{
 		this.textChangedListener = changedListener;
-		super.setChangedListener(this::onTextChanged);
+		super.setResponder(this::onTextChanged);
 	}
 	private void onTextChanged(String newText)
 	{
@@ -136,11 +133,11 @@ implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
 	}
 	
 	@Override
-	public List<OrderedText> getOrderedTooltip() {
+	public List<FormattedCharSequence> getTooltip() {
 		return this.compiledTooltipText;
 	}
 	@Override
-	public void setOrderedTooltip(List<OrderedText> textToSet) {
+	public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
 		this.compiledTooltipText = textToSet;
 	}
 }

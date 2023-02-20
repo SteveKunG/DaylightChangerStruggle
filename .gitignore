@@ -1,0 +1,13 @@
+# folder
+.cache
+.gradle
+.settings
+.idea
+bin
+build
+run
+
+# file
+*.launch
+.classpath
+.project

@@ -1,15 +1,13 @@
 package jugglestruggle.timechangerstruggle.client.util.render;
 
-import net.minecraft.util.math.Matrix4f;
-
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.MatrixStack;
-
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
+import net.minecraft.client.renderer.GameRenderer;
 
 /**
  *
@@ -20,7 +18,7 @@ public final class RenderUtils
 {
 	public static RainbowShader rainbowAllTheWay;
 	
-	public static void fillPointedGradient(MatrixStack matrices, int startX, int startY, int endX, int endY,
+	public static void fillPointedGradient(PoseStack matrices, int startX, int startY, int endX, int endY,
 		int z, int topLeftColor, int topRightColor, int bottomLeftColor, int bottomRightColor)
 	{
 		RenderSystem.enableBlend();
@@ -28,18 +26,18 @@ public final class RenderUtils
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		
-		final Tessellator tess = Tessellator.getInstance();
-		final BufferBuilder bb = tess.getBuffer();
-		final Matrix4f mat = matrices.peek().getPositionMatrix();
+		final Tesselator tess = Tesselator.getInstance();
+		final BufferBuilder bb = tess.getBuilder();
+		final Matrix4f mat = matrices.last().pose();
 		
-		bb.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 		
 		RenderUtils.fillPoint(mat, bb, endX, startY, z, topRightColor);
 		RenderUtils.fillPoint(mat, bb, startX, startY, z, topLeftColor);
 		RenderUtils.fillPoint(mat, bb, startX, endY, z, bottomLeftColor);
 		RenderUtils.fillPoint(mat, bb, endX, endY, z, bottomRightColor);
 		
-		tess.draw();
+		tess.end();
 		
 		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
@@ -51,12 +49,12 @@ public final class RenderUtils
 		float g = (float)(color >> 8 & 0xFF) / 255.0f;
 		float b = (float)(color & 0xFF) / 255.0f;
 		
-		bb.vertex(mat, x, y, z).color(r, g, b, a).next();
+		bb.vertex(mat, x, y, z).color(r, g, b, a).endVertex();
 	}
 	
 	public static void fillRainbow
 	(
-		MatrixStack matrices, int startX, int startY, int endX, int endY, int z,
+		PoseStack matrices, int startX, int startY, int endX, int endY, int z,
 		float offsetX, float offsetY, float offsetZ, float progress, boolean adv
 	)
 	{
@@ -71,11 +69,11 @@ public final class RenderUtils
 		
 		RenderSystem.setShader(() -> RenderUtils.rainbowAllTheWay);
 		
-		final Tessellator tess = Tessellator.getInstance();
-		final BufferBuilder bb = tess.getBuffer();
-		final Matrix4f mat = matrices.peek().getPositionMatrix();
+		final Tesselator tess = Tesselator.getInstance();
+		final BufferBuilder bb = tess.getBuilder();
+		final Matrix4f mat = matrices.last().pose();
 		
-		bb.begin(VertexFormat.DrawMode.QUADS, RainbowShader.RAINBOW_SHADER_FORMAT);
+		bb.begin(VertexFormat.Mode.QUADS, RainbowShader.RAINBOW_SHADER_FORMAT);
 		
 		float width  = endX - startX;
 		float height = endY - startY;
@@ -109,7 +107,7 @@ public final class RenderUtils
 		RenderUtils.fillRainbowPoint(mat, bb, startX,   endY, z, offsetX, offsetY, offsetZ, progress + btmLeftProgress);
 		RenderUtils.fillRainbowPoint(mat, bb,   endX,   endY, z, offsetX, offsetY, offsetZ, progress + btmRghtProgress);
 		
-		tess.draw();
+		tess.end();
 		
 		
 		
@@ -128,6 +126,6 @@ public final class RenderUtils
 		
 		bb.putFloat(0, progress); bb.nextElement();
 		
-		bb.next();
+		bb.endVertex();
 	}
 }

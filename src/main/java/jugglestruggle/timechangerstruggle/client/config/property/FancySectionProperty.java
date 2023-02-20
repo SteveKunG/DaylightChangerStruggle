@@ -7,9 +7,7 @@ import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,19 +24,19 @@ import com.mojang.brigadier.context.CommandContext;
  * @implNote Created on 01-Feb-2022, Tuesday
  */
 @Environment(EnvType.CLIENT)
-public class FancySectionProperty extends BaseProperty<FancySectionProperty, Text>
+public class FancySectionProperty extends BaseProperty<FancySectionProperty, Component>
 {
 	public static final FancySectionProperty EMPTY = new FancySectionProperty("", null);
 	
-	public FancySectionProperty(String property, Text value) {
+	public FancySectionProperty(String property, Component value) {
 		super(property, value);
 	}
 
 	@Override
-	public void set(Text value) {}
+	public void set(Component value) {}
 
 	@Override
-	public WidgetConfigInterface<FancySectionProperty, Text> createConfigElement
+	public WidgetConfigInterface<FancySectionProperty, Component> createConfigElement
 	(TimeChangerScreen screen, FancySectionProperty owningSection)
 	{
 		return null;
@@ -53,7 +51,7 @@ public class FancySectionProperty extends BaseProperty<FancySectionProperty, Tex
 	}
 
 	@Override
-	public ArgumentType<Text> onCommandOptionGetArgType() {
+	public ArgumentType<Component> onCommandOptionGetArgType() {
 		return null;
 	}
 

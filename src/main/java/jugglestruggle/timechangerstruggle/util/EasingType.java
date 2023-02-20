@@ -1,9 +1,8 @@
 package jugglestruggle.timechangerstruggle.util;
 
 import java.util.Locale;
-
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  *
@@ -29,8 +28,8 @@ public enum EasingType implements InterchangeableFunction<EasingType, String>
 	public final String toValueString() {
 		return this.toString().toLowerCase(Locale.ROOT);
 	}
-	public final Text getFormattedText() {
-		return new TranslatableText(String.format("jugglestruggle.tcs.easingtype.%1$s", this.toValueString()), new Object[0]);
+	public final Component getFormattedText() {
+		return new TranslatableComponent(String.format("jugglestruggle.tcs.easingtype.%1$s", this.toValueString()), new Object[0]);
 	}
 	
 	

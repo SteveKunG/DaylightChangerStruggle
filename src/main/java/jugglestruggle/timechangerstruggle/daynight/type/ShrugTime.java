@@ -3,12 +3,10 @@ package jugglestruggle.timechangerstruggle.daynight.type;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
 import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
-
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * ¯\_(ツ)_/¯
@@ -20,7 +18,7 @@ public class ShrugTime implements DayNightCycleBasis
 {
 
 	@Override
-	public long getModifiedTime(ClientWorld world, DayNightGetterType executor, boolean previous)
+	public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous)
 	{
 		// TODO Auto-generated method stub
 		return 0;
@@ -52,12 +50,12 @@ public class ShrugTime implements DayNightCycleBasis
 		}
 		
 		@Override
-		public Text getTranslatableName() {
-			return new LiteralText("¯\\_(ツ)_/¯");
+		public Component getTranslatableName() {
+			return new TextComponent("¯\\_(ツ)_/¯");
 		}
 		@Override
-		public Text getTranslatableDescription() {
-			return new TranslatableText("jugglestruggle.tcs.dnt.shrugtime.description");
+		public Component getTranslatableDescription() {
+			return new TranslatableComponent("jugglestruggle.tcs.dnt.shrugtime.description");
 		}
 	}
 }

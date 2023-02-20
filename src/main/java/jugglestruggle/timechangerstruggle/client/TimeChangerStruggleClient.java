@@ -19,16 +19,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
 
 /**
  *
@@ -311,7 +309,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
 		Keybindings.registerKeybindings();
 
 		// Load the configuration settings
-		File config = new File(MinecraftClient.getInstance().runDirectory, "config");
+		File config = new File(Minecraft.getInstance().gameDirectory, "config");
 		
 		// Check if the configuration directory exists, if not then 
 		// create it nonetheless
@@ -338,7 +336,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
 		TimeChangerStruggleClient.config.read();
 	}
 	
-	private void onClientStart(MinecraftClient client)
+	private void onClientStart(Minecraft client)
 	{
 		// Create my favorite shader that PvP / Cheat Clients use:
 		// Chroma/Rainbow Shader :D
@@ -353,18 +351,18 @@ public class TimeChangerStruggleClient implements ClientModInitializer
 		
 	}
 	
-	private void onClientTick(MinecraftClient client)
+	private void onClientTick(Minecraft client)
 	{
 		// TODO: Is there a better way to call key events on press and releases without the need of ticking?
 		
-		if (client.currentScreen == null && client.world != null)
+		if (client.screen == null && client.level != null)
 		{
-			if (Keybindings.timeChangerMenuKey.isPressed()) {
+			if (Keybindings.timeChangerMenuKey.isDown()) {
 				client.setScreen(new TimeChangerScreen());
 			}
 			
 			final boolean previousWorldTime = TimeChangerStruggleClient.worldTime;
-			while (Keybindings.toggleWorldTimeKey.wasPressed()) {
+			while (Keybindings.toggleWorldTimeKey.consumeClick()) {
 				TimeChangerStruggleClient.worldTime = !previousWorldTime;
 			}
 		}
@@ -384,7 +382,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
 		}
 		 */
 	}
-	private void onWorldTick(ClientWorld world)
+	private void onWorldTick(ClientLevel world)
 	{
 		if (TimeChangerStruggleClient.useWorldTime())
 			return;
