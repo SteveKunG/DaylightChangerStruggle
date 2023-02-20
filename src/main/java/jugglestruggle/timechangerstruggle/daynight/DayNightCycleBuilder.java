@@ -2,8 +2,7 @@ package jugglestruggle.timechangerstruggle.daynight;
 
 import jugglestruggle.timechangerstruggle.client.Commands;
 import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
-
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 /**
  * A cycle builder; this name is rather misleading as it is
@@ -36,7 +35,7 @@ public interface DayNightCycleBuilder
 	 * 
 	 * @return the name of the cycle
 	 */
-	Text getTranslatableName();
+	Component getTranslatableName();
 
 	/**
 	 * Gets a short description of the cycle. Used in both
@@ -46,7 +45,7 @@ public interface DayNightCycleBuilder
 	 * 
 	 * @return a description of the cycle
 	 */
-	Text getTranslatableDescription();
+	Component getTranslatableDescription();
 	
 	/**
 	 * Used to determine if certain option-related elements 

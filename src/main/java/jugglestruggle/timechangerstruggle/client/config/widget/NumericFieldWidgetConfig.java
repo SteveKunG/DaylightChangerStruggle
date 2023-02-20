@@ -3,22 +3,20 @@ package jugglestruggle.timechangerstruggle.client.config.widget;
 import jugglestruggle.timechangerstruggle.client.widget.PositionedTooltip;
 import jugglestruggle.timechangerstruggle.config.property.BaseNumber;
 import jugglestruggle.timechangerstruggle.config.property.BaseProperty.ValueConsumer;
-
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 
 /**
  *
  * @author JuggleStruggle
  * @implNote Created on 30-Jan-2022, Sunday
  */
-public class NumericFieldWidgetConfig<N extends Number> extends TextFieldWidget 
+public class NumericFieldWidgetConfig<N extends Number> extends EditBox 
 implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 {
 	protected final BaseNumber<N> property;
@@ -26,33 +24,33 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 
 	private int tooltipWidth;
 	private int tooltipHeight;
-	private List<OrderedText> compiledTooltipText;
+	private List<FormattedCharSequence> compiledTooltipText;
 	
 	protected Consumer<String> textChangedListener;
 	
 	private boolean isNewTextValid;
 	
-	public NumericFieldWidgetConfig(TextRenderer textRenderer, int width, int height, BaseNumber<N> property) 
+	public NumericFieldWidgetConfig(Font textRenderer, int width, int height, BaseNumber<N> property) 
 	{
-		super(textRenderer, 18, 18, width, height, Text.empty());
+		super(textRenderer, 18, 18, width, height, Component.empty());
 		
 		this.property = property;
 		this.isNewTextValid = true;
 		
-		this.setChangedListener(null);
-		this.setTextPredicate(null);
+		this.setResponder(null);
+		this.setFilter(null);
 		
-		this.setText(this.property.get().toString());
+		this.setValue(this.property.get().toString());
 		this.initialNumber = this.property.get();
 		
-		this.setCursorToStart();
+		this.moveCursorToStart();
 	}
 
 	@Override
-	public void setChangedListener(Consumer<String> changedListener)
+	public void setResponder(Consumer<String> changedListener)
 	{
 		this.textChangedListener = changedListener;
-		super.setChangedListener(this::onTextChanged);
+		super.setResponder(this::onTextChanged);
 	}
 	/**
 	 * Note: Numeric Field Widget snatches the setTextPredicate as 
@@ -63,7 +61,7 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 	 * avoid problems.
 	 */
 	@Override
-	public void setTextPredicate(Predicate<String> textPredicate)
+	public void setFilter(Predicate<String> textPredicate)
 	{
 		Predicate<String> theNextPredicate = (text) -> 
 		{
@@ -74,7 +72,7 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 			return true;
 		};
 		
-		super.setTextPredicate(theNextPredicate);
+		super.setFilter(theNextPredicate);
 	}
 	
 	
@@ -109,12 +107,12 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 	public void forceSetWidgetValueToDefault(boolean justInitial)
 	{
 		if (justInitial) {
-			this.setText("" + ((this.initialNumber == null) ? "0" : this.initialNumber));
+			this.setValue("" + ((this.initialNumber == null) ? "0" : this.initialNumber));
 		} 
 		else
 		{
 			final N defaultNumber = this.property.getDefaultValue();
-			this.setText("" + ((defaultNumber == null) ? "0" : defaultNumber));
+			this.setValue("" + ((defaultNumber == null) ? "0" : defaultNumber));
 		}
 	}
 	@Override
@@ -182,7 +180,7 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 		}
 		
 		this.isNewTextValid = valid;
-		this.setEditableColor(valid ? DEFAULT_EDITABLE_COLOR : 0xE06060);
+		this.setTextColor(valid ? DEFAULT_TEXT_COLOR : 0xE06060);
 		
 		if (this.textChangedListener != null) {
 			this.textChangedListener.accept(newText);
@@ -212,11 +210,11 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
 	}
 	
 	@Override
-	public List<OrderedText> getOrderedTooltip() {
+	public List<FormattedCharSequence> getTooltip() {
 		return this.compiledTooltipText;
 	}
 	@Override
-	public void setOrderedTooltip(List<OrderedText> textToSet) {
+	public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
 		this.compiledTooltipText = textToSet;
 	}
 	

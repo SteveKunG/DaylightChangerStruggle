@@ -7,11 +7,9 @@ import jugglestruggle.timechangerstruggle.util.DaylightUtils;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import java.util.Calendar;
-
-import net.minecraft.text.Text;
-import net.minecraft.client.world.ClientWorld;
 
 /**
  *
@@ -62,7 +60,7 @@ public class SystemTime implements DayNightCycleBasis
 	}
 	
 	@Override
-	public long getModifiedTime(ClientWorld world, DayNightGetterType executor, boolean previous) {
+	public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous) {
 		return previous ? this.previousCachedTime : this.cachedTime;
 	}
 	
@@ -94,12 +92,12 @@ public class SystemTime implements DayNightCycleBasis
 		}
 		
 		@Override
-		public Text getTranslatableName() {
-			return Text.translatable("jugglestruggle.tcs.dnt.systemtime");
+		public Component getTranslatableName() {
+			return Component.translatable("jugglestruggle.tcs.dnt.systemtime");
 		}
 		@Override
-		public Text getTranslatableDescription() {
-			return Text.translatable("jugglestruggle.tcs.dnt.systemtime.description");
+		public Component getTranslatableDescription() {
+			return Component.translatable("jugglestruggle.tcs.dnt.systemtime.description");
 		}
 	}
 }

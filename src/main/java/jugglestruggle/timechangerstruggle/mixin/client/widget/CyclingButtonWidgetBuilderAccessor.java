@@ -1,23 +1,20 @@
 package jugglestruggle.timechangerstruggle.mixin.client.widget;
 
 import java.util.function.Function;
-
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.CycleButton.ValueListSupplier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
-
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget.Values;
-import net.minecraft.client.option.SimpleOption;
 
 /**
  *
  * @author JuggleStruggle
  * @implNote Created on 03-Feb-2022, Thursday
  */
-@Mixin(CyclingButtonWidget.Builder.class)
+@Mixin(CycleButton.Builder.class)
 public interface CyclingButtonWidgetBuilderAccessor<T>
 {
 	@Accessor("value")
@@ -26,7 +23,7 @@ public interface CyclingButtonWidgetBuilderAccessor<T>
 	void setValue(T value);
 	
 	@Accessor("values")
-	Values<T> values();
+	ValueListSupplier<T> values();
 	
 	@Accessor("initialIndex")
 	int getInitialIndex();
@@ -34,14 +31,14 @@ public interface CyclingButtonWidgetBuilderAccessor<T>
 	void setInitialIndex(int initialIndex);
 
 	@Accessor("valueToText")
-	Function<T, Text> getValueToText();
+	Function<T, Component> getValueToText();
 
 	@Accessor("optionTextOmitted")
 	boolean omitOptionText();
 
 	@Accessor("narrationMessageFactory")
-	Function<CyclingButtonWidget<T>, MutableText> getNarrationMessageFactory();
+	Function<CycleButton<T>, MutableComponent> getNarrationMessageFactory();
 
 	@Accessor("tooltipFactory")
-	SimpleOption.TooltipFactory<T> getTooltipFactory();
+	OptionInstance.TooltipSupplier<T> getTooltipFactory();
 }

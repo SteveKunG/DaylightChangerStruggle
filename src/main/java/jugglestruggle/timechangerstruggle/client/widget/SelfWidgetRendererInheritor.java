@@ -1,13 +1,13 @@
 package jugglestruggle.timechangerstruggle.client.widget;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.components.AbstractWidget;
 
 /**
  *
  * @author JuggleStruggle
  * @implNote Created on 13-Feb-2022, Sunday
  */
-public interface SelfWidgetRendererInheritor<W extends ClickableWidget>
+public interface SelfWidgetRendererInheritor<W extends AbstractWidget>
 {
 	public SelfWidgetRender<W> getWidgetRenderer();
 }

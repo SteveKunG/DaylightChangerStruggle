@@ -1,8 +1,7 @@
 package jugglestruggle.timechangerstruggle.util;
 
 import java.util.Locale;
-
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 /**
  * An easings used for times that move; allows further customization in
@@ -277,8 +276,8 @@ public enum Easings implements InterchangeableFunction<Easings, String>
 	public final String toValueString() {
 		return this.toString().toLowerCase(Locale.ROOT);
 	}
-	public final Text getFormattedText() {
-		return Text.translatable(String.format("jugglestruggle.tcs.easings.%1$s", this.toValueString()), new Object[0]);
+	public final Component getFormattedText() {
+		return Component.translatable(String.format("jugglestruggle.tcs.easings.%1$s", this.toValueString()), new Object[0]);
 	}
 	
 	/**

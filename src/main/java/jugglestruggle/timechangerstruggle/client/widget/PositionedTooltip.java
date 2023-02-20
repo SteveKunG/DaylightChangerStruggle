@@ -4,15 +4,11 @@ import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.TooltipAccessor;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import java.util.List;
-
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.OrderableTooltip;
-
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -22,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  * @implNote Created on 06-Feb-2022, Sunday
  */
 @Environment(EnvType.CLIENT)
-public interface PositionedTooltip extends OrderableTooltip
+public interface PositionedTooltip extends TooltipAccessor
 {
 	int getTooltipWidth();
 	int getTooltipHeight();
@@ -30,14 +26,14 @@ public interface PositionedTooltip extends OrderableTooltip
 	void setTooltipWidth(int width);
 	void setTooltipHeight(int height);
 	
-	void setOrderedTooltip(List<OrderedText> textToSet);
+	void setOrderedTooltip(List<FormattedCharSequence> textToSet);
 	
-	default void updateTooltip(Text tooltipDescText, Text tooltipText, TextRenderer renderer)
+	default void updateTooltip(Component tooltipDescText, Component tooltipText, Font renderer)
 	{
 		final boolean descIsNull = tooltipDescText == null;
 		final boolean tooltipIsNull = tooltipText == null;
 		
-		List<OrderedText> compiledTooltipText;
+		List<FormattedCharSequence> compiledTooltipText;
 		
 		if (descIsNull && tooltipIsNull) {
 			compiledTooltipText = ImmutableList.of();

@@ -11,18 +11,15 @@ import net.fabricmc.api.EnvType;
 
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -43,11 +40,11 @@ public class EnumValue<EV extends Enum<EV>> extends BaseProperty<EnumValue<EV>, 
 {
 	protected final EV[] enumValues;
 	
-	protected Function<EV, Text> valueToTextFunc;
+	protected Function<EV, Component> valueToTextFunc;
 	protected Predicate<EV> validatePredicate;
 	protected InterchangeableFunction<EV, String> readableFunc;
 	
-	private final CyclingButtonWidget.UpdateCallback<EV> callback = (button, value) -> { 
+	private final CycleButton.OnValueChange<EV> callback = (button, value) -> { 
 		if (super.consumer != null)
 			super.consumer.consume(this, value);
 	};
@@ -78,7 +75,7 @@ public class EnumValue<EV extends Enum<EV>> extends BaseProperty<EnumValue<EV>, 
 	public EV[] getEnumValues() {
 		return this.enumValues;
 	}
-	public Function<EV, Text> getVTT() {
+	public Function<EV, Component> getVTT() {
 		return this.valueToTextFunc;
 	}
 	public Predicate<EV> getEnumValidation() {
@@ -91,7 +88,7 @@ public class EnumValue<EV extends Enum<EV>> extends BaseProperty<EnumValue<EV>, 
 	 * @param func the function used to translate enumerators to text
 	 * @return the same class but with an updated field
 	 */
-	public EnumValue<EV> setVTT(Function<EV, Text> func) {
+	public EnumValue<EV> setVTT(Function<EV, Component> func) {
 		this.valueToTextFunc = func; return this;
 	}
 	/**
@@ -126,21 +123,21 @@ public class EnumValue<EV extends Enum<EV>> extends BaseProperty<EnumValue<EV>, 
 	{
 		WidgetConfigBuilderEnum<EV> builder = CyclingWidgetConfig.enumCycle(this);
 
-		Text optionText = null;
+		Component optionText = null;
 		
 		if (owningSection != null)
 		{
-			Text sectionText = owningSection.get();
+			Component sectionText = owningSection.get();
 			
-			if (sectionText != null && sectionText.getContent() instanceof TranslatableTextContent)
+			if (sectionText != null && sectionText.getContents() instanceof TranslatableContents)
 			{
-				optionText = Text.translatable(String.format("%1$s.%2$s",
-					((TranslatableTextContent)sectionText.getContent()).getKey(), this.property().toLowerCase(Locale.ROOT)));
+				optionText = Component.translatable(String.format("%1$s.%2$s",
+					((TranslatableContents)sectionText.getContents()).getKey(), this.property().toLowerCase(Locale.ROOT)));
 			}
 		}
 		
 		if (optionText == null)
-			optionText = Text.of(this.property());
+			optionText = Component.nullToEmpty(this.property());
 		
 		return builder.build(20, 20, optionText, this.callback);
 	}

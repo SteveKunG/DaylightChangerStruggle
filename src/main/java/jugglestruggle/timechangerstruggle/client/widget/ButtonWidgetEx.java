@@ -1,13 +1,11 @@
 package jugglestruggle.timechangerstruggle.client.widget;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
-
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
 /**
  * 
@@ -15,18 +13,18 @@ import net.minecraft.client.util.math.MatrixStack;
  * @author JuggleStruggle
  * @implNote Created on 13-Feb-2022, Sunday
  */
-public class ButtonWidgetEx extends ButtonWidget 
+public class ButtonWidgetEx extends Button 
 implements PositionedTooltip, SelfWidgetRendererInheritor<ButtonWidgetEx>
 {
 	private int tooltipWidth;
 	private int tooltipHeight;
-	private List<OrderedText> compiledTooltipText;
+	private List<FormattedCharSequence> compiledTooltipText;
 	private final SelfWidgetRender<ButtonWidgetEx> renderer;
 	
-	public ButtonWidgetEx(int width, int height, Text message, Text tooltipDescText, Text tooltipText, 
-		TextRenderer renderer, PressAction onPress)
+	public ButtonWidgetEx(int width, int height, Component message, Component tooltipDescText, Component tooltipText, 
+		Font renderer, OnPress onPress)
 	{
-		super(0, 0, width, height, message, onPress, ButtonWidget.EMPTY);
+		super(0, 0, width, height, message, onPress, Button.NO_TOOLTIP);
 		this.updateTooltip(tooltipDescText, tooltipText, renderer);
 		this.renderer = new SelfWidgetRender<>(this, renderer);
 	}
@@ -49,11 +47,11 @@ implements PositionedTooltip, SelfWidgetRendererInheritor<ButtonWidgetEx>
 	}
 	
 	@Override
-	public List<OrderedText> getOrderedTooltip() {
+	public List<FormattedCharSequence> getTooltip() {
 		return this.compiledTooltipText;
 	}
 	@Override
-	public void setOrderedTooltip(List<OrderedText> textToSet) {
+	public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
 		this.compiledTooltipText = textToSet;
 	}
 	
@@ -63,7 +61,7 @@ implements PositionedTooltip, SelfWidgetRendererInheritor<ButtonWidgetEx>
 	}
 	
 	@Override
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderer.renderButton(matrices, mouseX, mouseY, delta);
 	}
 }

@@ -11,24 +11,21 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.arguments.TimeArgument;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.level.Level;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.UnaryOperator;
-
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.TimeArgumentType;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.Command;
@@ -60,7 +57,7 @@ public class Commands
 	}
 	
 
-    private void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess access)
+    private void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext access)
     {
         LiteralCommandNode<FabricClientCommandSource> baseCommand = dispatcher.register(this.getBaseCommand());
 
@@ -131,24 +128,24 @@ public class Commands
 				// and formatted!
 				TimeChangerStruggleClient.getCachedCycleTypeBuilders().forEach(cycle -> 
 				{
-					MutableText options = Text.literal("[\u26A1]");
-					MutableText useCycle = Text.literal("[\u2192]");
+					MutableComponent options = Component.literal("[\u26A1]");
+					MutableComponent useCycle = Component.literal("[\u2192]");
 					
 					final String baseName = cycle.getKeyName();
-					final Text displayName = cycle.getTranslatableName();
+					final Component displayName = cycle.getTranslatableName();
 					boolean isCurrentCycle = TimeChangerStruggleClient.isCycleTypeCurrentCycle(baseName);
 					
-					useCycle.styled(style -> 
+					useCycle.withStyle(style -> 
 					{
 						return style
 							.withColor(isCurrentCycle ? 0xFF5511 : 0x55FF11)
 							.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tcs cycle "+baseName))
 							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-								Text.translatable("jugglestruggle.tcs.cmd.cycle.listing.use", displayName)))
+								Component.translatable("jugglestruggle.tcs.cmd.cycle.listing.use", displayName)))
 							.withBold(true);
 					});
 					
-					options.styled(style -> 
+					options.withStyle(style -> 
 					{
 						Style currentStyle = style.withBold(true)
 							.withColor(cycle.hasOptionsToEdit() ? 0xFFDD00 : 0x666666);
@@ -156,18 +153,18 @@ public class Commands
 						if (cycle.hasOptionsToEdit())
 						{
 							currentStyle = currentStyle.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-								Text.translatable("jugglestruggle.tcs.cmd.cycle.listing.option", displayName)))
+								Component.translatable("jugglestruggle.tcs.cmd.cycle.listing.option", displayName)))
 							.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tcs cycle "+baseName+" option"));
 						}
 							
 						return currentStyle;
 					});
 					
-					MutableText displayNameAsDisplay = displayName.copy();
+					MutableComponent displayNameAsDisplay = displayName.copy();
 					
-					displayNameAsDisplay.styled(style -> 
+					displayNameAsDisplay.withStyle(style -> 
 					{
-						Text displayDesc = cycle.getTranslatableDescription();
+						Component displayDesc = cycle.getTranslatableDescription();
 						
 						if (displayDesc == null)
 							return style;
@@ -175,7 +172,7 @@ public class Commands
 							return style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, displayDesc));
 					});
 					
-					Commands.sendTextToChat(ctx, Text.translatable("%1$s %2$s %3$s", options, useCycle, displayNameAsDisplay));
+					Commands.sendTextToChat(ctx, Component.translatable("%1$s %2$s %3$s", options, useCycle, displayNameAsDisplay));
 				});
 				
 				
@@ -205,12 +202,12 @@ public class Commands
 				TimeChangerStruggleClient.setTimeChanger((DayNightCycleBasis)null);
 				TimeChangerStruggleClient.config.writeIfModified();
 				
-				final MutableText cycleRemovedText = Text.translatable
+				final MutableComponent cycleRemovedText = Component.translatable
 					("jugglestruggle.tcs.cmd.cycle.cycle", previousCycle.isPresent() ? previousCycle.get().getTranslatableName() : "??");
-				final MutableText worldTimeText = Text.translatable("jugglestruggle.tcs.screen.toggleworldtime");
+				final MutableComponent worldTimeText = Component.translatable("jugglestruggle.tcs.screen.toggleworldtime");
 				
-				cycleRemovedText.styled(style -> style.withColor(0xFFDD33));
-				worldTimeText.styled(style -> style.withColor(0xFFCC22));
+				cycleRemovedText.withStyle(style -> style.withColor(0xFFDD33));
+				worldTimeText.withStyle(style -> style.withColor(0xFFCC22));
 				
 				Commands.sendTextToChat
 				(
@@ -369,42 +366,42 @@ public class Commands
 			.then(this.generateOptionSubcommandBoolAction
 			(
 				"dateOverTicks", 
-				Text.translatable("jugglestruggle.tcs.screen.toggledate"), 
+				Component.translatable("jugglestruggle.tcs.screen.toggledate"), 
 				() -> TimeChangerStruggleClient.dateOverTicks, 
 				currentValue -> TimeChangerStruggleClient.dateOverTicks = currentValue
 			))
 			.then(this.generateOptionSubcommandBoolAction
 			(
 				"butterySmoothCycle", 
-				Text.translatable("jugglestruggle.tcs.screen.togglesmoothbutterdaylightcycle"), 
+				Component.translatable("jugglestruggle.tcs.screen.togglesmoothbutterdaylightcycle"), 
 				() -> TimeChangerStruggleClient.smoothButterCycle, 
 				currentValue -> TimeChangerStruggleClient.smoothButterCycle = currentValue
 			))
 			.then(this.generateOptionSubcommandBoolAction
 			(
 				"disableNightVisionEffect", 
-				Text.translatable("jugglestruggle.tcs.cmd.option.disablenightvision"), 
+				Component.translatable("jugglestruggle.tcs.cmd.option.disablenightvision"), 
 				() -> TimeChangerStruggleClient.disableNightVisionEffect, 
 				currentValue -> TimeChangerStruggleClient.disableNightVisionEffect = currentValue
 			))
 			.then(this.generateOptionSubcommandBoolAction
 			(
 				"disableWorldTimeOnCycleUsage", 
-				Text.translatable("jugglestruggle.tcs.cmd.option.disableworldtimeoncycleusage"), 
+				Component.translatable("jugglestruggle.tcs.cmd.option.disableworldtimeoncycleusage"), 
 				() -> TimeChangerStruggleClient.commandsDisableWorldTimeOnCycleUsage, 
 				currentValue -> TimeChangerStruggleClient.commandsDisableWorldTimeOnCycleUsage = currentValue
 			))
 			.then(this.generateOptionSubcommandBoolAction
 			(
 				"commandFeedbackOnLessImportant", 
-				Text.translatable("jugglestruggle.tcs.cmd.option.commandfeedbackonlessimportant"), 
+				Component.translatable("jugglestruggle.tcs.cmd.option.commandfeedbackonlessimportant"), 
 				() -> TimeChangerStruggleClient.commandsCommandFeedbackOnLessImportant, 
 				currentValue -> TimeChangerStruggleClient.commandsCommandFeedbackOnLessImportant = currentValue
 			));
 	}
 	
 	private LiteralArgumentBuilder<FabricClientCommandSource> generateOptionSubcommandBoolAction
-	(String subcommandName, Text displayName, BooleanSupplier suppliedValue, UnaryOperator<Boolean> onApplyConsumer)
+	(String subcommandName, Component displayName, BooleanSupplier suppliedValue, UnaryOperator<Boolean> onApplyConsumer)
 	{
 		LiteralArgumentBuilder<FabricClientCommandSource> subcommand = ClientCommandManager.literal(subcommandName);
 		
@@ -414,7 +411,7 @@ public class Commands
 			TimeChangerStruggleClient.config.writeIfModified();
 			
 			Commands.sendTextToChat(ctx, "jugglestruggle.tcs.cmd.option.set", 
-				displayName, ScreenTexts.onOrOff(newValue));
+				displayName, CommonComponents.optionStatus(newValue));
 			
 			return 1;
 		});
@@ -432,7 +429,7 @@ public class Commands
 				Commands.sendTextToChat
 				(
 					ctx, "jugglestruggle.tcs.cmd.option.set" + (prevAndNewValueEquals ? ".error.equals" : ""), 
-					displayName, ScreenTexts.onOrOff(newValue)
+					displayName, CommonComponents.optionStatus(newValue)
 				);
 				
 				if (prevAndNewValueEquals)
@@ -449,13 +446,13 @@ public class Commands
 	
 	private int displayWorldTime(CommandContext<FabricClientCommandSource> ctx) 
 	{
-		World w = ctx.getSource().getWorld();
+		Level w = ctx.getSource().getWorld();
 		
 		Commands.sendTextToChat
 		(
 			ctx, style -> style.withColor(0xFFDD22),
 			"jugglestruggle.tcs.cmd.time.use", 
-			w.getTimeOfDay(), DaylightUtils.getParsedTime(w, true)
+			w.getDayTime(), DaylightUtils.getParsedTime(w, true)
 		);
 		
 		return 1;
@@ -465,18 +462,18 @@ public class Commands
 	}
 	public static void sendTextToChat(CommandContext<FabricClientCommandSource> ctx, UnaryOperator<Style> styleUpdater, String key, Object... args)
 	{
-		final MutableText text = (args == null || args.length <= 0) ? 
-			Text.translatable(key) : Text.translatable(key, args);
+		final MutableComponent text = (args == null || args.length <= 0) ? 
+			Component.translatable(key) : Component.translatable(key, args);
 		
 		if (styleUpdater != null) {
-			text.styled(styleUpdater);
+			text.withStyle(styleUpdater);
 		}
 		
 		Commands.sendTextToChat(ctx, text);
 	}
 	@SuppressWarnings("resource")
-	public static void sendTextToChat(CommandContext<FabricClientCommandSource> ctx, Text text) {
-		ctx.getSource().getClient().inGameHud.getChatHud().addMessage(text);
+	public static void sendTextToChat(CommandContext<FabricClientCommandSource> ctx, Component text) {
+		ctx.getSource().getClient().gui.getChat().addMessage(text);
 	}
 	
 	// Don't mind the silly method wording
@@ -517,12 +514,12 @@ public class Commands
 				final String realCmd = String.format("/%1$s cycle", starterCommand);
 				final String langCmd = "jugglestruggle.tcs.cmd.worldtime.set.warn";
 				
-				MutableText clickableText = Text.literal(realCmd);
+				MutableComponent clickableText = Component.literal(realCmd);
 				
-				clickableText.styled(style -> {
-					return style.withColor(0xDD44FF).withUnderline(true).withBold(false)
+				clickableText.withStyle(style -> {
+					return style.withColor(0xDD44FF).withUnderlined(true).withBold(false)
 						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, realCmd))
-						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable(langCmd + ".hover")));
+						.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(langCmd + ".hover")));
 				});
 				
 				Commands.sendTextToChat
@@ -537,7 +534,7 @@ public class Commands
 				(
 					ctx, style -> style.withColor(0x44FF00).withBold(true),
 					"jugglestruggle.tcs.cmd.worldtime.set",
-					ScreenTexts.onOrOff(TimeChangerStruggleClient.worldTime)
+					CommonComponents.optionStatus(TimeChangerStruggleClient.worldTime)
 				);
 			}
 			
@@ -562,8 +559,8 @@ public class Commands
 			
 			if (previousCycle.isPresent() && previousCycle.get().getKeyName().equals(this.cycleToUse.getKeyName()))
 			{
-				MutableText cycleText = Text.translatable(langCmd+"cycle", 
-					this.cycleToUse.getTranslatableName().copy().styled(style -> style.withColor(0xFF22FF)));
+				MutableComponent cycleText = Component.translatable(langCmd+"cycle", 
+					this.cycleToUse.getTranslatableName().copy().withStyle(style -> style.withColor(0xFF22FF)));
 				
 				Commands.sendTextToChat
 				(
@@ -584,8 +581,8 @@ public class Commands
 			
 			if (TimeChangerStruggleClient.commandsCommandFeedbackOnLessImportant)
 			{
-				MutableText cycleText = Text.translatable(langCmd+"cycle", 
-					this.cycleToUse.getTranslatableName().copy().styled(style -> style.withColor(0xFFFF22)));
+				MutableComponent cycleText = Component.translatable(langCmd+"cycle", 
+					this.cycleToUse.getTranslatableName().copy().withStyle(style -> style.withColor(0xFFFF22)));
 				
 				Commands.sendTextToChat
 				(
@@ -606,7 +603,7 @@ public class Commands
 			final LiteralArgumentBuilder<FabricClientCommandSource> base = ClientCommandManager.literal(mode.name().toLowerCase(Locale.ROOT))
 			.then
 			(
-				ClientCommandManager.argument("time", TimeArgumentType.time())
+				ClientCommandManager.argument("time", TimeArgument.time())
 				.executes(new StaticTimeSetCommand(null, mode))
 			);
 			
@@ -655,8 +652,8 @@ public class Commands
 							"jugglestruggle.tcs.cmd.time.replacedto", 
 							
 							cycleBuilder.isPresent() ? cycleBuilder.get().getTranslatableName() :
-							Text.translatable("jugglestruggle.tcs.screen.switchcyclemenu.desc.using.none"),
-							Text.translatable("jugglestruggle.tcs.dnt.statictime")
+							Component.translatable("jugglestruggle.tcs.screen.switchcyclemenu.desc.using.none"),
+							Component.translatable("jugglestruggle.tcs.dnt.statictime")
 						);
 					}
 					
@@ -666,8 +663,8 @@ public class Commands
 				jugglestruggle.timechangerstruggle.daynight.type.StaticTime staticTime = 
 					(jugglestruggle.timechangerstruggle.daynight.type.StaticTime)TimeChangerStruggleClient.getTimeChanger();
 				
-				final World w = ctx.getSource().getWorld();
-				final long previousTimeOfDay = w.getTimeOfDay();
+				final Level w = ctx.getSource().getWorld();
+				final long previousTimeOfDay = w.getDayTime();
 				
 				long totalTimeOfDay;
 				long timeToActuallySet;
@@ -717,22 +714,22 @@ public class Commands
 					final String langCmd = "jugglestruggle.tcs.cmd.time.";
 					final String modeName = this.mode.name().toLowerCase(Locale.ROOT);
 					
-					MutableText myTimeTicks = Text.translatable(langCmd + "ticks", timeTicks);
-					MutableText totalTicks = Text.translatable(langCmd + "ticks", totalTimeOfDay);
-					MutableText prevTicks = Text.translatable(langCmd + "ticks", previousTimeOfDay);
+					MutableComponent myTimeTicks = Component.translatable(langCmd + "ticks", timeTicks);
+					MutableComponent totalTicks = Component.translatable(langCmd + "ticks", totalTimeOfDay);
+					MutableComponent prevTicks = Component.translatable(langCmd + "ticks", previousTimeOfDay);
 					
-					myTimeTicks.styled(style ->
-						style.withColor(0xFFDD22).withBold(false).withUnderline(true)
+					myTimeTicks.withStyle(style ->
+						style.withColor(0xFFDD22).withBold(false).withUnderlined(true)
 						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, 
 							String.format("/%1$s time %2$s %3$s", starterCommand, modeName, timeTicks)))
 					);
-					totalTicks.styled(style ->
-						style.withColor(0xFF22DD).withBold(false).withUnderline(true)
+					totalTicks.withStyle(style ->
+						style.withColor(0xFF22DD).withBold(false).withUnderlined(true)
 						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, 
 							String.format("/%1$s time set %2$s", starterCommand, totalTimeOfDay)))
 						);
-					prevTicks.styled(style ->
-						style.withColor(0x22DDFF).withBold(false).withUnderline(true)
+					prevTicks.withStyle(style ->
+						style.withColor(0x22DDFF).withBold(false).withUnderlined(true)
 						.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, 
 							String.format("/%1$s time set %2$s", starterCommand, previousTimeOfDay)))
 					);

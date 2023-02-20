@@ -2,13 +2,11 @@ package jugglestruggle.timechangerstruggle.util;
 
 import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
-
+import net.minecraft.world.level.Level;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import net.minecraft.world.World;
 
 /**
  * https://minecraft.gamepedia.com/wiki/Daylight_cycle
@@ -87,14 +85,14 @@ public final class DaylightUtils
 		return cal.getTime();
 	}
 	
-	public static String getParsedTime(World world, boolean dateOverTicks)
+	public static String getParsedTime(Level world, boolean dateOverTicks)
 	{
 		long ticksToParse;
 		boolean addDay;
 		
 		if (TimeChangerStruggleClient.useWorldTime()) 
 		{
-			ticksToParse = world.getTimeOfDay();
+			ticksToParse = world.getDayTime();
 			addDay = true;
 		}
 		else

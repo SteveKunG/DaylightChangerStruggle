@@ -1,20 +1,17 @@
 package jugglestruggle.timechangerstruggle.mixin.client.world;
 
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-
-import net.minecraft.client.world.ClientWorld;
-
 import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
 import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.storage.WritableLevelData;
 import java.util.function.Supplier;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,59 +24,59 @@ import org.spongepowered.asm.mixin.Unique;
  * @author JuggleStruggle
  * @implNote Created on 26-Jan-2022, Wednesday
  */
-@Mixin(ClientWorld.class)
+@Mixin(ClientLevel.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientWorldMixin extends World
+public abstract class ClientWorldMixin extends Level
 {
-    protected ClientWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef,
-        RegistryEntry<DimensionType> dimension, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld,
+    protected ClientWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef,
+        Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld,
         long seed, int maxChainedNeighborUpdates)
     {
         super(properties, registryRef, dimension, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 	
 	@Override
-	public long getTimeOfDay() 
+	public long getDayTime() 
 	{
 		return TimeChangerStruggleClient.useWorldTime() ? 
-			super.getTimeOfDay() : this.tcs_getModifiedTime(DayNightGetterType.DEFAULT, false);
+			super.getDayTime() : this.tcs_getModifiedTime(DayNightGetterType.DEFAULT, false);
 	}
 	@Override
-	public long getLunarTime() 
+	public long dayTime() 
 	{
 		return TimeChangerStruggleClient.useWorldTime() ? 
-			super.getLunarTime() : this.tcs_getModifiedTime(DayNightGetterType.LUNAR, false);
+			super.dayTime() : this.tcs_getModifiedTime(DayNightGetterType.LUNAR, false);
 	}
 	@Unique
 	public long getPreviousTimeOfDay() 
 	{
 		return TimeChangerStruggleClient.useWorldTime() ? 
-			super.getTimeOfDay() : this.tcs_getModifiedTime(DayNightGetterType.DEFAULT, true);
+			super.getDayTime() : this.tcs_getModifiedTime(DayNightGetterType.DEFAULT, true);
 	}
 	@Unique
 	public long getPreviousLunarTime() 
 	{
 		return TimeChangerStruggleClient.useWorldTime() ? 
-			super.getLunarTime() : this.tcs_getModifiedTime(DayNightGetterType.LUNAR, true);
+			super.dayTime() : this.tcs_getModifiedTime(DayNightGetterType.LUNAR, true);
 	}
 	
 	@Unique
 	public long tcs_getModifiedTime(DayNightGetterType executor, boolean previous) {
-		return TimeChangerStruggleClient.getTimeChanger().getModifiedTime((ClientWorld)(Object)this, executor, previous);
+		return TimeChangerStruggleClient.getTimeChanger().getModifiedTime((ClientLevel)(Object)this, executor, previous);
 	}
 	
 	@Override
-	public float getSkyAngle(float tickDelta)
+	public float getTimeOfDay(float tickDelta)
 	{
-		final DimensionType dt = this.getDimension();
+		final DimensionType dt = this.dimensionType();
 		
-		final long lunarTime  = this.getLunarTime();
-		float lunarAngle = dt.getSkyAngle(lunarTime);
+		final long lunarTime  = this.dayTime();
+		float lunarAngle = dt.timeOfDay(lunarTime);
 		
 		if (TimeChangerStruggleClient.smoothButterCycle)
 		{
 			final long lunarTimePrev = this.getPreviousLunarTime();
-			float lunarAnglePrev = dt.getSkyAngle(lunarTimePrev);
+			float lunarAnglePrev = dt.timeOfDay(lunarTimePrev);
 			
 			// This is important; not having it means that once either previous or current reaches higher 
 			// than 1.0 in its sky angle it will be reset immediately back to 0 point whatever as a result 

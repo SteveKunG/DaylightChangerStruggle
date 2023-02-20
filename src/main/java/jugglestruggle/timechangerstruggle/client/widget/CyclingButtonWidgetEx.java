@@ -5,19 +5,15 @@ import jugglestruggle.timechangerstruggle.mixin.client.widget.CyclingButtonWidge
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.OptionInstance.TooltipSupplier;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import java.util.List;
 import java.util.function.Function;
-
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.option.SimpleOption.TooltipFactory;
-import net.minecraft.client.util.math.MatrixStack;
-
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 /**
  * See {@link CyclingWidgetConfig}'s description.
@@ -29,16 +25,16 @@ import com.google.common.collect.ImmutableList;
  * @implNote Created on 13-Feb-2022, Sunday
  */
 @Environment(EnvType.CLIENT)
-public class CyclingButtonWidgetEx<T> extends CyclingButtonWidget<T> 
+public class CyclingButtonWidgetEx<T> extends CycleButton<T> 
 implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 {
 	private final SelfWidgetRender<CyclingButtonWidgetEx<T>> renderer;
 //	private T initial;
 	
-	protected CyclingButtonWidgetEx(int width, int height, Text message, Text optionText, 
-		int index, T value, Values<T> values, Function<T, Text> valueToText,
-		Function<CyclingButtonWidget<T>, MutableText> narrationMessageFactory, 
-		UpdateCallback<T> callback, TooltipFactory<T> tooltipFactory, boolean optionTextOmitted)
+	protected CyclingButtonWidgetEx(int width, int height, Component message, Component optionText, 
+		int index, T value, ValueListSupplier<T> values, Function<T, Component> valueToText,
+		Function<CycleButton<T>, MutableComponent> narrationMessageFactory, 
+		OnValueChange<T> callback, TooltipSupplier<T> tooltipFactory, boolean optionTextOmitted)
 	{
 		super(0, 0, width, height, message, optionText, 
 			index, value, values, valueToText, 
@@ -57,7 +53,7 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 		return this.renderer;
 	}
 	@Override
-	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+	public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
 		this.renderer.renderButton(matrices, mouseX, mouseY, delta);
 	}
 	
@@ -66,15 +62,15 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 	
 	
 	
-	public static WidgetBuilder<Boolean> booleanCycle(boolean initial, Text trueText, Text falseText)
+	public static WidgetBuilder<Boolean> booleanCycle(boolean initial, Component trueText, Component falseText)
 	{
-		Function<Boolean, Text> valueToText;
+		Function<Boolean, Component> valueToText;
 		
 		final boolean trueTextIsNull = trueText == null;
 		final boolean falseTextIsNull = falseText == null;
 		
 		if (trueTextIsNull && falseTextIsNull)
-			valueToText = state -> { return Text.empty(); };
+			valueToText = state -> { return Component.empty(); };
 		else if (trueTextIsNull)
 			valueToText = state -> { return falseText; };
 		else if (falseTextIsNull)
@@ -84,8 +80,8 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 		
 		WidgetBuilder<Boolean> wcbb = new WidgetBuilder<>(valueToText);
 		
-		wcbb.values(ImmutableList.of(true, false));
-		wcbb.initially(initial);
+		wcbb.withValues(ImmutableList.of(true, false));
+		wcbb.withInitialValue(initial);
 		
 		return wcbb;
 	}
@@ -95,22 +91,22 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 	
 	
 
-	public static class WidgetBuilder<V> extends CyclingButtonWidget.Builder<V>
+	public static class WidgetBuilder<V> extends CycleButton.Builder<V>
 	{
-		public WidgetBuilder(Function<V, Text> valueToText) {
+		public WidgetBuilder(Function<V, Component> valueToText) {
 			super(valueToText); 
 		}
 		
 		@Override
 		@SuppressWarnings("unchecked")
-		public Builder<V> initially(V value)
+		public Builder<V> withInitialValue(V value)
 		{
 			final CyclingButtonWidgetBuilderAccessor<V> accessor = 
 				(CyclingButtonWidgetBuilderAccessor<V>)this;
 			
 			accessor.setValue(value);
 			
-			int valueIndex = accessor.values().getDefaults().indexOf(value);
+			int valueIndex = accessor.values().getDefaultList().indexOf(value);
 			
 			// means that it doesn't exist
 			if (valueIndex != -1)
@@ -119,24 +115,24 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 			return this;
 		}
 		
-		public CyclingButtonWidgetEx<V> build(int width, int height, Text optionText) {
+		public CyclingButtonWidgetEx<V> build(int width, int height, Component optionText) {
 			return this.build(width, height, optionText, (b, v) -> {});
 		}
-		public CyclingButtonWidgetEx<V> build(int width, int height, Text optionText, UpdateCallback<V> callback)
+		public CyclingButtonWidgetEx<V> build(int width, int height, Component optionText, OnValueChange<V> callback)
 		{
 			@SuppressWarnings("unchecked")
 			final CyclingButtonWidgetBuilderAccessor<V> accessor = 
 			(CyclingButtonWidgetBuilderAccessor<V>)this;
 			
-			List<V> defaults = accessor.values().getDefaults();
+			List<V> defaults = accessor.values().getDefaultList();
 			
 			V startingValue = accessor.getValue();
 			startingValue = startingValue == null ? defaults.get(accessor.getInitialIndex()) : startingValue;
 			
-			Text messageText = accessor.getValueToText().apply(startingValue);
+			Component messageText = accessor.getValueToText().apply(startingValue);
 			
 			if (!accessor.omitOptionText())
-				messageText = ScreenTexts.composeGenericOptionText(optionText, messageText);
+				messageText = CommonComponents.optionNameValue(optionText, messageText);
 			
 			return new CyclingButtonWidgetEx<>(width, height, messageText, optionText, 
 				accessor.getInitialIndex(), startingValue, accessor.values(), accessor.getValueToText(), 
@@ -145,12 +141,12 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 		
 		@Override
 		@Deprecated
-		public CyclingButtonWidget<V> build(int x, int y, int width, int height, Text optionText) {
+		public CycleButton<V> create(int x, int y, int width, int height, Component optionText) {
 			return null;
 		}
 		@Override
 		@Deprecated
-		public CyclingButtonWidget<V> build(int x, int y, int width, int height, Text optionText, UpdateCallback<V> callback) {
+		public CycleButton<V> create(int x, int y, int width, int height, Component optionText, OnValueChange<V> callback) {
 			return null;
 		}
 	}

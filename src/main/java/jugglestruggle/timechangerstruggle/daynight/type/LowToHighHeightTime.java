@@ -7,14 +7,11 @@ import jugglestruggle.timechangerstruggle.config.property.LongValue;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
 import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import java.util.Set;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.text.Text;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -38,7 +35,7 @@ public class LowToHighHeightTime implements DayNightCycleBasis
 	@Override
 	public void tick()
 	{
-		Entity camEntity = MinecraftClient.getInstance().getCameraEntity();
+		Entity camEntity = Minecraft.getInstance().getCameraEntity();
 		
 		if (camEntity == null)
 		{
@@ -46,7 +43,7 @@ public class LowToHighHeightTime implements DayNightCycleBasis
 			return;
 		}
 		
-		double myY = camEntity.getPos().getY();
+		double myY = camEntity.position().y();
 		
 		this.cachedTimePrev = this.cachedTime;
 		
@@ -71,7 +68,7 @@ public class LowToHighHeightTime implements DayNightCycleBasis
 	}
 	
 	@Override
-	public long getModifiedTime(ClientWorld world, DayNightGetterType executor, boolean previous) {
+	public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous) {
 		return previous ? this.cachedTimePrev : this.cachedTime;
 	}
 
@@ -92,7 +89,7 @@ public class LowToHighHeightTime implements DayNightCycleBasis
 		
 		final String sectLang = "jugglestruggle.tcs.dnt.lowtohighheighttime.properties.";
 		
-		prop.add(new FancySectionProperty("minmaxheight", Text.translatable(sectLang+"minmaxheight")));
+		prop.add(new FancySectionProperty("minmaxheight", Component.translatable(sectLang+"minmaxheight")));
 		prop.add(new DoubleValue("minHeight",     this.minHeight, (double)Long.MIN_VALUE, Double.MAX_VALUE));
 		prop.add(new LongValue  ("minHeightTime", this.minHeightTime, Long.MIN_VALUE, Long.MAX_VALUE));
 		prop.add(new DoubleValue("maxHeight",     this.maxHeight, (double)Long.MIN_VALUE, Double.MAX_VALUE));
@@ -145,12 +142,12 @@ public class LowToHighHeightTime implements DayNightCycleBasis
 		}
 		
 		@Override
-		public Text getTranslatableName() {
-			return Text.translatable("jugglestruggle.tcs.dnt.lowtohighheighttime");
+		public Component getTranslatableName() {
+			return Component.translatable("jugglestruggle.tcs.dnt.lowtohighheighttime");
 		}
 		@Override
-		public Text getTranslatableDescription() {
-			return Text.translatable("jugglestruggle.tcs.dnt.lowtohighheighttime.description");
+		public Component getTranslatableDescription() {
+			return Component.translatable("jugglestruggle.tcs.dnt.lowtohighheighttime.description");
 		}
 		
 		@Override
