@@ -28,11 +28,9 @@ import org.spongepowered.asm.mixin.Unique;
 @Environment(EnvType.CLIENT)
 public abstract class ClientWorldMixin extends Level
 {
-    protected ClientWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef,
-        Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean isClient, boolean debugWorld,
-        long seed, int maxChainedNeighborUpdates)
+    protected ClientWorldMixin()
     {
-        super(properties, registryRef, dimension, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
+        super(null, null, null, null, null, false, false, 0, 0);
     }
 	
 	@Override

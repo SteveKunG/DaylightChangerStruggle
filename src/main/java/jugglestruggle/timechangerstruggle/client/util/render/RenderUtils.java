@@ -23,7 +23,6 @@ public final class RenderUtils
 		int z, int topLeftColor, int topRightColor, int bottomLeftColor, int bottomRightColor)
 	{
 		RenderSystem.enableBlend();
-		RenderSystem.disableTexture();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		
@@ -40,7 +39,6 @@ public final class RenderUtils
 		
 		tess.end();
 		
-		RenderSystem.enableTexture();
 		RenderSystem.disableBlend();
 	}
 	public static void fillPoint(Matrix4f mat, BufferBuilder bb, int x, int y, int z, int color) 
@@ -62,7 +60,6 @@ public final class RenderUtils
 		if (!adv)
 		{
 			RenderSystem.enableBlend();
-			RenderSystem.disableTexture();
 			RenderSystem.defaultBlendFunc();
 		}
 		
@@ -114,7 +111,6 @@ public final class RenderUtils
 		
 		if (!adv)
 		{
-			RenderSystem.enableTexture();
 			RenderSystem.disableBlend();
 		}
 	}

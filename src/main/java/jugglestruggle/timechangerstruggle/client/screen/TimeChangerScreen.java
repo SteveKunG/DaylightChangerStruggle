@@ -1433,7 +1433,7 @@ public class TimeChangerScreen extends Screen
 			AbstractWidget cw = (AbstractWidget)elementToDefocus;
 			
 			if (cw.isFocused()) {
-				cw.changeFocus(true);
+//				cw.changeFocus(true);TODO
 			}
 		}
 	}

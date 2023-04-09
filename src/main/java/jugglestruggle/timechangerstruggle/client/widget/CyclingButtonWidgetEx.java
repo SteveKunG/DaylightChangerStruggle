@@ -53,8 +53,8 @@ implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
 		return this.renderer;
 	}
 	@Override
-	public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderer.renderButton(matrices, mouseX, mouseY, delta);
+	public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+		this.renderer.render(matrices, mouseX, mouseY, delta);
 	}
 	
 	

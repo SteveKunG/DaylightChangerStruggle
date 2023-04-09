@@ -98,7 +98,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 		}
 	}
 	
-	public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta)
+	public void render(PoseStack matrices, int mouseX, int mouseY, float delta)
 	{
 		boolean stcwr = false;	
 		int textColor;
@@ -165,7 +165,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 			this.widget.getX() + this.widget.getWidth(), 
 			this.widget.getY() + this.widget.getHeight(), 
 			
-			this.widget.getBlitOffset(),
+			0,
 			
 			0.0f, 0.0f, 0.0f, 
 			
