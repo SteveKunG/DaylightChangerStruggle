@@ -1,11 +1,10 @@
 package jugglestruggle.timechangerstruggle.client.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import jugglestruggle.timechangerstruggle.client.util.color.AbstractRGB;
 import jugglestruggle.timechangerstruggle.client.util.color.RainbowRGB;
 import jugglestruggle.timechangerstruggle.client.util.render.RenderUtils;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -98,7 +97,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 		}
 	}
 	
-	public void render(PoseStack matrices, int mouseX, int mouseY, float delta)
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
 	{
 		boolean stcwr = false;	
 		int textColor;
@@ -121,7 +120,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 //				textColor = this.textColoring.getInterpolatedColor(delta);
 				textColor = 0xFF000000;
 				
-				GuiComponent.fill(matrices, this.widget.getX(), this.widget.getY(), 
+				graphics.fill(this.widget.getX(), this.widget.getY(), 
 					this.widget.getX() + this.widget.getWidth(), 
 					this.widget.getY() + this.widget.getHeight(), textColor);
 				
@@ -130,7 +129,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 			{
 				textColor = this.textColoring.getInterpolatedColor(delta);
 				
-				this.fillMyRainbow(matrices, delta, false);
+				this.fillMyRainbow(graphics, delta, false);
 			}
 		}
 		else
@@ -138,7 +137,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 			       textColor = this.widget.active ? 0xFFFFFF : 0xA0A0A0;
 			int enabledColor = this.widget.active ? 0xCC888888 : 0xCC333333;
 			
-			GuiComponent.fill(matrices, this.widget.getX(), this.widget.getY(), 
+			graphics.fill(this.widget.getX(), this.widget.getY(), 
 				this.widget.getX() + this.widget.getWidth(), this.widget.getY() + this.widget.getHeight(), enabledColor);
 		}
 		
@@ -149,16 +148,18 @@ public class SelfWidgetRender<W extends AbstractWidget>
 		final float y = this.widget.getY() + ((this.widget.getHeight() - (this.textRenderer.lineHeight - 1)) / 2);
 		
 		if (!stcwr)
-			this.textRenderer.drawShadow(matrices, message, x, y, textColor);
+		{
+		    graphics.drawString(this.textRenderer, message, (int)x, (int)y, textColor);
+		}
 	}
 	
-	private void fillMyRainbow(PoseStack matrices, float delta, boolean adv)
+	private void fillMyRainbow(GuiGraphics graphics, float delta, boolean adv)
 	{
 		RenderUtils.rainbowAllTheWay.stripeScale.set(50.0f / 2.0f * this.stripeScale);
 		
 		RenderUtils.fillRainbow
 		(
-			matrices, 
+		        graphics, 
 			
 			this.widget.getX(), this.widget.getY(), 
 			

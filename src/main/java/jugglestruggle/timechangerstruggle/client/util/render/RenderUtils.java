@@ -8,6 +8,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 
 /**
@@ -53,7 +55,7 @@ public final class RenderUtils
 	
 	public static void fillRainbow
 	(
-		PoseStack matrices, int startX, int startY, int endX, int endY, int z,
+	        GuiGraphics graphics, int startX, int startY, int endX, int endY, int z,
 		float offsetX, float offsetY, float offsetZ, float progress, boolean adv
 	)
 	{
@@ -69,7 +71,7 @@ public final class RenderUtils
 		
 		final Tesselator tess = Tesselator.getInstance();
 		final BufferBuilder bb = tess.getBuilder();
-		final Matrix4f mat = matrices.last().pose();
+		final Matrix4f mat = graphics.pose().last().pose();
 		
 		bb.begin(VertexFormat.Mode.QUADS, RainbowShader.RAINBOW_SHADER_FORMAT);
 		

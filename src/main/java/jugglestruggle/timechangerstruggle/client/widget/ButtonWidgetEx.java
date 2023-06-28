@@ -1,8 +1,8 @@
 package jugglestruggle.timechangerstruggle.client.widget;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -61,7 +61,7 @@ implements PositionedTooltip, SelfWidgetRendererInheritor<ButtonWidgetEx>
 	}
 	
 	@Override
-	public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderer.render(matrices, mouseX, mouseY, delta);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		this.renderer.render(graphics, mouseX, mouseY, delta);
 	}
 }

@@ -16,7 +16,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -41,7 +41,6 @@ import java.util.function.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 /**
  *
@@ -668,7 +667,7 @@ public class TimeChangerScreen extends Screen
 	}
 	
 	@Override
-	public void render(PoseStack matrices, int mouseX, int mouseY, float delta)
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
 	{
 		switch (this.currentMenu)
 		{
@@ -683,8 +682,8 @@ public class TimeChangerScreen extends Screen
 					int x = this.width / 2;
 					int y = this.height - 86;
 					
-					this.fillGradient(matrices, x - 152, y, x + 152, y + this.font.lineHeight + 4, 0xAA000000, 0x77000000);
-					this.font.draw(matrices, parsedTime, x - (textWidth / 2), y + 3, -1);
+					graphics.fillGradient(x - 152, y, x + 152, y + this.font.lineHeight + 4, 0xAA000000, 0x77000000);
+					graphics.drawString(this.font, parsedTime, x - (textWidth / 2), y + 3, -1);
 				}
 				
 				break;
@@ -695,10 +694,10 @@ public class TimeChangerScreen extends Screen
 		}
 		
 		// Renders the elements
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(graphics, mouseX, mouseY, delta);
 		
 		// Renders anything in front of the elements, this also includes the tooltips
-		TimeChangerScreen.renderTooltips(matrices, this, this, mouseX, mouseY, 0, 0);
+		TimeChangerScreen.renderTooltips(graphics, this, this, mouseX, mouseY, 0, 0);
 		
 		switch (this.currentMenu)
 		{
@@ -717,7 +716,7 @@ public class TimeChangerScreen extends Screen
 					SwitchGetterBasisBuilderList<?> listObtained = 
 						(SwitchGetterBasisBuilderList<?>)foundElement.get();
 					
-					listObtained.renderTooltips(matrices, mouseX, mouseY);
+					listObtained.renderTooltips(graphics, mouseX, mouseY);
 				}
 				
 				break;
@@ -1405,7 +1404,7 @@ public class TimeChangerScreen extends Screen
 		return new int[] {totalTooltipTextWidth, totalTooltipTextHeight};
 	}
 
-	private static void renderText(PoseStack matrices, Font renderer, Component textToRender, float x, float y, int maxWidth, boolean center, int color)
+	private static void renderText(GuiGraphics graphics, Font renderer, Component textToRender, float x, float y, int maxWidth, boolean center, int color)
 	{
 		if (textToRender == null)
 			return;
@@ -1418,7 +1417,7 @@ public class TimeChangerScreen extends Screen
 			x = x + (maxWidth / 2) - (trimmedTextWidth / 2);
 		}
 		
-		renderer.draw(matrices, trimmedText, x, y + 2, color);
+		graphics.drawString(renderer, trimmedText, (int)x, (int)y + 2, color);
 	}
 	/**
 	 * Makes sure that this particular element is unfocused.
@@ -1438,7 +1437,7 @@ public class TimeChangerScreen extends Screen
 		}
 	}
 	
-	static void renderTooltips(PoseStack matrices, TimeChangerScreen parent, 
+	static void renderTooltips(GuiGraphics graphics, TimeChangerScreen parent, 
 		ContainerEventHandler sourceElement, int mouseX, int mouseY, int offsetX, int offsetY)
 	{
 		GuiEventListener obtainedElement = TimeChangerScreen.getHoveringElementWithPredicate
@@ -1482,7 +1481,7 @@ public class TimeChangerScreen extends Screen
 			x = mouseX; y = mouseY;
 		}
 		
-		parent.renderTooltip(matrices, tooltipText, x, y);
+		graphics.renderTooltip(parent.font, tooltipText, x, y);
 	}
 	
 	
@@ -1837,7 +1836,7 @@ public class TimeChangerScreen extends Screen
 		}
 		
 		@Override
-		public void render(PoseStack matrices, int index, int y, int x, 
+		public void render(GuiGraphics graphics, int index, int y, int x, 
 			int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
 		{
 			this.options.setX(entryWidth - 35);
@@ -1863,17 +1862,17 @@ public class TimeChangerScreen extends Screen
 				colorStart = 0xA0000000; colorEnd = 0x44000000; colorTextName = -1; colorTextDesc = 0xFFAAAAAA;
 			}
 			
-			GuiComponent.fillGradient(matrices, x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd, 0);
+			graphics.fillGradient(x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd, 0);
 			
 			int maxRenderTextWidth = entryWidth - 56;
 			
 			final Font textRenderer = this.parent.parent.font;
 			
-			TimeChangerScreen.renderText(matrices, textRenderer, this.name, x + 4, y + 2, maxRenderTextWidth, false, colorTextName);
-			TimeChangerScreen.renderText(matrices, textRenderer, this.description, x + 4, y + textRenderer.lineHeight + 2, maxRenderTextWidth, false, colorTextDesc);
+			TimeChangerScreen.renderText(graphics, textRenderer, this.name, x + 4, y + 2, maxRenderTextWidth, false, colorTextName);
+			TimeChangerScreen.renderText(graphics, textRenderer, this.description, x + 4, y + textRenderer.lineHeight + 2, maxRenderTextWidth, false, colorTextDesc);
 			
-			this.options.render(matrices, mouseX, mouseY, tickDelta);
-			this.createAndUse.render(matrices, mouseX, mouseY, tickDelta);
+			this.options.render(graphics, mouseX, mouseY, tickDelta);
+			this.createAndUse.render(graphics, mouseX, mouseY, tickDelta);
 		}
 		
 		private void setSelectedIfTimeChangerMatches() {
@@ -2038,7 +2037,7 @@ public class TimeChangerScreen extends Screen
 		}
 
 		@Override
-		public void render(PoseStack matrices, int index, int y, int x, 
+		public void render(GuiGraphics graphics, int index, int y, int x, 
 			int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
 		{
 			if (this.updateLocSizeForElements) 
@@ -2063,7 +2062,7 @@ public class TimeChangerScreen extends Screen
 				colorStart = 0xFF000000; colorEnd = 0x55000F0F; colorTextName = -1; 
 			}
 			
-			GuiComponent.fillGradient(matrices, x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd, 0);
+			graphics.fillGradient(x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd, 0);
 			
 			int maxRenderTextWidth = entryWidth - 30;
 			
@@ -2074,17 +2073,17 @@ public class TimeChangerScreen extends Screen
 				int textWidth = textRenderer.width(this.owningSection.get().getVisualOrderText());
 				TimeChangerScreen.renderText
 				(
-					matrices, textRenderer, this.owningSection.get(), 
+					graphics, textRenderer, this.owningSection.get(), 
 					x + (entryWidth / 2) - (textWidth / 2), 
 					y + (entryHeight / 2) - (textRenderer.lineHeight / 2), 
 					maxRenderTextWidth, false, colorTextName
 				);
 				
-				this.sectionShowButton.render(matrices, mouseX, mouseY, tickDelta);
+				this.sectionShowButton.render(graphics, mouseX, mouseY, tickDelta);
 			}
 			else
 			{
-				this.properties.forEach(elem -> elem.render(matrices, mouseX, mouseY, tickDelta));
+				this.properties.forEach(elem -> elem.render(graphics, mouseX, mouseY, tickDelta));
 			}
 		}
 		
@@ -2257,13 +2256,13 @@ public class TimeChangerScreen extends Screen
 		
 		
 		@Override
-		public void render(PoseStack matrices, int mouseX, int mouseY, float delta)
+		public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
 		{
 			if (!this.visible) {
 				return;
 			}
 			
-			this.fillGradient(matrices, this.x0, this.y0, this.x1, this.y1, 0xAA334400, 0x55002233);
+			graphics.fillGradient(this.x0, this.y0, this.x1, this.y1, 0xAA334400, 0x55002233);
 			
 			
 			if (this.title != null)
@@ -2272,8 +2271,8 @@ public class TimeChangerScreen extends Screen
 				
 				int y = this.y0 - textRenderer.lineHeight - 6;
 				
-				this.fillGradient(matrices, this.x0, y, this.x1, y + textRenderer.lineHeight + 4, 0xAA000000, 0x77000000);
-				TimeChangerScreen.renderText(matrices, textRenderer, this.title, x0, y + 1, this.width, true, -1);
+				graphics.fillGradient(this.x0, y, this.x1, y + textRenderer.lineHeight + 4, 0xAA000000, 0x77000000);
+				TimeChangerScreen.renderText(graphics, textRenderer, this.title, x0, y + 1, this.width, true, -1);
 			}
 			
 			
@@ -2289,26 +2288,26 @@ public class TimeChangerScreen extends Screen
 				(int)((double)this.height * scale)
 			);
 			
-			super.render(matrices, mouseX, mouseY, delta);
+			super.render(graphics, mouseX, mouseY, delta);
 			
 			RenderSystem.disableScissor();
 		}
 		
 		@Override
-		protected void renderItem(PoseStack matrices, int mouseX, int mouseY, float delta, 
+		protected void renderItem(GuiGraphics graphics, int mouseX, int mouseY, float delta, 
 		    int index, int x, int y, int entryWidth, int entryHeight)
 		{
-		    super.renderItem(matrices, mouseX, mouseY, delta, index, x, y, entryWidth, entryHeight);
+		    super.renderItem(graphics, mouseX, mouseY, delta, index, x, y, entryWidth, entryHeight);
 		}
 
-		public void renderTooltips(PoseStack matrices, int mouseX, int mouseY)
+		public void renderTooltips(GuiGraphics graphics, int mouseX, int mouseY)
 		{
 			if (this.isMouseOver(mouseX, mouseY))
 			{
 				E entry = this.getEntryAtPosition(mouseX, mouseY);
 				
 				if (entry != null)
-					TimeChangerScreen.renderTooltips(matrices, this.parent, entry, mouseX, mouseY, 0, 8);
+					TimeChangerScreen.renderTooltips(graphics, this.parent, entry, mouseX, mouseY, 0, 8);
 			}
 		}
 		

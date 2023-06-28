@@ -10,6 +10,7 @@ import jugglestruggle.timechangerstruggle.mixin.client.widget.CyclingButtonWidge
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.OptionInstance.TooltipSupplier;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,6 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.List;
 import java.util.function.Function;
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 /**
  * @author JuggleStruggle
@@ -119,8 +119,8 @@ implements WidgetConfigInterface<B, T>, SelfWidgetRendererInheritor<CyclingWidge
 		return this.renderer;
 	}
 	@Override
-	public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderer.render(matrices, mouseX, mouseY, delta);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		this.renderer.render(graphics, mouseX, mouseY, delta);
 	}
 	
 	
