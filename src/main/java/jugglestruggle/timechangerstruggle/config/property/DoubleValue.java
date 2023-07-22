@@ -15,37 +15,37 @@ import com.mojang.brigadier.context.CommandContext;
  */
 public class DoubleValue extends BaseNumber<Double>
 {
-	public DoubleValue(String propertyName, double defaultValue, Double min, Double max) {
-		super(propertyName, defaultValue, min, max);
-	}
+    public DoubleValue(String propertyName, double defaultValue, Double min, Double max) {
+        super(propertyName, defaultValue, min, max);
+    }
 
-	@Override
-	public boolean isWithinRange() 
-	{
-		final Double value = this.get();
-		return value != null && value >= this.getMin() && value <= this.getMax();
-	}
-	@Override
-	public Double parseStringNumber(String toParse)
-	{
-		try {
-			return Double.parseDouble(toParse);
-		} catch (Throwable t) {}
-		
-		return null;
-	}
+    @Override
+    public boolean isWithinRange() 
+    {
+        final Double value = this.get();
+        return value != null && value >= this.getMin() && value <= this.getMax();
+    }
+    @Override
+    public Double parseStringNumber(String toParse)
+    {
+        try {
+            return Double.parseDouble(toParse);
+        } catch (Throwable t) {}
+        
+        return null;
+    }
 
-	@Override
-	public ArgumentType<Double> onCommandOptionGetArgType() 
-	{
-		if (this.min == null || this.max == null)
-			return DoubleArgumentType.doubleArg();
-		else
-			return DoubleArgumentType.doubleArg(this.min, this.max);
-	}
+    @Override
+    public ArgumentType<Double> onCommandOptionGetArgType() 
+    {
+        if (this.min == null || this.max == null)
+            return DoubleArgumentType.doubleArg();
+        else
+            return DoubleArgumentType.doubleArg(this.min, this.max);
+    }
 
-	@Override
-	public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx) {
-		this.set(DoubleArgumentType.getDouble(ctx, "value")); return 3;
-	}
+    @Override
+    public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx) {
+        this.set(DoubleArgumentType.getDouble(ctx, "value")); return 3;
+    }
 }

@@ -21,11 +21,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 public class GameRendererMixin
 {
-	@Inject(method = "getNightVisionScale", at = @At(value = "HEAD"), cancellable = true)
-	private static void nightVisionStrengthCheck(LivingEntity entity, float delta, CallbackInfoReturnable<Float> info)
-	{
-		if (TimeChangerStruggleClient.disableNightVisionEffect) {
-			info.setReturnValue(0.0f); info.cancel();
-		}
-	}
+    @Inject(method = "getNightVisionScale", at = @At(value = "HEAD"), cancellable = true)
+    private static void nightVisionStrengthCheck(LivingEntity entity, float delta, CallbackInfoReturnable<Float> info)
+    {
+        if (TimeChangerStruggleClient.disableNightVisionEffect) {
+            info.setReturnValue(0.0f); info.cancel();
+        }
+    }
 }

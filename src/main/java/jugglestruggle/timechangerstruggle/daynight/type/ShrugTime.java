@@ -15,45 +15,45 @@ import net.minecraft.network.chat.Component;
 public class ShrugTime implements DayNightCycleBasis
 {
 
-	@Override
-	public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous)
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous)
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public long getCachedTime()
-	{
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public long getCachedTime()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public Class<?> getBuilderClass() {
-		return Builder.class;
-	}
+    @Override
+    public Class<?> getBuilderClass() {
+        return Builder.class;
+    }
 
 
-	public static class Builder implements DayNightCycleBuilder
-	{
-		@Override
-		public DayNightCycleBasis create() {
-			return new ShrugTime();
-		}
+    public static class Builder implements DayNightCycleBuilder
+    {
+        @Override
+        public DayNightCycleBasis create() {
+            return new ShrugTime();
+        }
 
-		@Override
-		public String getKeyName() {
-			return "shrugtime";
-		}
-		
-		@Override
-		public Component getTranslatableName() {
-			return Component.nullToEmpty("¯\\_(ツ)_/¯");
-		}
-		@Override
-		public Component getTranslatableDescription() {
-			return Component.translatable("jugglestruggle.tcs.dnt.shrugtime.description");
-		}
-	}
+        @Override
+        public String getKeyName() {
+            return "shrugtime";
+        }
+        
+        @Override
+        public Component getTranslatableName() {
+            return Component.nullToEmpty("¯\\_(ツ)_/¯");
+        }
+        @Override
+        public Component getTranslatableDescription() {
+            return Component.translatable("jugglestruggle.tcs.dnt.shrugtime.description");
+        }
+    }
 }

@@ -8,6 +8,6 @@ package jugglestruggle.timechangerstruggle.daynight;
  */
 public enum DayNightGetterType
 {
-	DEFAULT,
-	LUNAR,
+    DEFAULT,
+    LUNAR,
 }

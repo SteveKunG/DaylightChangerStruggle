@@ -26,37 +26,37 @@ import com.mojang.brigadier.context.CommandContext;
 @Environment(EnvType.CLIENT)
 public class FancySectionProperty extends BaseProperty<FancySectionProperty, Component>
 {
-	public static final FancySectionProperty EMPTY = new FancySectionProperty("", null);
-	
-	public FancySectionProperty(String property, Component value) {
-		super(property, value);
-	}
+    public static final FancySectionProperty EMPTY = new FancySectionProperty("", null);
+    
+    public FancySectionProperty(String property, Component value) {
+        super(property, value);
+    }
 
-	@Override
-	public void set(Component value) {}
+    @Override
+    public void set(Component value) {}
 
-	@Override
-	public WidgetConfigInterface<FancySectionProperty, Component> createConfigElement
-	(TimeChangerScreen screen, FancySectionProperty owningSection)
-	{
-		return null;
-	}
+    @Override
+    public WidgetConfigInterface<FancySectionProperty, Component> createConfigElement
+    (TimeChangerScreen screen, FancySectionProperty owningSection)
+    {
+        return null;
+    }
 
-	@Override
-	public void readFromJson(JsonElement elem) {}
+    @Override
+    public void readFromJson(JsonElement elem) {}
 
-	@Override
-	public JsonElement writeToJson() {
-		return null;
-	}
+    @Override
+    public JsonElement writeToJson() {
+        return null;
+    }
 
-	@Override
-	public ArgumentType<Component> onCommandOptionGetArgType() {
-		return null;
-	}
+    @Override
+    public ArgumentType<Component> onCommandOptionGetArgType() {
+        return null;
+    }
 
-	@Override
-	public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx) {
-		return 0;
-	}
+    @Override
+    public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx) {
+        return 0;
+    }
 }

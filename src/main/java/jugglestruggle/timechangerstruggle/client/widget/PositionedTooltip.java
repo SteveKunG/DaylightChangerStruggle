@@ -20,44 +20,44 @@ import com.google.common.collect.ImmutableList;
 //TODO
 public interface PositionedTooltip/* extends TooltipAccessor*/
 {
-	int getTooltipWidth();
-	int getTooltipHeight();
-	
-	void setTooltipWidth(int width);
-	void setTooltipHeight(int height);
-	
-	void setOrderedTooltip(List<FormattedCharSequence> textToSet);
-	
-	default void updateTooltip(Component tooltipDescText, Component tooltipText, Font renderer)
-	{
-		final boolean descIsNull = tooltipDescText == null;
-		final boolean tooltipIsNull = tooltipText == null;
-		
-		List<FormattedCharSequence> compiledTooltipText;
-		
-		if (descIsNull && tooltipIsNull) {
-			compiledTooltipText = ImmutableList.of();
-		} 
-		else
-		{
-			byte useCase;
-			
-			if (descIsNull)
-				useCase = 1;
-			else if (tooltipIsNull)
-				useCase = 3;
-			else
-				useCase = 2;
-			
-			
-			compiledTooltipText = TimeChangerScreen.createOrderedTooltips(
-				renderer, useCase, tooltipDescText, tooltipText
-			);
-		}
-		
-		final int[] offsetPos = TimeChangerScreen.getTooltipForWidgetWidthHeight(compiledTooltipText, renderer);
-		this.setTooltipWidth(offsetPos[0]); this.setTooltipHeight(offsetPos[1]); 
-		
-		this.setOrderedTooltip(compiledTooltipText);
-	}
+    int getTooltipWidth();
+    int getTooltipHeight();
+    
+    void setTooltipWidth(int width);
+    void setTooltipHeight(int height);
+    
+    void setOrderedTooltip(List<FormattedCharSequence> textToSet);
+    
+    default void updateTooltip(Component tooltipDescText, Component tooltipText, Font renderer)
+    {
+        final boolean descIsNull = tooltipDescText == null;
+        final boolean tooltipIsNull = tooltipText == null;
+        
+        List<FormattedCharSequence> compiledTooltipText;
+        
+        if (descIsNull && tooltipIsNull) {
+            compiledTooltipText = ImmutableList.of();
+        } 
+        else
+        {
+            byte useCase;
+            
+            if (descIsNull)
+                useCase = 1;
+            else if (tooltipIsNull)
+                useCase = 3;
+            else
+                useCase = 2;
+            
+            
+            compiledTooltipText = TimeChangerScreen.createOrderedTooltips(
+                renderer, useCase, tooltipDescText, tooltipText
+            );
+        }
+        
+        final int[] offsetPos = TimeChangerScreen.getTooltipForWidgetWidthHeight(compiledTooltipText, renderer);
+        this.setTooltipWidth(offsetPos[0]); this.setTooltipHeight(offsetPos[1]); 
+        
+        this.setOrderedTooltip(compiledTooltipText);
+    }
 }

@@ -26,134 +26,134 @@ import com.google.common.collect.ImmutableSet;
 @Environment(EnvType.CLIENT)
 public class MovingTime extends MovingTimeBasis
 {
-	public int speedForImmediateCalls = 1;
-	public int speedForLaterCalls = 80;
+    public int speedForImmediateCalls = 1;
+    public int speedForLaterCalls = 80;
 
-	@Override
-	public void updateCall()
-	{
-		if (super.ticksUntilNextCall == 0)
-		{
-			super.previousInterpolatedTime =
-			super.previousCachedTime = super.cachedTime;
-			
-			super.cachedTime += this.speedForImmediateCalls;
-		}
-		else 
-		{
-			super.updateCall();
-		}
-	}
-	@Override
-	public void updateInterpolation() {
-		super.nextInterpolatedTime += this.speedForLaterCalls;
-	}
+    @Override
+    public void updateCall()
+    {
+        if (super.ticksUntilNextCall == 0)
+        {
+            super.previousInterpolatedTime =
+            super.previousCachedTime = super.cachedTime;
+            
+            super.cachedTime += this.speedForImmediateCalls;
+        }
+        else 
+        {
+            super.updateCall();
+        }
+    }
+    @Override
+    public void updateInterpolation() {
+        super.nextInterpolatedTime += this.speedForLaterCalls;
+    }
 
-	@Override
-	public Class<?> getBuilderClass() {
-		return Builder.class;
-	}
-	
+    @Override
+    public Class<?> getBuilderClass() {
+        return Builder.class;
+    }
+    
 
-	@Override
-	public Set<BaseProperty<?, ?>> createProperties()
-	{
-		ImmutableSet.Builder<BaseProperty<?, ?>> prop = ImmutableSet.builderWithExpectedSize(9);
-		
-		final String sectLang = "jugglestruggle.tcs.dnt.movingtime.properties.";
-		
-		prop.add(new FancySectionProperty("updating", Component.translatable(sectLang+"updating")));
-		prop.add(new LongValue("ticksUntilNextUpdate", super.ticksUntilNextCall, 0L, Long.MAX_VALUE));
-		
-		prop.add(new FancySectionProperty("speed", Component.translatable(sectLang+"speed")));
-		prop.add(new IntValue("immediateSpeed", this.speedForImmediateCalls, Integer.MIN_VALUE, Integer.MAX_VALUE));
-		prop.add(new IntValue("pausedSpeed", this.speedForLaterCalls, Integer.MIN_VALUE, Integer.MAX_VALUE));
+    @Override
+    public Set<BaseProperty<?, ?>> createProperties()
+    {
+        ImmutableSet.Builder<BaseProperty<?, ?>> prop = ImmutableSet.builderWithExpectedSize(9);
+        
+        final String sectLang = "jugglestruggle.tcs.dnt.movingtime.properties.";
+        
+        prop.add(new FancySectionProperty("updating", Component.translatable(sectLang+"updating")));
+        prop.add(new LongValue("ticksUntilNextUpdate", super.ticksUntilNextCall, 0L, Long.MAX_VALUE));
+        
+        prop.add(new FancySectionProperty("speed", Component.translatable(sectLang+"speed")));
+        prop.add(new IntValue("immediateSpeed", this.speedForImmediateCalls, Integer.MIN_VALUE, Integer.MAX_VALUE));
+        prop.add(new IntValue("pausedSpeed", this.speedForLaterCalls, Integer.MIN_VALUE, Integer.MAX_VALUE));
 
-		prop.add(new FancySectionProperty("easings", Component.translatable(sectLang+"easings")));
-		prop.add(new EnumValue<>("easingBetweenTicks", this.easingBetweenTicks, Easings.LINEAR, Easings.values())
-			.setVTT(easing -> easing.getFormattedText()));
-		prop.add(new EnumValue<>("easingTypeBetweenTicks", this.easingType, EasingType.BETWEEN, EasingType.values())
-			.setVTT(easing -> easing.getFormattedText()));
-		
-		return prop.build();
-	}
-	
-	@Override
-	public void writePropertyValueToCycle(BaseProperty<?, ?> property)
-	{
-		final String belongingKey = property.property();
-		
-		if (property instanceof LongValue)
-		{
-			if (belongingKey.equals("ticksUntilNextUpdate")) {
-				this.ticksUntilNextCall = ((LongValue)property).get();
-			}
-		}
-		else if (property instanceof IntValue)
-		{
-			IntValue prop = (IntValue)property;
-			
-			switch (belongingKey)
-			{
-				case "immediateSpeed": 
-					this.speedForImmediateCalls = prop.get(); break;
-				case "pausedSpeed": 
-					this.speedForLaterCalls = prop.get(); break;
-			}
-		}
-		else if (property instanceof EnumValue<?>)
-		{
-			EnumValue<?> prop = (EnumValue<?>)property;
-			
-			if (prop.getDefaultValue() instanceof Easings)
-			{
-				switch (belongingKey)
-				{
-					case "easingBetweenTicks": 
-					{
-						this.easingBetweenTicks = (Easings)prop.get(); 
-						break;
-					}
-				}
-			}
-			else if (prop.getDefaultValue() instanceof EasingType)
-			{
-				switch (belongingKey)
-				{
-					case "easingTypeBetweenTicks": 
-					{
-						this.easingType = (EasingType)prop.get(); 
-						break;
-					}
-				}
-			}
-		}
-	}
+        prop.add(new FancySectionProperty("easings", Component.translatable(sectLang+"easings")));
+        prop.add(new EnumValue<>("easingBetweenTicks", this.easingBetweenTicks, Easings.LINEAR, Easings.values())
+            .setVTT(easing -> easing.getFormattedText()));
+        prop.add(new EnumValue<>("easingTypeBetweenTicks", this.easingType, EasingType.BETWEEN, EasingType.values())
+            .setVTT(easing -> easing.getFormattedText()));
+        
+        return prop.build();
+    }
+    
+    @Override
+    public void writePropertyValueToCycle(BaseProperty<?, ?> property)
+    {
+        final String belongingKey = property.property();
+        
+        if (property instanceof LongValue)
+        {
+            if (belongingKey.equals("ticksUntilNextUpdate")) {
+                this.ticksUntilNextCall = ((LongValue)property).get();
+            }
+        }
+        else if (property instanceof IntValue)
+        {
+            IntValue prop = (IntValue)property;
+            
+            switch (belongingKey)
+            {
+                case "immediateSpeed": 
+                    this.speedForImmediateCalls = prop.get(); break;
+                case "pausedSpeed": 
+                    this.speedForLaterCalls = prop.get(); break;
+            }
+        }
+        else if (property instanceof EnumValue<?>)
+        {
+            EnumValue<?> prop = (EnumValue<?>)property;
+            
+            if (prop.getDefaultValue() instanceof Easings)
+            {
+                switch (belongingKey)
+                {
+                    case "easingBetweenTicks": 
+                    {
+                        this.easingBetweenTicks = (Easings)prop.get(); 
+                        break;
+                    }
+                }
+            }
+            else if (prop.getDefaultValue() instanceof EasingType)
+            {
+                switch (belongingKey)
+                {
+                    case "easingTypeBetweenTicks": 
+                    {
+                        this.easingType = (EasingType)prop.get(); 
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-	public static class Builder implements DayNightCycleBuilder
-	{
-		@Override
-		public DayNightCycleBasis create() {
-			return new MovingTime();
-		}
+    public static class Builder implements DayNightCycleBuilder
+    {
+        @Override
+        public DayNightCycleBasis create() {
+            return new MovingTime();
+        }
 
-		@Override
-		public String getKeyName() {
-			return "movingtime";
-		}
-		
-		@Override
-		public Component getTranslatableName() {
-			return Component.translatable("jugglestruggle.tcs.dnt.movingtime");
-		}
-		@Override
-		public Component getTranslatableDescription() {
-			return Component.translatable("jugglestruggle.tcs.dnt.movingtime.description");
-		}
-		
-		@Override
-		public boolean hasOptionsToEdit() {
-			return true;
-		}
-	}
+        @Override
+        public String getKeyName() {
+            return "movingtime";
+        }
+        
+        @Override
+        public Component getTranslatableName() {
+            return Component.translatable("jugglestruggle.tcs.dnt.movingtime");
+        }
+        @Override
+        public Component getTranslatableDescription() {
+            return Component.translatable("jugglestruggle.tcs.dnt.movingtime.description");
+        }
+        
+        @Override
+        public boolean hasOptionsToEdit() {
+            return true;
+        }
+    }
 }

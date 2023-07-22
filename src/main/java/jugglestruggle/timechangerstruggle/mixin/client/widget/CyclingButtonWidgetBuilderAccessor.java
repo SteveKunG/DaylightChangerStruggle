@@ -17,28 +17,28 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(CycleButton.Builder.class)
 public interface CyclingButtonWidgetBuilderAccessor<T>
 {
-	@Accessor("initialValue")
-	T getValue();
-	@Accessor("initialValue")
-	void setValue(T value);
-	
-	@Accessor("values")
-	ValueListSupplier<T> values();
-	
-	@Accessor("initialIndex")
-	int getInitialIndex();
-	@Accessor("initialIndex")
-	void setInitialIndex(int initialIndex);
+    @Accessor("initialValue")
+    T getValue();
+    @Accessor("initialValue")
+    void setValue(T value);
+    
+    @Accessor("values")
+    ValueListSupplier<T> values();
+    
+    @Accessor("initialIndex")
+    int getInitialIndex();
+    @Accessor("initialIndex")
+    void setInitialIndex(int initialIndex);
 
-	@Accessor("valueStringifier")
-	Function<T, Component> getValueToText();
+    @Accessor("valueStringifier")
+    Function<T, Component> getValueToText();
 
-	@Accessor("displayOnlyValue")
-	boolean omitOptionText();
+    @Accessor("displayOnlyValue")
+    boolean omitOptionText();
 
-	@Accessor("narrationProvider")
-	Function<CycleButton<T>, MutableComponent> getNarrationMessageFactory();
+    @Accessor("narrationProvider")
+    Function<CycleButton<T>, MutableComponent> getNarrationMessageFactory();
 
-	@Accessor("tooltipSupplier")
-	OptionInstance.TooltipSupplier<T> getTooltipFactory();
+    @Accessor("tooltipSupplier")
+    OptionInstance.TooltipSupplier<T> getTooltipFactory();
 }
