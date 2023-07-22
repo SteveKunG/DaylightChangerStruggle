@@ -24,7 +24,7 @@
 	},
 	
 	"mixins": ["timechangerstruggle.client.mixins.json"],
-	"accessWidener": "timechangerstruggle.client.accesswidener",
+	"accessWidener": "timechangerstruggle.accesswidener",
 	
 	"depends": {
 	  "fabricloader": ">=0.12.12",
