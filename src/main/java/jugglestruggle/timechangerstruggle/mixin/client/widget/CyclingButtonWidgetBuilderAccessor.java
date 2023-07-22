@@ -17,9 +17,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(CycleButton.Builder.class)
 public interface CyclingButtonWidgetBuilderAccessor<T>
 {
-	@Accessor("value")
+	@Accessor("initialValue")
 	T getValue();
-	@Accessor("value")
+	@Accessor("initialValue")
 	void setValue(T value);
 	
 	@Accessor("values")
@@ -30,15 +30,15 @@ public interface CyclingButtonWidgetBuilderAccessor<T>
 	@Accessor("initialIndex")
 	void setInitialIndex(int initialIndex);
 
-	@Accessor("valueToText")
+	@Accessor("valueStringifier")
 	Function<T, Component> getValueToText();
 
-	@Accessor("optionTextOmitted")
+	@Accessor("displayOnlyValue")
 	boolean omitOptionText();
 
-	@Accessor("narrationMessageFactory")
+	@Accessor("narrationProvider")
 	Function<CycleButton<T>, MutableComponent> getNarrationMessageFactory();
 
-	@Accessor("tooltipFactory")
+	@Accessor("tooltipSupplier")
 	OptionInstance.TooltipSupplier<T> getTooltipFactory();
 }
