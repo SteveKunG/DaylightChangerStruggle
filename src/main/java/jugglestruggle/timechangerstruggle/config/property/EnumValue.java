@@ -1,25 +1,12 @@
 package jugglestruggle.timechangerstruggle.config.property;
 
-import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
-import jugglestruggle.timechangerstruggle.client.config.widget.CyclingWidgetConfig;
-import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInterface;
-import jugglestruggle.timechangerstruggle.client.config.widget.CyclingWidgetConfig.WidgetConfigBuilderEnum;
-import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
-import jugglestruggle.timechangerstruggle.util.InterchangeableFunction;
-
-import net.fabricmc.api.EnvType;
-
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -29,6 +16,19 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+
+import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
+import jugglestruggle.timechangerstruggle.client.config.widget.CyclingWidgetConfig;
+import jugglestruggle.timechangerstruggle.client.config.widget.CyclingWidgetConfig.WidgetConfigBuilderEnum;
+import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInterface;
+import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
+import jugglestruggle.timechangerstruggle.util.InterchangeableFunction;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 
 /**
  *

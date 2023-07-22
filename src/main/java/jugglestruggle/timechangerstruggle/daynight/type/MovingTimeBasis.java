@@ -21,7 +21,7 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
 {
     protected long cachedTime = 0;
     protected long previousCachedTime = 0;
-    
+
     /**
      * Used as a transition for the current tick.
      */
@@ -30,7 +30,7 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
      * Used as a transition for the next tick.
      */
     protected long nextInterpolatedTime = 0;
-    
+
     /**
      * The amount of ticks it has passed, it is also a way to create an 
      * easing delta combining this field with {@link #ticksUntilNextCall}.
@@ -48,7 +48,7 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
      * constantly through day and night, so prepare yourselves for such thing.
      */
     protected long ticksUntilNextCall = 40L;
-    
+
     /**
      * See {@link #ticksUntilNextCall} for some information.
      * <p> This field can be left null if planning not to use any.
@@ -58,21 +58,9 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
      * Helps in deciding the easing if going in, out or both.
      */
     protected EasingType easingType = EasingType.BETWEEN;
-    
-    
-    
-    
-    
-    
-    
+
     public abstract void updateInterpolation();
-    
-    
-    
-    
-    
-    
-    
+
     @Override
     public void tick()
     {
@@ -87,16 +75,16 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
             {
                 double animationDelta = (double)this.ticksPassed / (double)this.ticksUntilNextCall;
                 double result = this.easingBetweenTicks.value(this.easingType, animationDelta);
-                
+
                 this.previousCachedTime = this.cachedTime;
-                
-                this.cachedTime = (long)((double)this.previousInterpolatedTime + 
-                    ((double)this.nextInterpolatedTime - (double)this.previousInterpolatedTime) * result);
+
+                this.cachedTime = (long)((double)this.previousInterpolatedTime + ((double)this.nextInterpolatedTime - (double)this.previousInterpolatedTime) * result);
             }
-            
+
             ++this.ticksPassed;
         }
     }
+
     /**
      * Updates the call whenever {@link #ticksPassed} supercedes or 
      * matches {@link #ticksUntilNextCall}.
@@ -104,19 +92,22 @@ public abstract class MovingTimeBasis implements DayNightCycleBasis
     public void updateCall()
     {
         this.previousInterpolatedTime = this.nextInterpolatedTime;
-        
+
         this.updateInterpolation();
-        
+
         this.previousCachedTime = this.cachedTime;
         this.cachedTime = this.previousInterpolatedTime;
     }
-    
+
     @Override
-    public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous) {
+    public long getModifiedTime(ClientLevel world, DayNightGetterType executor, boolean previous)
+    {
         return previous ? this.previousCachedTime : this.cachedTime;
     }
+
     @Override
-    public long getCachedTime() {
+    public long getCachedTime()
+    {
         return this.cachedTime;
     }
 }

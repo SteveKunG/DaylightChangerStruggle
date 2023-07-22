@@ -1,25 +1,18 @@
 package jugglestruggle.timechangerstruggle;
 
-import net.fabricmc.api.ModInitializer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
-public class TimeChangerStruggle implements ModInitializer 
+import com.mojang.logging.LogUtils;
+
+import net.fabricmc.api.ModInitializer;
+
+public class TimeChangerStruggle implements ModInitializer
 {
-    public static final String MOD_ID;
-    public static final String PACKAGE_ID;
-    
-    public static final Logger LOGGER;
-    
-    static
-    {
-        MOD_ID = "timechangerstruggle";
-        PACKAGE_ID = "jugglestruggle.timechangerstruggle";
-        
-        LOGGER = LogManager.getLogger("TimeChangerStruggle");
-    }
-    
+    public static final String MOD_ID = "timechangerstruggle";
+    public static final String PACKAGE_ID = "jugglestruggle.timechangerstruggle";
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     @Override
-    public void onInitialize() {}
+    public void onInitialize()
+    {}
 }

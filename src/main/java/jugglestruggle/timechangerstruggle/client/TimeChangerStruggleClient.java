@@ -1,5 +1,8 @@
 package jugglestruggle.timechangerstruggle.client;
 
+import java.io.File;
+import java.util.*;
+
 import jugglestruggle.timechangerstruggle.TimeChangerStruggle;
 import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
 import jugglestruggle.timechangerstruggle.client.util.render.RainbowShader;
@@ -7,13 +10,8 @@ import jugglestruggle.timechangerstruggle.client.util.render.RenderUtils;
 import jugglestruggle.timechangerstruggle.config.Configuration;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
-import jugglestruggle.timechangerstruggle.daynight.type.LowToHighHeightTime;
-import jugglestruggle.timechangerstruggle.daynight.type.MovingTime;
-import jugglestruggle.timechangerstruggle.daynight.type.RandomizedTime;
-import jugglestruggle.timechangerstruggle.daynight.type.StaticTime;
-import jugglestruggle.timechangerstruggle.daynight.type.SystemTime;
-import jugglestruggle.timechangerstruggle.mixin.client.world.ClientWorldMixin;
-
+import jugglestruggle.timechangerstruggle.daynight.type.*;
+import jugglestruggle.timechangerstruggle.mixin.client.world.ClientLevelMixin;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,12 +19,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import java.io.File;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  *
@@ -52,7 +44,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
      * <p> Setting it to {@code false} uses JuggleStruggle's version 
      * and takes control over most (or all) of the time-related calls.
      * 
-     * @see {@linkplain ClientWorldMixin Client World Mixin} 
+     * @see {@linkplain ClientLevelMixin Client World Mixin} 
      * where almost all of the calls are overriden
      */
     public static boolean worldTime = true;
@@ -342,13 +334,15 @@ public class TimeChangerStruggleClient implements ClientModInitializer
         // Chroma/Rainbow Shader :D
         if (RenderUtils.rainbowAllTheWay == null)
         {
-            try {
+            try
+            {
                 RenderUtils.rainbowAllTheWay = new RainbowShader();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
-            } 
+            }
         }
-        
     }
     
     private void onClientTick(Minecraft client)
@@ -382,11 +376,12 @@ public class TimeChangerStruggleClient implements ClientModInitializer
         }
          */
     }
+
     private void onWorldTick(ClientLevel world)
     {
         if (TimeChangerStruggleClient.useWorldTime())
             return;
-        
+
         TimeChangerStruggleClient.timeChanger.tick();
     }
 }

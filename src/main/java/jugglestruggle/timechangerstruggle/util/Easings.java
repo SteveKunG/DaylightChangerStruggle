@@ -1,6 +1,7 @@
 package jugglestruggle.timechangerstruggle.util;
 
 import java.util.Locale;
+
 import net.minecraft.network.chat.Component;
 
 /**
@@ -17,76 +18,69 @@ import net.minecraft.network.chat.Component;
  */
 public enum Easings implements InterchangeableFunction<Easings, String>
 {
-    LINEAR { // JuggleStruggle
+    LINEAR
+    { // JuggleStruggle
         @Override
-        public double value(EasingType type, double delta) {
+        public double value(EasingType type, double delta)
+        {
             return delta;
         }
     },
-    FLOOR { // JuggleStruggle
+    FLOOR
+    { // JuggleStruggle
         @Override
-        public double value(EasingType type, double delta) {
+        public double value(EasingType type, double delta)
+        {
             return Math.floor(delta);
         }
     },
-    CEILING { // JuggleStruggle
+    CEILING
+    { // JuggleStruggle
         @Override
-        public double value(EasingType type, double delta) {
+        public double value(EasingType type, double delta)
+        {
             return Math.ceil(delta);
         }
     },
-    
-    // 
+
     SINE
     {
         @Override
         public double value(EasingType type, double delta)
         {
-//            delta *= Math.PI;
             delta = delta * Math.PI;
-            
+
             return switch (type)
             {
-                case IN -> 
-                    1.0 - Math.cos(delta / 2.0);
-                case OUT -> 
-                    Math.sin(delta / 2.0);
-                case BETWEEN -> 
-                    -(Math.cos(delta / 2.0) - 1.0) / 2.0;
+                case IN -> 1.0 - Math.cos(delta / 2.0);
+                case OUT -> Math.sin(delta / 2.0);
+                case BETWEEN -> -(Math.cos(delta / 2.0) - 1.0) / 2.0;
             };
         }
     },
-    QUAD 
+    QUAD
     {
         @Override
         public double value(EasingType type, double delta)
         {
             return switch (type)
             {
-                case IN -> 
-                    delta * delta;
-                case OUT -> 
-                    1.0 - (1.0 - delta) * (1.0 - delta);
-                case BETWEEN -> (delta < 0.5) ? 
-                    (2.0 * delta * delta) : 
-                    (1.0 - Math.pow(-2.0 * delta + 2.0, 2.0) / 2.0);
+                case IN -> delta * delta;
+                case OUT -> 1.0 - (1.0 - delta) * (1.0 - delta);
+                case BETWEEN -> (delta < 0.5) ? (2.0 * delta * delta) : (1.0 - Math.pow(-2.0 * delta + 2.0, 2.0) / 2.0);
             };
         }
     },
-    CUBIC 
+    CUBIC
     {
         @Override
         public double value(EasingType type, double delta)
         {
             return switch (type)
             {
-                case IN -> 
-                    delta * delta * delta;
-                case OUT -> 
-                    1.0 - Math.pow(1.0 - delta, 3.0);
-                case BETWEEN -> (delta < 0.5) ? 
-                    (4.0 * delta * delta * delta) : 
-                    (1.0 - Math.pow(-2.0 * delta + 2.0, 3.0) / 2.0);
+                case IN -> delta * delta * delta;
+                case OUT -> 1.0 - Math.pow(1.0 - delta, 3.0);
+                case BETWEEN -> (delta < 0.5) ? (4.0 * delta * delta * delta) : (1.0 - Math.pow(-2.0 * delta + 2.0, 3.0) / 2.0);
             };
         }
     },
@@ -97,53 +91,35 @@ public enum Easings implements InterchangeableFunction<Easings, String>
         {
             return switch (type)
             {
-                case IN -> 
-                    delta * delta * delta * delta;
-                case OUT -> 
-                    1.0 - Math.pow(1.0 - delta, 4.0);
-                case BETWEEN -> (delta < 0.5) ? 
-                    (8.0 * delta * delta * delta * delta) : 
-                    (1.0 - Math.pow(-2.0 * delta + 2.0, 4.0) / 2.0);
+                case IN -> delta * delta * delta * delta;
+                case OUT -> 1.0 - Math.pow(1.0 - delta, 4.0);
+                case BETWEEN -> (delta < 0.5) ? (8.0 * delta * delta * delta * delta) : (1.0 - Math.pow(-2.0 * delta + 2.0, 4.0) / 2.0);
             };
         }
     },
-    QUINT 
+    QUINT
     {
         @Override
         public double value(EasingType type, double delta)
         {
             return switch (type)
             {
-                case IN -> 
-                    delta * delta * delta * delta * delta;
-                case OUT -> 
-                    1.0 - Math.pow(1.0 - delta, 5.0);
-                case BETWEEN -> (delta < 0.5) ? 
-                    (16.0 * delta * delta * delta * delta * delta) : 
-                    (1.0 - Math.pow(-2.0 * delta + 2.0, 5.0) / 2.0);
+                case IN -> delta * delta * delta * delta * delta;
+                case OUT -> 1.0 - Math.pow(1.0 - delta, 5.0);
+                case BETWEEN -> (delta < 0.5) ? (16.0 * delta * delta * delta * delta * delta) : (1.0 - Math.pow(-2.0 * delta + 2.0, 5.0) / 2.0);
             };
         }
     },
-    EXPO 
+    EXPO
     {
         @Override
         public double value(EasingType type, double delta)
         {
             return switch (type)
             {
-                case IN -> (delta == 0.0) ? 
-                    0.0 : Math.pow(2.0, 10.0 * delta - 10.0);
-                case OUT -> (delta == 1.0) ?
-                    1.0 : 1.0 - Math.pow(2.0, -10.0 * delta);
-                case BETWEEN -> (delta == 0.0) ? 0.0 :
-                    (
-                        (delta == 1.0) ? 1.0 : 
-                        (
-                            (delta < 0.5) ? 
-                            (Math.pow(2.0, 20.0 * delta - 10.0) / 2.0) :
-                            ((2.0 - Math.pow(2.0, -20.0 * delta + 10.0)) / 2.0)
-                        )
-                    );
+                case IN -> (delta == 0.0) ? 0.0 : Math.pow(2.0, 10.0 * delta - 10.0);
+                case OUT -> (delta == 1.0) ? 1.0 : 1.0 - Math.pow(2.0, -10.0 * delta);
+                case BETWEEN -> (delta == 0.0) ? 0.0 : ((delta == 1.0) ? 1.0 : ((delta < 0.5) ? (Math.pow(2.0, 20.0 * delta - 10.0) / 2.0) : ((2.0 - Math.pow(2.0, -20.0 * delta + 10.0)) / 2.0)));
             };
         }
     },
@@ -154,13 +130,9 @@ public enum Easings implements InterchangeableFunction<Easings, String>
         {
             return switch (type)
             {
-                case IN -> 
-                    1.0 - Math.sqrt(1.0 - Math.pow(delta, 2.0));
-                case OUT -> 
-                    Math.sqrt(1.0 - Math.pow(delta - 1.0, 2.0));
-                case BETWEEN -> (delta < 0.5) ?
-                    (1.0 - Math.sqrt(1.0 - Math.pow(2.0 * delta, 2.0)) / 2.0) :
-                    ((Math.sqrt(1.0 - Math.pow(-2.0 * delta + 2.0, 2.0)) + 1.0) / 2.0);
+                case IN -> 1.0 - Math.sqrt(1.0 - Math.pow(delta, 2.0));
+                case OUT -> Math.sqrt(1.0 - Math.pow(delta - 1.0, 2.0));
+                case BETWEEN -> (delta < 0.5) ? (1.0 - Math.sqrt(1.0 - Math.pow(2.0 * delta, 2.0)) / 2.0) : ((Math.sqrt(1.0 - Math.pow(-2.0 * delta + 2.0, 2.0)) + 1.0) / 2.0);
             };
         }
     },
@@ -172,73 +144,49 @@ public enum Easings implements InterchangeableFunction<Easings, String>
             final double ebb = 1.70158;
             final double ebbP1 = ebb + 1.0;
             final double ebbP2 = ebb * 1.525;
-            
+
             return switch (type)
             {
-                case IN -> 
-                    ebbP1 * delta * delta * delta - ebb * delta * delta;
-                case OUT -> 
-                    1.0 + ebbP1 * Math.pow(delta - 1.0, 3.0) + ebb * Math.pow(delta - 1.0, 2.0);
-                case BETWEEN -> (delta < 0.5) ?
-                    ((Math.pow(2.0 * delta, 2.0) * ((ebbP2 + 1.0) * 2.0 * delta - ebbP2)) / 2.0) :
-                    ((Math.pow(2.0 * delta - 2.0, 2.0) * ((ebbP2 + 1.0) * (delta * 2.0 - 2.0) + ebbP2) + 2.0) / 2.0);
+                case IN -> ebbP1 * delta * delta * delta - ebb * delta * delta;
+                case OUT -> 1.0 + ebbP1 * Math.pow(delta - 1.0, 3.0) + ebb * Math.pow(delta - 1.0, 2.0);
+                case BETWEEN -> (delta < 0.5) ? ((Math.pow(2.0 * delta, 2.0) * ((ebbP2 + 1.0) * 2.0 * delta - ebbP2)) / 2.0) : ((Math.pow(2.0 * delta - 2.0, 2.0) * ((ebbP2 + 1.0) * (delta * 2.0 - 2.0) + ebbP2) + 2.0) / 2.0);
             };
         }
     },
-    ELASTIC 
+    ELASTIC
     {
         @Override
         public double value(EasingType type, double delta)
         {
-            final double ebb  = (2.0 * Math.PI) / 3.0;
+            final double ebb = (2.0 * Math.PI) / 3.0;
             final double ebbT = (2.0 * Math.PI) / 4.5;
-            
+
             return switch (type)
             {
-                case IN -> (delta == 0) ? 0.0 :
-                    (
-                        (delta == 1) ? 1.0 :
-                        (-Math.pow(2.0, 10.0 * delta - 10.0) * Math.sin((delta * 10.0 - 10.75) * ebb))
-                    );
-                case OUT -> (delta == 0) ? 0.0 :
-                    (
-                        (delta == 1) ? 1.0 :
-                        (Math.pow(2.0, -10.0 * delta) * Math.sin((delta * 10.0 - 0.75) * ebb) + 1.0)
-                    );
-                case BETWEEN -> (delta == 0) ? 0.0 :
-                    (
-                        (delta == 1) ? 1.0 :
-                        (
-                            (delta < 0.5) ?
-                            (-(Math.pow(2.0,  20.0 * delta - 10.0) * Math.sin((20.0 * delta - 11.125) * ebbT)) / 2.0) :
-                            ( (Math.pow(2.0, -20.0 * delta + 10.0) * Math.sin((20.0 * delta - 11.125) * ebbT)) / 2.0 + 1.0)
-                        )
-                    );
+                case IN -> (delta == 0) ? 0.0 : ((delta == 1) ? 1.0 : (-Math.pow(2.0, 10.0 * delta - 10.0) * Math.sin((delta * 10.0 - 10.75) * ebb)));
+                case OUT -> (delta == 0) ? 0.0 : ((delta == 1) ? 1.0 : (Math.pow(2.0, -10.0 * delta) * Math.sin((delta * 10.0 - 0.75) * ebb) + 1.0));
+                case BETWEEN -> (delta == 0) ? 0.0 : ((delta == 1) ? 1.0 : ((delta < 0.5) ? (-(Math.pow(2.0, 20.0 * delta - 10.0) * Math.sin((20.0 * delta - 11.125) * ebbT)) / 2.0) : ((Math.pow(2.0, -20.0 * delta + 10.0) * Math.sin((20.0 * delta - 11.125) * ebbT)) / 2.0 + 1.0)));
             };
         }
     },
-    BOUNCE 
+    BOUNCE
     {
         @Override
         public double value(EasingType type, double delta)
         {
             return switch (type)
             {
-                case IN -> 
-                    1.0 - this.easeOutBounce(1.0 - delta);
-                case OUT -> 
-                    this.easeOutBounce(delta);
-                case BETWEEN -> (delta < 0.5) ?
-                    ((1.0 - this.easeOutBounce(1.0 - 2.0 * delta)) / 2.0) :
-                    ((1.0 + this.easeOutBounce(2.0 * delta - 1.0)) / 2.0);
+                case IN -> 1.0 - this.easeOutBounce(1.0 - delta);
+                case OUT -> this.easeOutBounce(delta);
+                case BETWEEN -> (delta < 0.5) ? ((1.0 - this.easeOutBounce(1.0 - 2.0 * delta)) / 2.0) : ((1.0 + this.easeOutBounce(2.0 * delta - 1.0)) / 2.0);
             };
         }
-        
+
         private double easeOutBounce(double delta)
         {
             final double ebbN = 7.5625;
             final double ebbD = 2.75;
-            
+
             if (delta < 1.0 / ebbD)
                 return ebbN * delta * delta;
             else if (delta < 2.0 / ebbD)
@@ -248,8 +196,7 @@ public enum Easings implements InterchangeableFunction<Easings, String>
             else
                 return ebbN * (delta -= 2.625 / ebbD) * delta + 0.984375;
         }
-    }
-    ;
+    };
     
     /**
      * Gets the value ranging from 0.0 or 1.0 (depends on the easing 
@@ -262,21 +209,29 @@ public enum Easings implements InterchangeableFunction<Easings, String>
      * @return a value from the easing type
      */
     public abstract double value(EasingType type, double animationDelta);
-    
-    public final double easingInValue(double delta) {
+
+    public final double easingInValue(double delta)
+    {
         return this.value(EasingType.IN, delta);
     }
-    public final double easingOutValue(double delta) {
+
+    public final double easingOutValue(double delta)
+    {
         return this.value(EasingType.OUT, delta);
     }
-    public final double easingBetweenValue(double delta) {
+
+    public final double easingBetweenValue(double delta)
+    {
         return this.value(EasingType.BETWEEN, delta);
     }
 
-    public final String toValueString() {
+    public final String toValueString()
+    {
         return this.toString().toLowerCase(Locale.ROOT);
     }
-    public final Component getFormattedText() {
+
+    public final Component getFormattedText()
+    {
         return Component.translatable(String.format("jugglestruggle.tcs.easings.%1$s", this.toValueString()), new Object[0]);
     }
     
@@ -288,26 +243,28 @@ public enum Easings implements InterchangeableFunction<Easings, String>
      * 
      * @return a boolean value
      */
-    public boolean canBeRandomlyUsed() {
+    public boolean canBeRandomlyUsed()
+    {
         return true;
     }
-    
+
     @Override
-    public Easings applyLeft(String value) {
+    public Easings applyLeft(String value)
+    {
         return Easings.parseFromString(value);
     }
+
     @Override
-    public String applyRight(Easings value) {
+    public String applyRight(Easings value)
+    {
         return value.toValueString();
     }
-    
-    
-    
+
     public static final Easings parseFromString(String name)
     {
         if (name == null || name.isEmpty() || name.isBlank())
             return null;
-        
+
         return switch (name.toLowerCase(Locale.ROOT))
         {
             case "linear" -> Easings.LINEAR;
@@ -323,7 +280,7 @@ public enum Easings implements InterchangeableFunction<Easings, String>
             case "back" -> Easings.BACK;
             case "elastic" -> Easings.ELASTIC;
             case "bounce" -> Easings.BOUNCE;
-            
+
             default -> null;
         };
     }

@@ -1,10 +1,10 @@
 package jugglestruggle.timechangerstruggle.config.property;
 
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 /**
  * This is directly taken from my own legit client (up to you to 

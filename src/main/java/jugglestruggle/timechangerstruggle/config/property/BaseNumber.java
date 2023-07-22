@@ -1,16 +1,15 @@
 package jugglestruggle.timechangerstruggle.config.property;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.LazilyParsedNumber;
+
 import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
 import jugglestruggle.timechangerstruggle.client.config.widget.NumericFieldWidgetConfig;
 import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInterface;
 import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.internal.LazilyParsedNumber;
 
 /**
  * A base number type is a type that stores numbers alone as its value

@@ -1,16 +1,6 @@
 package jugglestruggle.timechangerstruggle.config;
 
-import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
-import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
-import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
-import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
-import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,13 +9,14 @@ import java.util.Set;
 
 import org.apache.commons.compress.utils.IOUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+
+import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
+import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
+import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
+import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
+import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
 
 /**
  *

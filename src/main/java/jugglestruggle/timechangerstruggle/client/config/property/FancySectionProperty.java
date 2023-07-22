@@ -1,16 +1,14 @@
 package jugglestruggle.timechangerstruggle.client.config.property;
 
-import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInterface;
-import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
-import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.network.chat.Component;
 import com.google.gson.JsonElement;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+
+import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInterface;
+import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
+import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.network.chat.Component;
 
 /**
  * A section that cannot and should not be used to save as
@@ -23,40 +21,44 @@ import com.mojang.brigadier.context.CommandContext;
  * @author JuggleStruggle
  * @implNote Created on 01-Feb-2022, Tuesday
  */
-@Environment(EnvType.CLIENT)
 public class FancySectionProperty extends BaseProperty<FancySectionProperty, Component>
 {
     public static final FancySectionProperty EMPTY = new FancySectionProperty("", null);
-    
-    public FancySectionProperty(String property, Component value) {
+
+    public FancySectionProperty(String property, Component value)
+    {
         super(property, value);
     }
 
     @Override
-    public void set(Component value) {}
+    public void set(Component value)
+    {}
 
     @Override
-    public WidgetConfigInterface<FancySectionProperty, Component> createConfigElement
-    (TimeChangerScreen screen, FancySectionProperty owningSection)
+    public WidgetConfigInterface<FancySectionProperty, Component> createConfigElement(TimeChangerScreen screen, FancySectionProperty owningSection)
     {
         return null;
     }
 
     @Override
-    public void readFromJson(JsonElement elem) {}
+    public void readFromJson(JsonElement elem)
+    {}
 
     @Override
-    public JsonElement writeToJson() {
+    public JsonElement writeToJson()
+    {
         return null;
     }
 
     @Override
-    public ArgumentType<Component> onCommandOptionGetArgType() {
+    public ArgumentType<Component> onCommandOptionGetArgType()
+    {
         return null;
     }
 
     @Override
-    public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx) {
+    public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx)
+    {
         return 0;
     }
 }

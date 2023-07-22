@@ -1,17 +1,17 @@
 package jugglestruggle.timechangerstruggle.client.config.widget;
 
-import jugglestruggle.timechangerstruggle.client.widget.PositionedTooltip;
-import jugglestruggle.timechangerstruggle.config.property.StringValue;
-import jugglestruggle.timechangerstruggle.config.property.BaseProperty.ValueConsumer;
+import java.util.List;
+import java.util.function.Consumer;
 
+import jugglestruggle.timechangerstruggle.client.widget.PositionedTooltip;
+import jugglestruggle.timechangerstruggle.config.property.BaseProperty.ValueConsumer;
+import jugglestruggle.timechangerstruggle.config.property.StringValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  *

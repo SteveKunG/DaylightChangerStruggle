@@ -1,10 +1,10 @@
 package jugglestruggle.timechangerstruggle.config.property;
 
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 /**
  * 
@@ -14,28 +14,34 @@ import com.mojang.brigadier.context.CommandContext;
  */
 public class LongValue extends BaseNumber<Long>
 {
-    public LongValue(String propertyName, long defaultValue, Long min, Long max) {
+    public LongValue(String propertyName, long defaultValue, Long min, Long max)
+    {
         super(propertyName, defaultValue, min, max);
     }
-    
+
     @Override
-    public boolean isWithinRange() 
+    public boolean isWithinRange()
     {
         final Long value = this.get();
         return value != null && value >= this.getMin() && value <= this.getMax();
     }
+
     @Override
     public Long parseStringNumber(String toParse)
     {
-        try {
+        try
+        {
             return Long.parseLong(toParse);
-        } catch (Throwable t) {}
-        
+        }
+        catch (Throwable t)
+        {
+        }
+
         return null;
     }
 
     @Override
-    public ArgumentType<Long> onCommandOptionGetArgType() 
+    public ArgumentType<Long> onCommandOptionGetArgType()
     {
         if (this.min == null || this.max == null)
             return LongArgumentType.longArg();
@@ -44,7 +50,9 @@ public class LongValue extends BaseNumber<Long>
     }
 
     @Override
-    public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx) {
-        this.set(LongArgumentType.getLong(ctx, "value")); return 3;
+    public int onCommandOptionWithValueExecute(CommandContext<FabricClientCommandSource> ctx)
+    {
+        this.set(LongArgumentType.getLong(ctx, "value"));
+        return 3;
     }
 }

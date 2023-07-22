@@ -27,7 +27,7 @@ public interface DayNightCycleBuilder
      * @return a String value
      */
     String getKeyName();
-    
+
     /**
      * Gets the name of the cycle which is translatable; 
      * this is not necessary as some cycles do not implement 
@@ -46,7 +46,7 @@ public interface DayNightCycleBuilder
      * @return a description of the cycle
      */
     Component getTranslatableDescription();
-    
+
     /**
      * Used to determine if certain option-related elements 
      * should be enabled; not really representative of the 
@@ -55,9 +55,11 @@ public interface DayNightCycleBuilder
      * 
      * @return a boolean value
      */
-    default boolean hasOptionsToEdit() {
+    default boolean hasOptionsToEdit()
+    {
         return false;
     }
+
     /**
      * Used to determine if the cycle in question uses 
      * dynamic properties meaning that while the user
@@ -66,7 +68,8 @@ public interface DayNightCycleBuilder
      * 
      * @return a boolean value
      */
-    default boolean hasDynamicOptions() {
+    default boolean hasDynamicOptions()
+    {
         return false;
     }
 }

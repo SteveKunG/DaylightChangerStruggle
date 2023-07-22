@@ -1,26 +1,23 @@
 package jugglestruggle.timechangerstruggle.daynight.type;
 
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import com.google.common.collect.ImmutableSet;
+
 import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
 import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInterface;
-import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
-import jugglestruggle.timechangerstruggle.config.property.BooleanValue;
-import jugglestruggle.timechangerstruggle.config.property.EnumValue;
-import jugglestruggle.timechangerstruggle.config.property.LongValue;
-import jugglestruggle.timechangerstruggle.config.property.StringValue;
+import jugglestruggle.timechangerstruggle.config.property.*;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
 import jugglestruggle.timechangerstruggle.util.EasingType;
 import jugglestruggle.timechangerstruggle.util.Easings;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.Map.Entry;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * A time which it is randomized through crazy means. This can essentially

@@ -1,8 +1,12 @@
 package jugglestruggle.timechangerstruggle.client.widget;
 
+import java.util.List;
+import java.util.function.Function;
+
+import com.google.common.collect.ImmutableList;
+
 import jugglestruggle.timechangerstruggle.client.config.widget.CyclingWidgetConfig;
 import jugglestruggle.timechangerstruggle.mixin.client.widget.CyclingButtonWidgetBuilderAccessor;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.OptionInstance.TooltipSupplier;
@@ -11,9 +15,6 @@ import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import java.util.List;
-import java.util.function.Function;
-import com.google.common.collect.ImmutableList;
 
 /**
  * See {@link CyclingWidgetConfig}'s description.

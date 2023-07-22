@@ -1,5 +1,9 @@
 package jugglestruggle.timechangerstruggle.client.config.widget;
 
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import jugglestruggle.timechangerstruggle.client.widget.PositionedTooltip;
 import jugglestruggle.timechangerstruggle.config.property.BaseNumber;
 import jugglestruggle.timechangerstruggle.config.property.BaseProperty.ValueConsumer;
@@ -7,9 +11,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  *
@@ -217,38 +218,45 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
     public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
         this.compiledTooltipText = textToSet;
     }
-    
-    
-    
-    
-    
-    
-    protected static final boolean canParseString(Number n, String val) {
+
+    protected static final boolean canParseString(Number n, String val)
+    {
         return NumericFieldWidgetConfig.parseString(n, val) != null;
     }
-    
+
     @SuppressWarnings("unchecked")
-    protected static final <N> N parseString(N n, String val) 
+    protected static final <N> N parseString(N n, String val)
     {
         if (n == null || val == null)
             return null;
-        
+
         try
         {
-            if (n instanceof Integer) {
+            if (n instanceof Integer)
+            {
                 return (N)(Integer)Integer.parseInt(val);
-            } else if (n instanceof Long) {
+            }
+            else if (n instanceof Long)
+            {
                 return (N)(Long)Long.parseLong(val);
-            } else if (n instanceof Double) {
+            }
+            else if (n instanceof Double)
+            {
                 return (N)(Double)Double.parseDouble(val);
-            } else if (n instanceof Float) {
+            }
+            else if (n instanceof Float)
+            {
                 return (N)(Float)Float.parseFloat(val);
-            } else if (n instanceof Byte) {
+            }
+            else if (n instanceof Byte)
+            {
                 return (N)(Byte)Byte.parseByte(val);
             }
         }
-        catch (NumberFormatException nfe) {}
-        
+        catch (NumberFormatException nfe)
+        {
+        }
+
         return null;
     }
 }

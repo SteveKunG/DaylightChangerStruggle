@@ -10,9 +10,9 @@ import net.minecraft.client.gui.narration.NarratableEntry;
  * @author JuggleStruggle
  * @implNote Created on 30-Jan-2022, Sunday
  */
-public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V> 
-//TODO
-extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
+public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
+        // TODO
+        extends GuiEventListener, Renderable, NarratableEntry/* , TooltipAccessor */
 {
     /**
      * Gets whether the property set in the widget is valid 
@@ -21,13 +21,13 @@ extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
      * @return a boolean value
      */
     boolean isValid();
-    
+
     /**
      * Gets the modifying property.
      * @return the property
      */
     B getProperty();
-    
+
     /**
      * Gets the starting value when this config widget was 
      * either created or replaced with a new value.
@@ -35,6 +35,7 @@ extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
      * @return a value which represents the property's type
      */
     V getInitialValue();
+
     /**
      * Sets the starting value; usually this is done during
      * a write (like a save to the cycle type, not part if
@@ -43,7 +44,7 @@ extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
      * @param value the new value to apply into the widget
      */
     void setInitialValue(V value);
-    
+
     /**
      * Forces the current value of the widget to be reset back
      * to either initial or default of the property.
@@ -53,6 +54,7 @@ extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
      * the property's default value
      */
     void forceSetWidgetValueToDefault(boolean justInitial);
+
     /**
      * Sets the current value of the property to be reset back
      * to either initial or property default.
@@ -62,7 +64,7 @@ extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
      * the property's default value
      */
     void setPropertyValueToDefault(boolean justInitial);
-    
+
     /**
      * Returns if the value within the {@link #getProperty()}'s
      * {@linkplain BaseProperty#getDefaultValue() getDefaultValue()} 
@@ -72,12 +74,13 @@ extends GuiEventListener, Renderable, NarratableEntry/*, TooltipAccessor*/
      * considered modified
      */
     boolean isDefaultValue();
-    
+
     /**
      * Used to keep track of the JSON read/write.
      * @return a string
      */
-    default String getPropertyName() {
+    default String getPropertyName()
+    {
         return this.getProperty().property();
     }
 }

@@ -1,13 +1,15 @@
 package jugglestruggle.timechangerstruggle.mixin.client.widget;
 
 import java.util.function.Function;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
+
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.CycleButton.ValueListSupplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  *
@@ -19,14 +21,16 @@ public interface CyclingButtonWidgetBuilderAccessor<T>
 {
     @Accessor("initialValue")
     T getValue();
+
     @Accessor("initialValue")
     void setValue(T value);
-    
+
     @Accessor("values")
     ValueListSupplier<T> values();
-    
+
     @Accessor("initialIndex")
     int getInitialIndex();
+
     @Accessor("initialIndex")
     void setInitialIndex(int initialIndex);
 
