@@ -43,7 +43,7 @@ implements WidgetConfigInterface<StringValue, String>, PositionedTooltip
         this.setValue(this.initialText);
         this.setResponder(null);
         
-        this.moveCursorToStart();
+        this.moveCursorToStart(false);
     }
 
     @Override

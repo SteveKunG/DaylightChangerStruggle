@@ -44,7 +44,7 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
         this.setValue(this.property.get().toString());
         this.initialNumber = this.property.get();
         
-        this.moveCursorToStart();
+        this.moveCursorToStart(false);
     }
 
     @Override

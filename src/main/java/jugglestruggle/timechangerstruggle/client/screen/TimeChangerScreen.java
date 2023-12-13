@@ -2153,7 +2153,6 @@ public class TimeChangerScreen extends Screen
             
             this.setRenderBackground(false);
             this.setRenderHeader(false, -4);
-            this.setRenderTopAndBottom(false);
             
             this.centerListVertically = false;
         }
@@ -2235,8 +2234,8 @@ public class TimeChangerScreen extends Screen
             return this.visible ? super.mouseReleased(mouseX, mouseY, button) : false;
         }
         @Override
-        public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-            return this.visible ? super.mouseScrolled(mouseX, mouseY, amount) : false;
+        public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+            return this.visible ? super.mouseScrolled(mouseX, mouseY, scrollX, scrollY) : false;
         }
         
         @Override
