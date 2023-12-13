@@ -1,29 +1,42 @@
 plugins {
-    id "fabric-loom" version "1.2-SNAPSHOT"
-    id "io.github.juuxel.loom-vineflower" version "1.11.0"
+    id "fabric-loom" version "1.4-SNAPSHOT"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
-archivesBaseName = project.archives_base_name
+base {
+    archivesName = project.archives_base_name
+}
+
 version = project.mod_version
 group = project.maven_group
 
 loom {
+    def commonVmArgs = [
+            "-XX:+AllowEnhancedClassRedefinition",
+            "-XX:+IgnoreUnrecognizedVMOptions"
+    ]
+    def commonProperties = ["mixin.debug.export": "true", "mixin.hotSwap": "true"]
+
+    decompilers {
+        vineflower {
+            options.put("pll", "32767")
+            options.put("ind", "    ")
+        }
+    }
+
 	accessWidenerPath = file("src/main/resources/timechangerstruggle.accesswidener")
 
 	runs {
         client {
-            property "mixin.debug.export", "true"
-            property "mixin.hotSwap", "true"
+            properties commonProperties
+            vmArgs commonVmArgs
             property "devauth.configDir", "${devauth_dir}"
         }
     }
-}
-
-vineflower {
-    toolVersion = "1.9.1"
 }
 
 repositories {
