@@ -9,7 +9,6 @@ import jugglestruggle.timechangerstruggle.mixin.client.widget.CyclingButtonWidge
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.OptionInstance.TooltipSupplier;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -25,26 +24,11 @@ import net.minecraft.network.chat.MutableComponent;
  * @implNote Created on 13-Feb-2022, Sunday
  */
 @Environment(EnvType.CLIENT)
-public class CyclingButtonWidgetEx<T> extends CycleButton<T> implements SelfWidgetRendererInheritor<CyclingButtonWidgetEx<T>>
+public class CyclingButtonWidgetEx<T> extends CycleButton<T>
 {
-    private final SelfWidgetRender<CyclingButtonWidgetEx<T>> renderer;
-
     protected CyclingButtonWidgetEx(int width, int height, Component message, Component optionText, int index, T value, ValueListSupplier<T> values, Function<T, Component> valueToText, Function<CycleButton<T>, MutableComponent> narrationMessageFactory, OnValueChange<T> callback, TooltipSupplier<T> tooltipFactory, boolean optionTextOmitted)
     {
         super(0, 0, width, height, message, optionText, index, value, values, valueToText, narrationMessageFactory, callback, tooltipFactory, optionTextOmitted);
-        this.renderer = new SelfWidgetRender<>(this, null);
-    }
-
-    @Override
-    public SelfWidgetRender<CyclingButtonWidgetEx<T>> getWidgetRenderer()
-    {
-        return this.renderer;
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
-    {
-        this.renderer.render(graphics, mouseX, mouseY, delta);
     }
 
     public static WidgetBuilder<Boolean> booleanCycle(boolean initial, Component trueText, Component falseText)

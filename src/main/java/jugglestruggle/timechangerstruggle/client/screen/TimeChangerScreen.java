@@ -17,7 +17,6 @@ import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInter
 import jugglestruggle.timechangerstruggle.client.widget.ButtonWidgetEx;
 import jugglestruggle.timechangerstruggle.client.widget.CyclingButtonWidgetEx;
 import jugglestruggle.timechangerstruggle.client.widget.PositionedTooltip;
-import jugglestruggle.timechangerstruggle.client.widget.SelfWidgetRendererInheritor;
 import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
@@ -480,7 +479,7 @@ public class TimeChangerScreen extends Screen
                         lobster.setHeight(lobster.getHeight() - 22);
 
                         // Auto-Save Properties
-                        SelfWidgetRendererInheritor<?> widgetRenderer = TimeChangerScreen.createCyclingWidget(20, 20, Component.empty(), TimeChangerStruggleClient.applyOnPropertyListValueUpdate, true, null, null, this::toggleCyclePropertyListAutoApply, state ->
+                        var widgetRenderer = TimeChangerScreen.createCyclingWidget(20, 20, Component.empty(), TimeChangerStruggleClient.applyOnPropertyListValueUpdate, true, null, null, this::toggleCyclePropertyListAutoApply, state ->
                         {
                             final var stateText = state ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF;
 
@@ -491,8 +490,6 @@ public class TimeChangerScreen extends Screen
                             //                                    Component.translatable("jugglestruggle.tcs.screen.switchcyclemenu.propertylist.autosave.desc"));
 
                         });
-
-                        widgetRenderer.getWidgetRenderer().setTextRendering(this.getTextRenderer());
 
                         var bwe = (AbstractWidget)widgetRenderer;
 
@@ -575,11 +572,6 @@ public class TimeChangerScreen extends Screen
 
         elements.stream().forEach(elem ->
         {
-            if (elem instanceof SelfWidgetRendererInheritor<?>)
-            {
-                ((SelfWidgetRendererInheritor<?>)elem).getWidgetRenderer().setTextRendering(this.getTextRenderer());
-            }
-
             this.addRenderableWidget((T)elem);
         });
 
@@ -713,11 +705,7 @@ public class TimeChangerScreen extends Screen
     {
         this.children().forEach(elem ->
         {
-            if (elem instanceof SelfWidgetRendererInheritor)
-            {
-                ((SelfWidgetRendererInheritor<?>)elem).getWidgetRenderer().tick();
-            }
-            else if (elem instanceof SwitchGetterBasisBuilderList)
+            if (elem instanceof SwitchGetterBasisBuilderList)
             {
                 ((SwitchGetterBasisBuilderList<?>)elem).tick();
             }
@@ -995,11 +983,6 @@ public class TimeChangerScreen extends Screen
             if (elem == null)
             {
                 continue;
-            }
-
-            if (elem instanceof SelfWidgetRendererInheritor)
-            {
-                ((SelfWidgetRendererInheritor<?>)elem).getWidgetRenderer().setTextRendering(this.getTextRenderer());
             }
 
             if (elem instanceof WidgetConfigInterface)
@@ -1456,9 +1439,9 @@ public class TimeChangerScreen extends Screen
      */
     private static <E extends GuiEventListener> void defocusElement(E elementToDefocus)
     {
-        if (elementToDefocus instanceof AbstractWidget cw && cw.isFocused())
+        if (elementToDefocus.isFocused())
         {
-            cw.setFocused(false);
+            elementToDefocus.setFocused(false);
         }
     }
 
@@ -1648,22 +1631,6 @@ public class TimeChangerScreen extends Screen
                 }
 
                 this.sections = sectionsToCache.build();
-
-                this.children().forEach(entry ->
-                {
-                    List<? extends GuiEventListener> entryChildrenElems = entry.children();
-
-                    if (!entryChildrenElems.isEmpty())
-                    {
-                        entryChildrenElems.forEach(childEntry ->
-                        {
-                            if (childEntry instanceof SelfWidgetRendererInheritor<?>)
-                            {
-                                ((SelfWidgetRendererInheritor<?>)childEntry).getWidgetRenderer().setTextRendering(this.parent.getTextRenderer());
-                            }
-                        });
-                    }
-                });
 
                 var cycleBuilder = TimeChangerStruggleClient
                         .getCachedCycleBuilderByClass(this.modifyingCycleType.getBuilderClass());
@@ -2422,14 +2389,6 @@ public class TimeChangerScreen extends Screen
             {
                 return;
             }
-
-            children.forEach(elem ->
-            {
-                if (elem instanceof SelfWidgetRendererInheritor)
-                {
-                    ((SelfWidgetRendererInheritor<?>)elem).getWidgetRenderer().tick();
-                }
-            });
         }
     }
 

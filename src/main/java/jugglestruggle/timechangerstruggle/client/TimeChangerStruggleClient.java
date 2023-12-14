@@ -8,8 +8,6 @@ import java.util.Optional;
 
 import jugglestruggle.timechangerstruggle.TimeChangerStruggle;
 import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
-import jugglestruggle.timechangerstruggle.client.util.render.RainbowShader;
-import jugglestruggle.timechangerstruggle.client.util.render.RenderUtils;
 import jugglestruggle.timechangerstruggle.config.Configuration;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
@@ -18,7 +16,6 @@ import jugglestruggle.timechangerstruggle.mixin.client.world.ClientLevelMixin;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -322,29 +319,11 @@ public class TimeChangerStruggleClient implements ClientModInitializer
 
         // Add fabric events for use in creating a shader, keyboard detection
         // and in ticking the cycle types
-        ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStart);
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ClientTickEvents.END_WORLD_TICK.register(this::onWorldTick);
 
         // Then read the configs
         TimeChangerStruggleClient.config.read();
-    }
-
-    private void onClientStart(Minecraft client)
-    {
-        // Create my favorite shader that PvP / Cheat Clients use:
-        // Chroma/Rainbow Shader :D
-        if (RenderUtils.rainbowAllTheWay == null)
-        {
-            try
-            {
-                RenderUtils.rainbowAllTheWay = new RainbowShader();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void onClientTick(Minecraft client)

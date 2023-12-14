@@ -4,15 +4,12 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
-import jugglestruggle.timechangerstruggle.client.widget.SelfWidgetRender;
-import jugglestruggle.timechangerstruggle.client.widget.SelfWidgetRendererInheritor;
 import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
 import jugglestruggle.timechangerstruggle.config.property.BooleanValue;
 import jugglestruggle.timechangerstruggle.config.property.EnumValue;
 import jugglestruggle.timechangerstruggle.mixin.client.widget.CyclingButtonWidgetBuilderAccessor;
 import net.minecraft.client.OptionInstance.TooltipSupplier;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -22,10 +19,9 @@ import net.minecraft.network.chat.MutableComponent;
  * @author JuggleStruggle
  * @implNote Created on 30-Jan-2022, Sunday
  */
-public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleButton<T> implements WidgetConfigInterface<B, T>, SelfWidgetRendererInheritor<CyclingWidgetConfig<B, T>>
+public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleButton<T> implements WidgetConfigInterface<B, T>
 {
     private final B property;
-    private final SelfWidgetRender<CyclingWidgetConfig<B, T>> renderer;
     private T initial;
     /**
      * This cycling widget config will provide its own callback as to avoid using mixins again, but that callback will also call this callback :)
@@ -35,12 +31,9 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
     protected CyclingWidgetConfig(B property, int width, int height, Component message, Component optionText, int index, T value, ValueListSupplier<T> values, Function<T, Component> valueToText, Function<CycleButton<T>, MutableComponent> narrationMessageFactory, OnValueChange<T> externalCallback, TooltipSupplier<T> tooltipFactory, boolean optionTextOmitted)
     {
         super(0, 0, width, height, message, optionText, index, value, values, valueToText, narrationMessageFactory, new SetPropertyValueCallback<>(), tooltipFactory, optionTextOmitted);
-
         this.property = property;
         this.initial = property.get();
-
         this.externalCallback = externalCallback;
-        this.renderer = new SelfWidgetRender<>(this, null);
     }
 
     @Override
@@ -121,18 +114,6 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
                 this.setValue(defaultValue);
             }
         }
-    }
-
-    @Override
-    public SelfWidgetRender<CyclingWidgetConfig<B, T>> getWidgetRenderer()
-    {
-        return this.renderer;
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
-    {
-        this.renderer.render(graphics, mouseX, mouseY, delta);
     }
 
     public static WidgetConfigBuilderBoolean booleanCycle(BooleanValue property, Component trueText, Component falseText)
