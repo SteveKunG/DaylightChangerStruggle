@@ -4,6 +4,7 @@ import jugglestruggle.timechangerstruggle.config.property.BaseProperty;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
 /**
  *
@@ -11,8 +12,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
  * @implNote Created on 30-Jan-2022, Sunday
  */
 public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
-        // TODO
-        extends GuiEventListener, Renderable, NarratableEntry/* , TooltipAccessor */
+        extends GuiEventListener, Renderable, NarratableEntry, ClientTooltipComponent
 {
     /**
      * Gets whether the property set in the widget is valid 

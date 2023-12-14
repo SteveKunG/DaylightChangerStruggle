@@ -12,6 +12,7 @@ import jugglestruggle.timechangerstruggle.config.property.BooleanValue;
 import jugglestruggle.timechangerstruggle.config.property.EnumValue;
 import jugglestruggle.timechangerstruggle.mixin.client.widget.CyclingButtonWidgetBuilderAccessor;
 import net.minecraft.client.OptionInstance.TooltipSupplier;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.network.chat.CommonComponents;
@@ -71,6 +72,11 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
     public boolean isDefaultValue()
     {
         return false;
+    }
+    
+    @Override
+    public int getWidth(Font font) {
+        return getWidth();
     }
 
     @Override

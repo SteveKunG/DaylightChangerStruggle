@@ -347,20 +347,15 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     
     private void onClientTick(Minecraft client)
     {
-        // TODO: Is there a better way to call key events on press and releases without the need of ticking?
-        
-        if (client.screen == null && client.level != null)
-        {
-            if (Keybindings.timeChangerMenuKey.isDown()) {
-                client.setScreen(new TimeChangerScreen());
-            }
-            
-            final boolean previousWorldTime = TimeChangerStruggleClient.worldTime;
-            while (Keybindings.toggleWorldTimeKey.consumeClick()) {
-                TimeChangerStruggleClient.worldTime = !previousWorldTime;
-            }
+        if (Keybindings.timeChangerMenuKey.isDown()) {
+            client.setScreen(new TimeChangerScreen());
         }
-        
+
+        final boolean previousWorldTime = TimeChangerStruggleClient.worldTime;
+        while (Keybindings.toggleWorldTimeKey.consumeClick()) {
+            TimeChangerStruggleClient.worldTime = !previousWorldTime;
+        }
+
         /*
         boolean isTCS = (client.currentScreen instanceof TimeChangerScreen);
         if (RenderUtils.rainbowAllTheWay != null && isTCS)

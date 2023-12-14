@@ -33,7 +33,7 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
     
     public NumericFieldWidgetConfig(Font textRenderer, int width, int height, BaseNumber<N> property) 
     {
-        super(textRenderer, 18, 18, width, height, Component.empty());
+        super(textRenderer, 18, 18, width, height, Component.literal(property.get().toString()));
         
         this.property = property;
         this.isNewTextValid = true;
@@ -209,11 +209,12 @@ implements WidgetConfigInterface<BaseNumber<N>, N>, PositionedTooltip
     public void setTooltipHeight(int height) {
         this.tooltipHeight = height;
     }
-    
-//    @Override
-//    public List<FormattedCharSequence> getTooltip() {
-//        return this.compiledTooltipText;
-//    }
+
+    @Override
+    public List<FormattedCharSequence> getOrderedTooltip() {
+        return this.compiledTooltipText;
+    }
+
     @Override
     public void setOrderedTooltip(List<FormattedCharSequence> textToSet) {
         this.compiledTooltipText = textToSet;
