@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 /**
- * 
+ *
  *
  * @author JuggleStruggle
  * @implNote Created on 31-Jan-2022, Monday
@@ -22,7 +22,7 @@ public class LongValue extends BaseNumber<Long>
     @Override
     public boolean isWithinRange()
     {
-        final Long value = this.get();
+        final var value = this.get();
         return value != null && value >= this.getMin() && value <= this.getMax();
     }
 
@@ -44,9 +44,13 @@ public class LongValue extends BaseNumber<Long>
     public ArgumentType<Long> onCommandOptionGetArgType()
     {
         if (this.min == null || this.max == null)
+        {
             return LongArgumentType.longArg();
+        }
         else
+        {
             return LongArgumentType.longArg(this.min, this.max);
+        }
     }
 
     @Override

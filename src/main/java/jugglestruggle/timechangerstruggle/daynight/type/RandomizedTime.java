@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component;
  * A time which it is randomized through crazy means. This can essentially
  * turn into seizures as the time is ran though the randomizer. The initial
  * seed can be put, but whatever.
- * 
+ *
  * @author JuggleStruggle
  * @implNote
  * Created on 26-Jan-2022, Wednesday
@@ -31,16 +31,16 @@ import net.minecraft.network.chat.Component;
 @Environment(EnvType.CLIENT)
 public class RandomizedTime extends MovingTimeBasis
 {
-    /** 
-     * The initial seed whenever this class is created, loaded or 
-     * property-loaded provided that the property-load was done without 
-     * any tick updates being called. 
-     * 
-     * <p> Can be left out {@code null} to start with the 
+    /**
+     * The initial seed whenever this class is created, loaded or
+     * property-loaded provided that the property-load was done without
+     * any tick updates being called.
+     *
+     * <p> Can be left out {@code null} to start with the
      * {@linkplain System#currentTimeMillis() current millisecond}.
      */
     public String startingSeed;
-    
+
     /**
      * Minimum value for daylight randomization.
      */
@@ -50,34 +50,31 @@ public class RandomizedTime extends MovingTimeBasis
      */
     public long maximumRandomTime = 24000L;
 
-
-    
     /**
      * As the field name suggests, this randomizes {@link #ticksUntilNextRNG}
      * to a user-defined value.
      */
     public boolean randomizeTicksUntilNextRNG = false;
     /**
-     * Minimum value for randomization. The minimum value for this field 
+     * Minimum value for randomization. The minimum value for this field
      * must be 1.
-     * 
+     *
      * <p> Only used if {@link #randomizeTicksUntilNextRNG} is enabled.
      */
     public long ticksUntilNextRNGMin = 1L;
     /**
-     * Maximum value for randomization. The maximum value for this field 
+     * Maximum value for randomization. The maximum value for this field
      * must be {@link Long#MAX_VALUE}.
-     * 
+     *
      * <p> Only used if {@link #randomizeTicksUntilNextRNG} is enabled.
      */
     public long ticksUntilNextRNGMax = 24000L;
-    
-    
+
     /**
      * As the field name suggests, this randomizes {@link #easingBetweenTicks}
      * to whatever it can come up. This is only updated whenever {@link #updateRNG()}
      * is called.
-     * 
+     *
      * <p> <i>(Maybe in the future change the easing on-the-fly?)</i>
      */
     public boolean randomizeEasingBetweenTicks = false;
@@ -87,11 +84,11 @@ public class RandomizedTime extends MovingTimeBasis
      * smoothness transition like in or out, which is {@link EasingType}.
      */
     public boolean randomizeEasingTypeBetweenTicks = false;
-    
+
     /**
      * This is the value that will be storedd and the value which will override
      * {@link #ticksUntilNextRNG} whenever {@link #randomizeTicksUntilNextRNG}
-     * is off.     
+     * is off.
      */
     public long ticksUntilNextRNGBasis = 40L;
     /**
@@ -106,292 +103,342 @@ public class RandomizedTime extends MovingTimeBasis
      * is off.
      */
     public EasingType easingTypeBetweenTicksBasis = EasingType.BETWEEN;
-    
-    
+
     /**
      * The master randomizer. BEHOLD!
      */
     public Random rng;
-    
+
     /**
      * Only used for helping in creation of the RNG seed.
      */
     protected boolean hasTickUpdateOccured = false;
-    
-    
-    public RandomizedTime(String startingSeed, boolean applyRNG) {
+
+    public RandomizedTime(String startingSeed, boolean applyRNG)
+    {
         this.createRNG(startingSeed, applyRNG);
     }
+
     private void createRNG(String startingSeed, boolean applyRNG)
     {
-        if (startingSeed == null || startingSeed.length() == 0) {
-            this.rng = new Random(System.currentTimeMillis());
-        } 
-        else 
+        if (startingSeed == null || startingSeed.length() == 0)
         {
-            int seed = 0;
-            
-            try {
+            this.rng = new Random(System.currentTimeMillis());
+        }
+        else
+        {
+            var seed = 0;
+
+            try
+            {
                 seed = Integer.parseInt(startingSeed);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 seed = startingSeed.hashCode();
             }
-            
+
             this.rng = new Random(seed);
             this.startingSeed = startingSeed;
         }
-        
-        if (applyRNG) 
+
+        if (applyRNG)
         {
             // Called twice to update the current and previous interpolation
             // times so that it doesn't create the sad immersion that you start
             // with nothing (well, now you know...)
-            this.updateCall(); this.updateCall();
+            this.updateCall();
+            this.updateCall();
         }
     }
 
     @Override
-    public void tick() 
+    public void tick()
     {
         super.tick();
         this.hasTickUpdateOccured = true;
     }
-    
+
     @Override
     public void updateInterpolation()
     {
         this.genNextRandomTime();
-        
+
         if (this.randomizeTicksUntilNextRNG)
+        {
             this.genTicksUntilNextRNG();
-        
+        }
+
         if (this.randomizeEasingBetweenTicks)
+        {
             this.genRandomizedEasing();
+        }
         if (this.randomizeEasingTypeBetweenTicks)
+        {
             this.genRandomizedEasingType();
+        }
     }
-    
-    private long genNextLongRNG(Random rng, long minRand, long maxRand) 
+
+    private long genNextLongRNG(Random rng, long minRand, long maxRand)
     {
         if (minRand < 0)
+        {
             minRand = 0;
-        
+        }
+
         if (maxRand < 0)
+        {
             maxRand = 1;
-        // Force maxRand to be inclusive if not the maximum value Long can hold
-        // as Java's Random implementation makes the maximum value exclusive
+        }
         else if (maxRand != Long.MAX_VALUE)
+        {
             maxRand += 1L;
-        
+        }
+
         return rng.nextLong(minRand, maxRand);
     }
-    
-    private void shouldGenTicksUntilNextRNG() 
+
+    private void shouldGenTicksUntilNextRNG()
     {
-        if (this.ticksUntilNextCall < this.ticksUntilNextRNGMin ||
-            this.ticksUntilNextCall > this.ticksUntilNextRNGMax)
+        if (this.ticksUntilNextCall < this.ticksUntilNextRNGMin || this.ticksUntilNextCall > this.ticksUntilNextRNGMax)
         {
             this.genTicksUntilNextRNG();
         }
     }
-    private void genNextRandomTime() {
+
+    private void genNextRandomTime()
+    {
         this.nextInterpolatedTime = this.genNextLongRNG(this.rng, this.minimumRandomTime, this.maximumRandomTime);
     }
-    private void genTicksUntilNextRNG() {
+
+    private void genTicksUntilNextRNG()
+    {
         this.ticksUntilNextCall = this.genNextLongRNG(this.rng, this.ticksUntilNextRNGMin, this.ticksUntilNextRNGMax);
     }
-    
+
     private void genRandomizedEasing()
     {
-        Easings easingToUse = this.genRandomizedEnum(Easings.values(), easing -> easing.canBeRandomlyUsed());
-        
+        var easingToUse = this.genRandomizedEnum(Easings.values(), Easings::canBeRandomlyUsed);
+
         if (easingToUse != null)
+        {
             this.easingBetweenTicks = easingToUse;
+        }
     }
-    
+
     private void genRandomizedEasingType()
     {
-        EasingType easingToUse = this.genRandomizedEnum(EasingType.values(), null);
-        
+        var easingToUse = this.genRandomizedEnum(EasingType.values(), null);
+
         if (easingToUse != null)
+        {
             this.easingType = easingToUse;
+        }
     }
+
     private <E extends Enum<E>> E genRandomizedEnum(E[] types, Predicate<E> canBeUsedIfSelected)
     {
         E typeToUse = null;
         byte tries = 0;
-        
-        final int typesSize = types.length;
-        
+
+        final var typesSize = types.length;
+
         while (true)
         {
-            if (tries > 5) {
+            if (tries > 5)
+            {
                 break;
             }
-            
-            int index = this.rng.nextInt(typesSize);
-            
-            if (index < 0 || index >= typesSize) {
-                ++tries; continue;
+
+            var index = this.rng.nextInt(typesSize);
+
+            if (index < 0 || index >= typesSize)
+            {
+                ++tries;
+                continue;
             }
-            
+
             typeToUse = types[index];
-            
+
             if (canBeUsedIfSelected == null || canBeUsedIfSelected.test(typeToUse))
+            {
                 break;
-                
+            }
+
             ++tries;
         }
-        
+
         return typeToUse;
     }
-    
-    
+
     @Override
-    public Class<?> getBuilderClass() {
+    public Class<?> getBuilderClass()
+    {
         return Builder.class;
     }
-    
+
     @Override
     public Set<BaseProperty<?, ?>> createProperties()
     {
         ImmutableSet.Builder<BaseProperty<?, ?>> prop = ImmutableSet.builderWithExpectedSize(12);
-        
-        final String sectLang = "jugglestruggle.tcs.dnt.randomizer.properties.";
-        
-        prop.add(new FancySectionProperty("seed", Component.translatable(sectLang+"seed")));
-        prop.add(new StringValue("startingSeed", (this.startingSeed == null) ? "" : this.startingSeed).setEmptyTextAllowance(true));
-        
-        prop.add(new FancySectionProperty("daylightrandomtime", Component.translatable(sectLang+"daylightrandomtime")));
+
+        final var sectLang = "jugglestruggle.tcs.dnt.randomizer.properties.";
+
+        prop.add(new FancySectionProperty("seed", Component.translatable(sectLang + "seed")));
+        prop.add(new StringValue("startingSeed", this.startingSeed == null ? "" : this.startingSeed).setEmptyTextAllowance(true));
+
+        prop.add(new FancySectionProperty("daylightrandomtime", Component.translatable(sectLang + "daylightrandomtime")));
         prop.add(new LongValue("minimumRandomTime", this.minimumRandomTime, 0L, Long.MAX_VALUE));
         prop.add(new LongValue("maximumRandomTime", this.maximumRandomTime, 0L, Long.MAX_VALUE));
-        
-        prop.add(new FancySectionProperty("ticksuntilnextrng", Component.translatable(sectLang+"ticksuntilnextrng")));
+
+        prop.add(new FancySectionProperty("ticksuntilnextrng", Component.translatable(sectLang + "ticksuntilnextrng")));
         prop.add(new BooleanValue("randomizeTicksUntilNextRNG", this.randomizeTicksUntilNextRNG));
         prop.add(new LongValue("ticksUntilNextRNG", this.ticksUntilNextRNGBasis, 1L, Long.MAX_VALUE));
         prop.add(new LongValue("ticksUntilNextRNGMin", this.ticksUntilNextRNGMin, 1L, Long.MAX_VALUE));
         prop.add(new LongValue("ticksUntilNextRNGMax", this.ticksUntilNextRNGMax, 1L, Long.MAX_VALUE));
-        
-        prop.add(new FancySectionProperty("easings", Component.translatable(sectLang+"easings")));
+
+        prop.add(new FancySectionProperty("easings", Component.translatable(sectLang + "easings")));
         prop.add(new BooleanValue("randomizeEasingBetweenTicks", this.randomizeEasingBetweenTicks));
         prop.add(new EnumValue<>("easingBetweenTicks", this.easingBetweenTicksBasis, Easings.LINEAR, Easings.values())
-            .setVTT(easing -> easing.getFormattedText()));
+                .setVTT(Easings::getFormattedText));
         prop.add(new BooleanValue("randomizeEasingTypeBetweenTicks", this.randomizeEasingTypeBetweenTicks));
         prop.add(new EnumValue<>("easingTypeBetweenTicks", this.easingTypeBetweenTicksBasis, EasingType.BETWEEN, EasingType.values())
-            .setVTT(easing -> easing.getFormattedText()));
-        
+                .setVTT(EasingType::getFormattedText));
+
         return prop.build();
     }
-    
+
     @Override
-//    public <B extends BaseProperty<B, V>, V> void writePropertyValueToCycle(B property)
+    //    public <B extends BaseProperty<B, V>, V> void writePropertyValueToCycle(B property)
     public void writePropertyValueToCycle(BaseProperty<?, ?> property)
     {
-        final String belongingKey = property.property();
-        
+        final var belongingKey = property.property();
+
         if (property instanceof StringValue)
         {
             if (belongingKey.equals("startingSeed"))
             {
                 this.startingSeed = ((StringValue)property).get();
-                
+
                 if (!this.hasTickUpdateOccured)
+                {
                     this.createRNG(this.startingSeed, true);
+                }
             }
         }
-        else if (property instanceof LongValue)
+        else if (property instanceof LongValue prop)
         {
-            LongValue prop = (LongValue)property;
-            
             switch (belongingKey)
             {
-                case "minimumRandomTime": 
-                    this.minimumRandomTime = prop.get(); break;
-                case "maximumRandomTime": 
-                    this.maximumRandomTime = prop.get(); break;
-                    
-                case "ticksUntilNextRNG": 
+                case "minimumRandomTime":
+                    this.minimumRandomTime = prop.get();
+                    break;
+                case "maximumRandomTime":
+                    this.maximumRandomTime = prop.get();
+                    break;
+
+                case "ticksUntilNextRNG":
                 {
                     this.ticksUntilNextRNGBasis = prop.get();
-                    
+
                     if (!this.randomizeTicksUntilNextRNG)
+                    {
                         this.ticksUntilNextCall = this.ticksUntilNextRNGBasis;
-                        
+                    }
+
                     break;
                 }
-                case "ticksUntilNextRNGMin": 
-                case "ticksUntilNextRNGMax": 
+                case "ticksUntilNextRNGMin":
+                case "ticksUntilNextRNGMax":
                 {
                     if (belongingKey.equals("ticksUntilNextRNGMax"))
+                    {
                         this.ticksUntilNextRNGMax = prop.get();
+                    }
                     else
+                    {
                         this.ticksUntilNextRNGMin = prop.get();
-                        
+                    }
+
                     if (this.randomizeTicksUntilNextRNG)
+                    {
                         this.shouldGenTicksUntilNextRNG();
+                    }
                     else
+                    {
                         this.easingBetweenTicks = this.easingBetweenTicksBasis;
-                    
+                    }
+
                     break;
                 }
             }
         }
-        else if (property instanceof BooleanValue)
+        else if (property instanceof BooleanValue prop)
         {
-            BooleanValue prop = (BooleanValue)property;
-            
             switch (belongingKey)
             {
-                case "randomizeTicksUntilNextRNG": 
+                case "randomizeTicksUntilNextRNG":
                 {
-                    this.randomizeTicksUntilNextRNG = prop.get(); 
-                    
+                    this.randomizeTicksUntilNextRNG = prop.get();
+
                     if (this.randomizeTicksUntilNextRNG)
+                    {
                         this.shouldGenTicksUntilNextRNG();
+                    }
                     else
+                    {
                         this.ticksUntilNextCall = this.ticksUntilNextRNGBasis;
-                    
+                    }
+
                     break;
                 }
-                case "randomizeEasingBetweenTicks": 
+                case "randomizeEasingBetweenTicks":
                 {
-                    this.randomizeEasingBetweenTicks = prop.get(); 
-                    
+                    this.randomizeEasingBetweenTicks = prop.get();
+
                     if (this.randomizeEasingBetweenTicks)
+                    {
                         this.genRandomizedEasing();
+                    }
                     else
+                    {
                         this.easingBetweenTicks = this.easingBetweenTicksBasis;
-                    
+                    }
+
                     break;
                 }
-                case "randomizeEasingTypeBetweenTicks": 
+                case "randomizeEasingTypeBetweenTicks":
                 {
-                    this.randomizeEasingTypeBetweenTicks = prop.get(); 
-                    
+                    this.randomizeEasingTypeBetweenTicks = prop.get();
+
                     if (this.randomizeEasingTypeBetweenTicks)
+                    {
                         this.genRandomizedEasingType();
+                    }
                     else
+                    {
                         this.easingType = this.easingTypeBetweenTicksBasis;
-                    
+                    }
+
                     break;
                 }
             }
         }
-        else if (property instanceof EnumValue<?>)
+        else if (property instanceof EnumValue<?> prop)
         {
-            EnumValue<?> prop = (EnumValue<?>)property;
-            
             if (prop.getDefaultValue() instanceof Easings)
             {
                 switch (belongingKey)
                 {
-                    case "easingBetweenTicks": 
+                    case "easingBetweenTicks":
                     {
-                        this.easingBetweenTicksBasis = (Easings)prop.get(); 
-                        
+                        this.easingBetweenTicksBasis = (Easings)prop.get();
+
                         if (!this.randomizeEasingBetweenTicks)
+                        {
                             this.easingBetweenTicks = this.easingBetweenTicksBasis;
-                        
+                        }
+
                         break;
                     }
                 }
@@ -400,64 +447,70 @@ public class RandomizedTime extends MovingTimeBasis
             {
                 switch (belongingKey)
                 {
-                    case "easingTypeBetweenTicks": 
+                    case "easingTypeBetweenTicks":
                     {
-                        this.easingTypeBetweenTicksBasis = (EasingType)prop.get(); 
-                        
+                        this.easingTypeBetweenTicksBasis = (EasingType)prop.get();
+
                         if (!this.randomizeEasingTypeBetweenTicks)
+                        {
                             this.easingType = this.easingTypeBetweenTicksBasis;
-                        
+                        }
+
                         break;
                     }
                 }
             }
         }
     }
-    
+
     @Override
-    public WidgetConfigInterface<?, ?>[][] rearrangeSectionElements
-    (Entry<FancySectionProperty, List<WidgetConfigInterface<?, ?>>> entry, int elementsPerRow)
+    public WidgetConfigInterface<?, ?>[][] rearrangeSectionElements(Entry<FancySectionProperty, List<WidgetConfigInterface<?, ?>>> entry, int elementsPerRow)
     {
-        final List<WidgetConfigInterface<?, ?>> elements = entry.getValue();
-        
+        final var elements = entry.getValue();
+
         return switch (entry.getKey().property())
         {
-//            default -> DayNightCycleBasis.super.rearrangeSectionElements(entry, elementsPerRow);
+            //            default -> DayNightCycleBasis.super.rearrangeSectionElements(entry, elementsPerRow);
             default -> super.rearrangeSectionElements(entry, elementsPerRow);
-                
-            case "ticksuntilnextrng" -> new WidgetConfigInterface<?, ?>[][] 
-            {
-                // Randomize ticks until next RNG and non-RNG next ticks
-                new WidgetConfigInterface<?, ?>[]{ elements.get(0), elements.get(1) },
-                // Minimum and Maximum for RNG to touch
-                new WidgetConfigInterface<?, ?>[]{ elements.get(2), elements.get(3) }
+
+            case "ticksuntilnextrng" -> new WidgetConfigInterface<?, ?>[][] {
+                    // Randomize ticks until next RNG and non-RNG next ticks
+                    new WidgetConfigInterface<?, ?>[] { elements.get(0), elements.get(1) },
+                    // Minimum and Maximum for RNG to touch
+                    new WidgetConfigInterface<?, ?>[] { elements.get(2), elements.get(3) }
             };
         };
     }
-    
+
     public static class Builder implements DayNightCycleBuilder
     {
         @Override
-        public DayNightCycleBasis create() {
+        public DayNightCycleBasis create()
+        {
             return new RandomizedTime(null, false);
         }
 
         @Override
-        public String getKeyName() {
+        public String getKeyName()
+        {
             return "randomizers";
         }
-        
+
         @Override
-        public Component getTranslatableName() {
+        public Component getTranslatableName()
+        {
             return Component.translatable("jugglestruggle.tcs.dnt.randomizer");
         }
+
         @Override
-        public Component getTranslatableDescription() {
+        public Component getTranslatableDescription()
+        {
             return Component.translatable("jugglestruggle.tcs.dnt.randomizer.description");
         }
-        
+
         @Override
-        public boolean hasOptionsToEdit() {
+        public boolean hasOptionsToEdit()
+        {
             return true;
         }
     }

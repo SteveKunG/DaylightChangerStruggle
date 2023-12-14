@@ -1,6 +1,5 @@
 package jugglestruggle.timechangerstruggle.client.config.widget;
 
-import java.util.List;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
@@ -35,7 +34,7 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
 
     protected CyclingWidgetConfig(B property, int width, int height, Component message, Component optionText, int index, T value, ValueListSupplier<T> values, Function<T, Component> valueToText, Function<CycleButton<T>, MutableComponent> narrationMessageFactory, OnValueChange<T> externalCallback, TooltipSupplier<T> tooltipFactory, boolean optionTextOmitted)
     {
-        super(0, 0, width, height, message, optionText, index, value, values, valueToText, narrationMessageFactory, new SetPropertyValueCallback<B, T>(), tooltipFactory, optionTextOmitted);
+        super(0, 0, width, height, message, optionText, index, value, values, valueToText, narrationMessageFactory, new SetPropertyValueCallback<>(), tooltipFactory, optionTextOmitted);
 
         this.property = property;
         this.initial = property.get();
@@ -73,10 +72,11 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
     {
         return false;
     }
-    
+
     @Override
-    public int getWidth(Font font) {
-        return getWidth();
+    public int getWidth(Font font)
+    {
+        return this.getWidth();
     }
 
     @Override
@@ -108,14 +108,18 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
         if (justInitial)
         {
             if (this.initial != null)
+            {
                 this.setValue(this.initial);
+            }
         }
         else
         {
-            final T defaultValue = this.property.getDefaultValue();
+            final var defaultValue = this.property.getDefaultValue();
 
             if (defaultValue != null)
+            {
                 this.setValue(defaultValue);
+            }
         }
     }
 
@@ -135,19 +139,27 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
     {
         Function<Boolean, Component> valueToText;
 
-        final boolean trueTextIsNull = trueText == null;
-        final boolean falseTextIsNull = falseText == null;
+        final var trueTextIsNull = trueText == null;
+        final var falseTextIsNull = falseText == null;
 
         if (trueTextIsNull && falseTextIsNull)
+        {
             valueToText = state -> Component.empty();
+        }
         else if (trueTextIsNull)
+        {
             valueToText = state -> falseText;
+        }
         else if (falseTextIsNull)
+        {
             valueToText = state -> trueText;
+        }
         else
+        {
             valueToText = state -> state ? trueText : falseText;
+        }
 
-        WidgetConfigBuilderBoolean wcbb = new WidgetConfigBuilderBoolean(property, valueToText);
+        var wcbb = new WidgetConfigBuilderBoolean(property, valueToText);
 
         wcbb.withValues(ImmutableList.of(true, false));
         wcbb.withInitialValue(property.get());
@@ -157,12 +169,14 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
 
     public static <EV extends Enum<EV>> WidgetConfigBuilderEnum<EV> enumCycle(EnumValue<EV> property)
     {
-        Function<EV, Component> valueToText = property.getVTT();
+        var valueToText = property.getVTT();
 
         if (valueToText == null)
+        {
             valueToText = value -> Component.nullToEmpty(value.toString());
+        }
 
-        WidgetConfigBuilderEnum<EV> wcbe = new WidgetConfigBuilderEnum<>(property, valueToText);
+        var wcbe = new WidgetConfigBuilderEnum<>(property, valueToText);
 
         wcbe.withValues(property.getEnumValues());
         wcbe.withInitialValue(property.get());
@@ -172,9 +186,6 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
 
     protected static class SetPropertyValueCallback<B extends BaseProperty<B, T>, T> implements OnValueChange<T>
     {
-        protected SetPropertyValueCallback()
-        {}
-
         @Override
         @SuppressWarnings({ "unchecked" })
         public void onValueChange(CycleButton<T> button, T value)
@@ -197,15 +208,17 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
         @SuppressWarnings("unchecked")
         public Builder<V> withInitialValue(V value)
         {
-            final CyclingButtonWidgetBuilderAccessor<V> accessor = (CyclingButtonWidgetBuilderAccessor<V>)this;
+            final var accessor = (CyclingButtonWidgetBuilderAccessor<V>)this;
 
             accessor.setValue(value);
 
-            int valueIndex = accessor.values().getDefaultList().indexOf(value);
+            var valueIndex = accessor.values().getDefaultList().indexOf(value);
 
             // means that it doesn't exist
             if (valueIndex != -1)
+            {
                 accessor.setInitialIndex(valueIndex);
+            }
 
             return this;
         }
@@ -220,17 +233,19 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
         public CyclingWidgetConfig<B, V> build(int width, int height, Component optionText, OnValueChange<V> callback)
         {
             @SuppressWarnings("unchecked")
-            final CyclingButtonWidgetBuilderAccessor<V> accessor = (CyclingButtonWidgetBuilderAccessor<V>)this;
+            final var accessor = (CyclingButtonWidgetBuilderAccessor<V>)this;
 
-            List<V> defaults = accessor.values().getDefaultList();
+            var defaults = accessor.values().getDefaultList();
 
-            V startingValue = accessor.getValue();
+            var startingValue = accessor.getValue();
             startingValue = startingValue == null ? defaults.get(accessor.getInitialIndex()) : startingValue;
 
-            Component messageText = accessor.getValueToText().apply(startingValue);
+            var messageText = accessor.getValueToText().apply(startingValue);
 
             if (!accessor.omitOptionText())
+            {
                 messageText = CommonComponents.optionNameValue(optionText, messageText);
+            }
 
             return new CyclingWidgetConfig<>(this.propertyRepresented, width, height, messageText, optionText, accessor.getInitialIndex(), startingValue, accessor.values(), accessor.getValueToText(), accessor.getNarrationMessageFactory(), callback, accessor.getTooltipFactory(), accessor.omitOptionText());
         }

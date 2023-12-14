@@ -6,12 +6,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
-import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBasis;
 import net.minecraft.world.level.Level;
 
 /**
  * https://minecraft.gamepedia.com/wiki/Daylight_cycle
- * 
+ *
  * @author JuggleStruggle
  * @implNote Created on 27-Jan-2022, Thursday
  */
@@ -46,26 +45,26 @@ public final class DaylightUtils
         // 06:00 (0 ticks). If ticks is 0, then it is subtracted by
         // MIDNIGHT (-18000) then added by ONE_DAY (24000) which ends
         // up resulting in 6000, 6 AM
-        long newTicks = ticks - (long)MIDNIGHT + (long)ONE_DAY;
+        var newTicks = ticks - MIDNIGHT + (long)ONE_DAY;
 
         // Divide the ticks by the amount of days then subtract our created
         // daylight ticks to avoid getting larger values in hours, so on and
         // so for
-        long days = newTicks / (long)ONE_DAY;
+        var days = newTicks / (long)ONE_DAY;
         newTicks -= days * ONE_DAY;
 
         // Do the same with hours and so on and so for
-        int hours = (int)(newTicks / (long)ONE_HOUR);
+        var hours = (int)(newTicks / (long)ONE_HOUR);
         newTicks -= hours * ONE_HOUR;
 
-        int minutes = (int)(newTicks / (long)ONE_MINUTE);
+        var minutes = (int)(newTicks / (long)ONE_MINUTE);
         newTicks -= minutes * ONE_MINUTE;
 
-        int seconds = (int)(newTicks / ONE_SECOND);
+        var seconds = (int)(newTicks / ONE_SECOND);
 
         // Align to local time rather than GMT since the game doesn't care if we us
         // players live in a different timezone.
-        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        var cal = Calendar.getInstance(Locale.ENGLISH);
 
         cal.setLenient(true);
 
@@ -91,7 +90,7 @@ public final class DaylightUtils
         }
         else
         {
-            DayNightCycleBasis cycle = TimeChangerStruggleClient.getTimeChanger();
+            var cycle = TimeChangerStruggleClient.getTimeChanger();
 
             ticksToParse = cycle.getCachedTime();
             addDay = cycle.shouldAddDayForDateDisplay();

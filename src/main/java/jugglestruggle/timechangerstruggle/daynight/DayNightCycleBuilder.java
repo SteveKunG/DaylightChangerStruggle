@@ -23,16 +23,16 @@ public interface DayNightCycleBuilder
     /**
      * Gets the key name which is used on the configuration,
      * commands and on other places.
-     * 
+     *
      * @return a String value
      */
     String getKeyName();
 
     /**
-     * Gets the name of the cycle which is translatable; 
-     * this is not necessary as some cycles do not implement 
+     * Gets the name of the cycle which is translatable;
+     * this is not necessary as some cycles do not implement
      * this.
-     * 
+     *
      * @return the name of the cycle
      */
     Component getTranslatableName();
@@ -40,19 +40,19 @@ public interface DayNightCycleBuilder
     /**
      * Gets a short description of the cycle. Used in both
      * the {@linkplain TimeChangerScreen screen} and in
-     * {@linkplain Commands commands} when typing 
+     * {@linkplain Commands commands} when typing
      * {@code cycle}.
-     * 
+     *
      * @return a description of the cycle
      */
     Component getTranslatableDescription();
 
     /**
-     * Used to determine if certain option-related elements 
-     * should be enabled; not really representative of the 
-     * actual properties the cycle might have as it might 
+     * Used to determine if certain option-related elements
+     * should be enabled; not really representative of the
+     * actual properties the cycle might have as it might
      * not have it.
-     * 
+     *
      * @return a boolean value
      */
     default boolean hasOptionsToEdit()
@@ -61,11 +61,11 @@ public interface DayNightCycleBuilder
     }
 
     /**
-     * Used to determine if the cycle in question uses 
+     * Used to determine if the cycle in question uses
      * dynamic properties meaning that while the user
      * makes X change results in either adding or removing
      * a certain property.
-     * 
+     *
      * @return a boolean value
      */
     default boolean hasDynamicOptions()

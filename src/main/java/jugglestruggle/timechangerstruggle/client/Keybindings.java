@@ -19,7 +19,9 @@ public class Keybindings
     public static void registerKeybindings()
     {
         if (Keybindings.timeChangerMenuKey != null)
+        {
             return;
+        }
 
         Keybindings.timeChangerMenuKey = Keybindings.registerBinding("timechangermenu");
         Keybindings.toggleWorldTimeKey = Keybindings.registerBinding("toggleworldtime");

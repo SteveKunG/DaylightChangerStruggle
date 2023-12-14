@@ -14,7 +14,6 @@ import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 
 /**
  * A daylight cycle which uses the current viewing entity's height
@@ -37,7 +36,7 @@ public class LowToHighHeightTime implements DayNightCycleBasis
     @Override
     public void tick()
     {
-        Entity camEntity = Minecraft.getInstance().getCameraEntity();
+        var camEntity = Minecraft.getInstance().getCameraEntity();
 
         if (camEntity == null)
         {
@@ -45,28 +44,32 @@ public class LowToHighHeightTime implements DayNightCycleBasis
             return;
         }
 
-        double myY = camEntity.position().y();
+        var myY = camEntity.position().y();
 
         this.cachedTimePrev = this.cachedTime;
 
         if (myY < this.minHeight)
+        {
             this.cachedTime = this.minHeightTime;
+        }
         else if (myY > this.maxHeight)
+        {
             this.cachedTime = this.maxHeightTime;
+        }
         else
         {
-            double heightLength = this.maxHeight - this.minHeight;
-            double res = myY - this.minHeight;
+            var heightLength = this.maxHeight - this.minHeight;
+            var res = myY - this.minHeight;
             res = res / heightLength;
 
-            this.cachedTime = (long)((double)this.minHeightTime + (double)(this.maxHeightTime - this.minHeightTime) * res);
+            this.cachedTime = (long)(this.minHeightTime + (this.maxHeightTime - this.minHeightTime) * res);
         }
-        
-//        if (Keybindings.toggleWorldTimeKey.isPressed())
-//        {
-//            jugglestruggle.timechangerstruggle.TimeChangerStruggle.LOGGER
-//            .info("cached time: {} | prev: {}", this.cachedTime, this.cachedTimePrev);
-//        }
+
+        //        if (Keybindings.toggleWorldTimeKey.isPressed())
+        //        {
+        //            jugglestruggle.timechangerstruggle.TimeChangerStruggle.LOGGER
+        //            .info("cached time: {} | prev: {}", this.cachedTime, this.cachedTimePrev);
+        //        }
     }
 
     @Override
@@ -92,7 +95,7 @@ public class LowToHighHeightTime implements DayNightCycleBasis
     {
         ImmutableSet.Builder<BaseProperty<?, ?>> prop = ImmutableSet.builderWithExpectedSize(5);
 
-        final String sectLang = "jugglestruggle.tcs.dnt.lowtohighheighttime.properties.";
+        final var sectLang = "jugglestruggle.tcs.dnt.lowtohighheighttime.properties.";
 
         prop.add(new FancySectionProperty("minmaxheight", Component.translatable(sectLang + "minmaxheight")));
         prop.add(new DoubleValue("minHeight", this.minHeight, (double)Long.MIN_VALUE, Double.MAX_VALUE));
@@ -106,12 +109,10 @@ public class LowToHighHeightTime implements DayNightCycleBasis
     @Override
     public void writePropertyValueToCycle(BaseProperty<?, ?> property)
     {
-        final String belongingKey = property.property();
+        final var belongingKey = property.property();
 
-        if (property instanceof LongValue)
+        if (property instanceof LongValue prop)
         {
-            LongValue prop = (LongValue)property;
-
             switch (belongingKey)
             {
                 case "minHeightTime":
@@ -122,10 +123,8 @@ public class LowToHighHeightTime implements DayNightCycleBasis
                     break;
             }
         }
-        else if (property instanceof DoubleValue)
+        else if (property instanceof DoubleValue prop)
         {
-            DoubleValue prop = (DoubleValue)property;
-
             switch (belongingKey)
             {
                 case "minHeight":

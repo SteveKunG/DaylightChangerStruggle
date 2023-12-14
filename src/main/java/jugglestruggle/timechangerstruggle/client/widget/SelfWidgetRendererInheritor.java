@@ -9,5 +9,5 @@ import net.minecraft.client.gui.components.AbstractWidget;
  */
 public interface SelfWidgetRendererInheritor<W extends AbstractWidget>
 {
-    public SelfWidgetRender<W> getWidgetRenderer();
+    SelfWidgetRender<W> getWidgetRenderer();
 }

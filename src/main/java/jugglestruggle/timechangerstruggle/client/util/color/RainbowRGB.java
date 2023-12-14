@@ -4,7 +4,7 @@ import jugglestruggle.timechangerstruggle.util.EasingType;
 import jugglestruggle.timechangerstruggle.util.Easings;
 
 /**
- * 
+ *
  *
  * @author JuggleStruggle
  * @implNote Created on 11-Feb-2022, Friday
@@ -19,8 +19,8 @@ public class RainbowRGB extends AbstractRGB
         }
         else
         {
-            RainbowRGB[] chromaColors = new RainbowRGB[startingColors.length];
-            for (int i = 0; i < startingColors.length; ++i)
+            var chromaColors = new RainbowRGB[startingColors.length];
+            for (var i = 0; i < startingColors.length; ++i)
             {
                 chromaColors[i] = new RainbowRGB(startingColors[i]);
             }
@@ -36,12 +36,12 @@ public class RainbowRGB extends AbstractRGB
 
     /**
      * Target color is defined as:
-     * 
+     *
      * <ul>
-     * <li> 0 = Rising Red 
+     * <li> 0 = Rising Red
      * <li> 1 = Falling Blue
      * <li> 2 = Rising Green
-     * <li> 3 = Falling Red 
+     * <li> 3 = Falling Red
      * <li> 4 = Rising Blue
      * <li> 5 = Falling Green
      * </ul>
@@ -107,20 +107,20 @@ public class RainbowRGB extends AbstractRGB
 
             this.previousChromaColor = this.currentChromaColor;
 
-            int a = (this.currentChromaColor >> 24 & 0xFF);
-            int r = (this.currentChromaColor >> 16 & 0xFF);
-            int g = (this.currentChromaColor >> 8 & 0xFF);
-            int b = (this.currentChromaColor & 0xFF);
+            var a = this.currentChromaColor >> 24 & 0xFF;
+            var r = this.currentChromaColor >> 16 & 0xFF;
+            var g = this.currentChromaColor >> 8 & 0xFF;
+            var b = this.currentChromaColor & 0xFF;
 
             // Used to keep track of how many tries it took in attempting
             // to switch the colors where there is a chance that it might
             // softlock the client over something meaningless
-            int tries = 0;
+            var tries = 0;
 
             while (true)
             {
-                boolean exitLoop = true;
-                final byte previousTargetColor = this.targetColor;
+                var exitLoop = true;
+                final var previousTargetColor = this.targetColor;
 
                 switch (this.targetColor)
                 {
@@ -131,7 +131,9 @@ public class RainbowRGB extends AbstractRGB
                             // Check if there are other colors with at least
                             // a higher than or equal to 128
                             if (g >= 128 || b >= 128)
+                            {
                                 this.targetColor = 3;
+                            }
 
                             ++tries;
                             exitLoop = false;
@@ -148,7 +150,9 @@ public class RainbowRGB extends AbstractRGB
                         if (b <= 0x00)
                         {
                             if (g < 128 || r < 128)
+                            {
                                 this.targetColor = 4;
+                            }
 
                             ++tries;
                             exitLoop = false;
@@ -165,7 +169,9 @@ public class RainbowRGB extends AbstractRGB
                         if (g >= 0xFF)
                         {
                             if (r >= 128 || b >= 128)
+                            {
                                 this.targetColor = 5;
+                            }
 
                             ++tries;
                             exitLoop = false;
@@ -182,7 +188,9 @@ public class RainbowRGB extends AbstractRGB
                         if (r <= 0x00)
                         {
                             if (g < 128 || b < 128)
+                            {
                                 this.targetColor = 0;
+                            }
 
                             ++tries;
                             exitLoop = false;
@@ -199,7 +207,9 @@ public class RainbowRGB extends AbstractRGB
                         if (b >= 0xFF)
                         {
                             if (r >= 128 || g >= 128)
+                            {
                                 this.targetColor = 1;
+                            }
 
                             ++tries;
                             exitLoop = false;
@@ -216,7 +226,9 @@ public class RainbowRGB extends AbstractRGB
                         if (g <= 0x00)
                         {
                             if (r < 128 || b < 128)
+                            {
                                 this.targetColor = 2;
+                            }
 
                             ++tries;
                             exitLoop = false;
@@ -236,24 +248,34 @@ public class RainbowRGB extends AbstractRGB
                     if (this.reverseTargetColor)
                     {
                         if (this.targetColor <= 0)
+                        {
                             this.targetColor = 5;
+                        }
                         else
+                        {
                             --this.targetColor;
+                        }
                     }
                     else
                     {
                         if (this.targetColor >= 5)
+                        {
                             this.targetColor = 0;
+                        }
                         else
+                        {
                             ++this.targetColor;
+                        }
                     }
                 }
 
                 if (exitLoop || tries > 3)
+                {
                     break;
+                }
             }
 
-            this.currentChromaColor = (a << 24) | (r << 16) | (g << 8) | b;
+            this.currentChromaColor = a << 24 | r << 16 | g << 8 | b;
 
             this.previousColor = this.color;
             this.color = this.previousChromaColor;
@@ -262,8 +284,8 @@ public class RainbowRGB extends AbstractRGB
         {
             this.previousColor = this.color;
 
-            float delta = (float)this.ticks / (float)this.ticksForNextUpdate;
-            float result = (float)this.interpolation.value(this.easingType, delta);
+            var delta = (float)this.ticks / (float)this.ticksForNextUpdate;
+            var result = (float)this.interpolation.value(this.easingType, delta);
 
             this.color = AbstractRGB.getInterpolatedColor(this.previousChromaColor, this.currentChromaColor, result);
 

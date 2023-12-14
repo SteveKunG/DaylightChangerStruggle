@@ -1,7 +1,10 @@
 package jugglestruggle.timechangerstruggle.client;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import jugglestruggle.timechangerstruggle.TimeChangerStruggle;
 import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
@@ -17,6 +20,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 
@@ -24,7 +28,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
  *
  * @author JuggleStruggle
  * @implNote Created on 26-Jan-2022, Wednesday
- * 
+ *
  * @see TimeChangerStruggle
  */
 @Environment(EnvType.CLIENT)
@@ -32,19 +36,19 @@ public class TimeChangerStruggleClient implements ClientModInitializer
 {
     /**
      * A cached list of day cycle builders which are primarily used
-     * to load their corresponding day cycle type. 
-     * 
+     * to load their corresponding day cycle type.
+     *
      * <p> This is a linked hashmap to keep things ordered from when
      * they were first added.
      */
     private static final Map<String, DayNightCycleBuilder> CYCLE_BUILDERS;
     /**
-     * Uses the client world's time. 
-     * 
-     * <p> Setting it to {@code false} uses JuggleStruggle's version 
+     * Uses the client world's time.
+     *
+     * <p> Setting it to {@code false} uses JuggleStruggle's version
      * and takes control over most (or all) of the time-related calls.
-     * 
-     * @see {@linkplain ClientLevelMixin Client World Mixin} 
+     *
+     * @see {@linkplain ClientLevelMixin Client World Mixin}
      * where almost all of the calls are overriden
      */
     public static boolean worldTime = true;
@@ -56,8 +60,8 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     /**
      * A feature not used in the vanilla game where the daylight cycle
      * moves by combining the previous time with the current while
-     * accounting for the delta. 
-     * 
+     * accounting for the delta.
+     *
      * <p> Disable this to restore the classic cycle where it only uses
      * the current cycle as the deciding factor.
      */
@@ -67,23 +71,23 @@ public class TimeChangerStruggleClient implements ClientModInitializer
      * no advantage as it removes the night potion effect from the world
      * and does nothing regarding giving user the advantage for gamma or
      * the brightened-up fog.
-     * 
+     *
      * <p> The main reason why this was created was to avoid night time
      * from looking like day when the original goal was to have it this
      * way. There are servers that give users night vision to help with
      * seeing things better, but the users should be the one to decide
      * if this is something they want.
-     * 
-     * <p> To get some advantages, resort to using options.txt or use a 
+     *
+     * <p> To get some advantages, resort to using options.txt or use a
      * mod that will give such lighting advantage.
      */
     public static boolean disableNightVisionEffect = false;
     /**
      * Updates the current cycle type {@link #timeChanger} to match
-     * the new values provided on the property list. 
-     * 
+     * the new values provided on the property list.
+     *
      * <p> It can either be by the active's daylight cycle or by
-     * just having it loaded in the properties list, which it is 
+     * just having it loaded in the properties list, which it is
      * written to the {@link #config}'s {@link Configuration#configData}
      * as long as this field is set to {@code true}.
      */
@@ -99,7 +103,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     private static String timeChangerKey = null;
     /**
      * Used as a "key" to get the first item on the map.
-     * 
+     *
      * @see TimeChangerStruggleClient#timeChangerKey
      * @see TimeChangerStruggleClient#timeChangerKeyLast
      */
@@ -107,7 +111,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     /**
      * Used as a "key" to get the last item on the map. Usually this
      * is the recently added item into the builder cache.
-     * 
+     *
      * @see TimeChangerStruggleClient#timeChangerKey
      * @see TimeChangerStruggleClient#timeChangerKeyFirst
      */
@@ -121,23 +125,23 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     /**
      * Whenever the user wishes to use a cycle or uses options which
      * uses a cycle, disable world time if enabled to make it seem
-     * that it has any effect. 
-     * 
-     * <p> Users who already know the workings of the mod already 
+     * that it has any effect.
+     *
+     * <p> Users who already know the workings of the mod already
      * should be aware that it's working by guessing, even if the
      * world time is ON.
      */
     public static boolean commandsDisableWorldTimeOnCycleUsage = true;
-    
+
     public static Configuration config;
 
     private static Commands commands;
-    
+
     static
     {
         // Add default day/night cycle builders for use
         CYCLE_BUILDERS = new LinkedHashMap<>(5);
-        
+
         TimeChangerStruggleClient.registerCycleBuilder(new SystemTime.Builder());
         TimeChangerStruggleClient.registerCycleBuilder(new StaticTime.Builder());
         TimeChangerStruggleClient.registerCycleBuilder(new MovingTime.Builder());
@@ -145,101 +149,112 @@ public class TimeChangerStruggleClient implements ClientModInitializer
         // TimeChangerStruggleClient.registerCycleBuilder(new ShrugTime.Builder()); (will not be used in initial release since it does nothing)
         TimeChangerStruggleClient.registerCycleBuilder(new LowToHighHeightTime.Builder());
     }
-    
+
     public static <B extends DayNightCycleBuilder> void registerCycleBuilder(B builder)
     {
-        String key = builder.getKeyName();
-        
-        if (TimeChangerStruggleClient.CYCLE_BUILDERS.containsKey(key))
-            return;
-        
-        if (TimeChangerStruggleClient.timeChangerKeyFirst == null)
-            TimeChangerStruggleClient.timeChangerKeyFirst = key;
-        
-        TimeChangerStruggleClient.timeChangerKeyLast = key;
-            
-        TimeChangerStruggleClient.CYCLE_BUILDERS.put(key, builder);
-    }
-    
+        var key = builder.getKeyName();
 
-    
-    
-    
-    
-    public static final DayNightCycleBasis getTimeChanger() {
-        return TimeChangerStruggleClient.timeChanger;
-    }
-    public static final String getTimeChangerKey() {
-        return TimeChangerStruggleClient.timeChangerKey;
-    }
-    public static final void setTimeChanger(DayNightCycleBasis timeToChange) 
-    {
-        TimeChangerStruggleClient.timeChanger = timeToChange;
-        
-        Optional<DayNightCycleBuilder> cachedCycleBuilder = (timeToChange == null) ? Optional.empty() :
-            TimeChangerStruggleClient.getCachedCycleBuilderByClass(timeToChange.getBuilderClass());
-        
-        TimeChangerStruggleClient.timeChangerKey = cachedCycleBuilder.isPresent() ? 
-            cachedCycleBuilder.get().getKeyName() : null;
-    }
-    public static final void setTimeChanger(String cycleType) 
-    {
-        if (!TimeChangerStruggleClient.cachedCycleTypeExists(cycleType)) {
+        if (TimeChangerStruggleClient.CYCLE_BUILDERS.containsKey(key))
+        {
             return;
         }
-        
+
+        if (TimeChangerStruggleClient.timeChangerKeyFirst == null)
+        {
+            TimeChangerStruggleClient.timeChangerKeyFirst = key;
+        }
+
+        TimeChangerStruggleClient.timeChangerKeyLast = key;
+
+        TimeChangerStruggleClient.CYCLE_BUILDERS.put(key, builder);
+    }
+
+    public static final DayNightCycleBasis getTimeChanger()
+    {
+        return TimeChangerStruggleClient.timeChanger;
+    }
+
+    public static final String getTimeChangerKey()
+    {
+        return TimeChangerStruggleClient.timeChangerKey;
+    }
+
+    public static final void setTimeChanger(DayNightCycleBasis timeToChange)
+    {
+        TimeChangerStruggleClient.timeChanger = timeToChange;
+
+        var cachedCycleBuilder = timeToChange == null ? Optional.<DayNightCycleBuilder>empty() : TimeChangerStruggleClient.getCachedCycleBuilderByClass(timeToChange.getBuilderClass());
+
+        TimeChangerStruggleClient.timeChangerKey = cachedCycleBuilder.isPresent() ? cachedCycleBuilder.get().getKeyName() : null;
+    }
+
+    public static final void setTimeChanger(String cycleType)
+    {
+        if (!TimeChangerStruggleClient.cachedCycleTypeExists(cycleType))
+        {
+            return;
+        }
+
         TimeChangerStruggleClient.timeChanger = TimeChangerStruggleClient.CYCLE_BUILDERS.get(cycleType).create();
         TimeChangerStruggleClient.timeChangerKey = cycleType;
     }
-    public static final boolean useWorldTime() {
+
+    public static final boolean useWorldTime()
+    {
         return TimeChangerStruggleClient.worldTime || TimeChangerStruggleClient.timeChanger == null;
     }
-    public static final Collection<DayNightCycleBuilder> getCachedCycleTypeBuilders() {
+
+    public static final Collection<DayNightCycleBuilder> getCachedCycleTypeBuilders()
+    {
         return TimeChangerStruggleClient.CYCLE_BUILDERS.values();
     }
-    public static final int getCachedCycleTypeSize() {
+
+    public static final int getCachedCycleTypeSize()
+    {
         return TimeChangerStruggleClient.CYCLE_BUILDERS.size();
     }
-    public static final boolean cachedCycleTypeExists(String cycleTypeToCheck) 
+
+    public static final boolean cachedCycleTypeExists(String cycleTypeToCheck)
     {
-        return cycleTypeToCheck != null && !cycleTypeToCheck.isEmpty() &&
-            TimeChangerStruggleClient.CYCLE_BUILDERS.containsKey(cycleTypeToCheck);
+        return cycleTypeToCheck != null && !cycleTypeToCheck.isEmpty() && TimeChangerStruggleClient.CYCLE_BUILDERS.containsKey(cycleTypeToCheck);
     }
+
     public static final void quickSwitchCachedCycleType(boolean backwards)
     {
         // if our key is empty, just pick the first or last item in the map
-        if (TimeChangerStruggleClient.timeChangerKey == null) 
+        if (TimeChangerStruggleClient.timeChangerKey == null)
         {
-            if (backwards) {
+            if (backwards)
+            {
                 TimeChangerStruggleClient.setTimeChanger(TimeChangerStruggleClient.timeChangerKeyLast);
-            } else {
+            }
+            else
+            {
                 TimeChangerStruggleClient.setTimeChanger(TimeChangerStruggleClient.timeChangerKeyFirst);
             }
         }
         // Else, just get us a way to go for previous/next depending on our key index
         else
         {
-            Iterator<String> cycleKeys = TimeChangerStruggleClient.CYCLE_BUILDERS.keySet().iterator();
-            
+            var cycleKeys = TimeChangerStruggleClient.CYCLE_BUILDERS.keySet().iterator();
+
             String previousKey = null;
-            
+
             while (cycleKeys.hasNext())
             {
-                String key = cycleKeys.next();
-                
+                var key = cycleKeys.next();
+
                 if (TimeChangerStruggleClient.timeChangerKey.equals(key))
                 {
                     if (backwards)
                     {
-                        TimeChangerStruggleClient.setTimeChanger((previousKey == null) ? 
-                            TimeChangerStruggleClient.timeChangerKeyLast : previousKey);
+                        TimeChangerStruggleClient.setTimeChanger(previousKey == null ? TimeChangerStruggleClient.timeChangerKeyLast : previousKey);
                     }
                     else
                     {
-                        TimeChangerStruggleClient.setTimeChanger(cycleKeys.hasNext() ? 
-                            cycleKeys.next() : TimeChangerStruggleClient.timeChangerKeyFirst);
+                        TimeChangerStruggleClient.setTimeChanger(cycleKeys.hasNext() ? cycleKeys.next() : TimeChangerStruggleClient.timeChangerKeyFirst);
                     }
-                    
+
                     break;
                 }
                 else
@@ -249,22 +264,22 @@ public class TimeChangerStruggleClient implements ClientModInitializer
             }
         }
     }
-    public static final Optional<DayNightCycleBuilder> getCachedCycleBuilderByClass(Class<?> builderClass) 
+
+    public static final Optional<DayNightCycleBuilder> getCachedCycleBuilderByClass(Class<?> builderClass)
     {
         if (builderClass != null)
         {
-            Class<?>[] builderClassInterfaces = builderClass.getInterfaces();
-            
-            if (builderClassInterfaces != null && builderClassInterfaces.length == 1 && 
-                DayNightCycleBuilder.class.equals(builderClassInterfaces[0]))
+            var builderClassInterfaces = builderClass.getInterfaces();
+
+            if (builderClassInterfaces != null && builderClassInterfaces.length == 1 && DayNightCycleBuilder.class.equals(builderClassInterfaces[0]))
             {
-                return TimeChangerStruggleClient.CYCLE_BUILDERS.values().stream()
-                    .filter(b -> { return builderClass.equals(b.getClass()); }).findFirst();
+                return TimeChangerStruggleClient.CYCLE_BUILDERS.values().stream().filter(b -> builderClass.equals(b.getClass())).findFirst();
             }
         }
-        
+
         return Optional.empty();
     }
+
     /**
      * Returns the current cycle's builder class if there are any.
      * @return an optional containing nothing or the current cycle's builder.
@@ -273,61 +288,48 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     {
         if (TimeChangerStruggleClient.timeChanger != null && TimeChangerStruggleClient.timeChangerKey != null)
         {
-            return Optional.ofNullable(TimeChangerStruggleClient.CYCLE_BUILDERS
-                .get(TimeChangerStruggleClient.timeChangerKey));
+            return Optional.ofNullable(TimeChangerStruggleClient.CYCLE_BUILDERS.get(TimeChangerStruggleClient.timeChangerKey));
         }
-        
+
         return Optional.empty();
     }
-    public static final boolean isCycleTypeCurrentCycle(String cycleTypeToCheck) 
+
+    public static final boolean isCycleTypeCurrentCycle(String cycleTypeToCheck)
     {
         if (cycleTypeToCheck == null || cycleTypeToCheck.isEmpty())
+        {
             return false;
-        
-        final Optional<DayNightCycleBuilder> builder = TimeChangerStruggleClient.getCurrentCycleBuilder();
+        }
+
+        final var builder = TimeChangerStruggleClient.getCurrentCycleBuilder();
         return builder.isPresent() && builder.get().getKeyName().equals(cycleTypeToCheck);
     }
-    
-    
-    
-    
-    
-    
+
     @Override
-    @SuppressWarnings("resource")
     public void onInitializeClient()
     {
         // Register keybindings to client
         Keybindings.registerKeybindings();
 
-        // Load the configuration settings
-        File config = new File(Minecraft.getInstance().gameDirectory, "config");
-        
-        // Check if the configuration directory exists, if not then 
-        // create it nonetheless
-        if (!config.exists())
-            config.mkdir();
-        
         // Then create a file which represents the real config, the file creation
         // isn't really made unless there are user-values to write or the file
         // already exists which should also allow for reads :)
-        config = new File(config, "DaylightChangerStruggle.json");
-        TimeChangerStruggleClient.config = new Configuration(config);
-        
+        TimeChangerStruggleClient.config = new Configuration(new File(FabricLoader.getInstance().getConfigDir().toFile(), "DaylightChangerStruggle.json"));
+
         // Then create the commands...
         TimeChangerStruggleClient.commands = new Commands();
         TimeChangerStruggleClient.commands.registerCommands();
-        
-        // Add fabric events for use in creating a shader, keyboard detection 
+
+        // Add fabric events for use in creating a shader, keyboard detection
         // and in ticking the cycle types
         ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStart);
         ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
         ClientTickEvents.END_WORLD_TICK.register(this::onWorldTick);
-        
+
         // Then read the configs
         TimeChangerStruggleClient.config.read();
     }
-    
+
     private void onClientStart(Minecraft client)
     {
         // Create my favorite shader that PvP / Cheat Clients use:
@@ -344,15 +346,17 @@ public class TimeChangerStruggleClient implements ClientModInitializer
             }
         }
     }
-    
+
     private void onClientTick(Minecraft client)
     {
-        if (Keybindings.timeChangerMenuKey.isDown()) {
+        if (Keybindings.timeChangerMenuKey.isDown())
+        {
             client.setScreen(new TimeChangerScreen());
         }
 
-        final boolean previousWorldTime = TimeChangerStruggleClient.worldTime;
-        while (Keybindings.toggleWorldTimeKey.consumeClick()) {
+        final var previousWorldTime = TimeChangerStruggleClient.worldTime;
+        while (Keybindings.toggleWorldTimeKey.consumeClick())
+        {
             TimeChangerStruggleClient.worldTime = !previousWorldTime;
         }
 
@@ -363,7 +367,7 @@ public class TimeChangerStruggleClient implements ClientModInitializer
             // final net.minecraft.client.util.Window win = client.getWindow();
              RenderUtils.rainbowAllTheWay.aspectRatio.set((float)win.getWidth() / (float)win.getHeight());
              RenderUtils.rainbowAllTheWay.stripeScale.set(50.0f / 2.0f * 1.0f);
-            
+        
             // Stroke Width: No use yet so far...
              RenderUtils.rainbowAllTheWay.strokeWidth.set(18.0f);
             // Global Rainbow Shift Offset
@@ -375,7 +379,9 @@ public class TimeChangerStruggleClient implements ClientModInitializer
     private void onWorldTick(ClientLevel world)
     {
         if (TimeChangerStruggleClient.useWorldTime())
+        {
             return;
+        }
 
         TimeChangerStruggleClient.timeChanger.tick();
     }

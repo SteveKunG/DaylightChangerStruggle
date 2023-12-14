@@ -1,7 +1,5 @@
 package jugglestruggle.timechangerstruggle.daynight.type;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -29,7 +27,7 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 
 /**
  * A time which the user defines and remains as it is.
- * 
+ *
  * <p> Essentially, this should be assumed as if the daylight cycle
  * is off and the time is set through the time command.
  *
@@ -62,36 +60,33 @@ public class StaticTime implements DayNightCycleBasis
     @Override
     public GuiEventListener[] createQuickOptionElements(TimeChangerScreen screen)
     {
-        final Iterator<BaseProperty<?, ?>> propsCreated = this.createProperties().iterator();
+        final var propsCreated = this.createProperties().iterator();
 
-        final FancySectionProperty sectionProp = (FancySectionProperty)propsCreated.next();
-        final String sectionRoughLang = ((TranslatableContents)sectionProp.get().getContents()).getKey();
+        final var sectionProp = (FancySectionProperty)propsCreated.next();
+        final var sectionRoughLang = ((TranslatableContents)sectionProp.get().getContents()).getKey();
 
-        final NumericFieldWidgetConfig<Long> worldTimeProp = (NumericFieldWidgetConfig<Long>)((LongValue)propsCreated.next()).createConfigElement(screen, sectionProp);
+        final var worldTimeProp = (NumericFieldWidgetConfig<Long>)((LongValue)propsCreated.next()).createConfigElement(screen, sectionProp);
 
-        List<PresetSetTimes> setTimes = Lists.newArrayList(PresetSetTimes.values()).stream()
-                .filter(presetTime -> presetTime.shouldShowInQuickOptions()).toList();
+        var setTimes = Lists.newArrayList(PresetSetTimes.values()).stream()
+                .filter(PresetSetTimes::shouldShowInQuickOptions).toList();
 
-        final int setTimesSize = setTimes.size();
-        final ButtonWidgetEx[] dayCycles = new ButtonWidgetEx[setTimesSize];
+        final var setTimesSize = setTimes.size();
+        final var dayCycles = new ButtonWidgetEx[setTimesSize];
 
-        Iterator<PresetSetTimes> setTimesIterator = setTimes.iterator();
-
-        int i = 0;
-        while (setTimesIterator.hasNext())
+        var i = 0;
+        for (PresetSetTimes entry : setTimes)
         {
-            final PresetSetTimes entry = setTimesIterator.next();
-            final Component displayText = entry.getQuickOptionsText();
-            final String cycleName = entry.name().toLowerCase(Locale.ROOT);
+            final var displayText = entry.getQuickOptionsText();
+            final var cycleName = entry.name().toLowerCase(Locale.ROOT);
 
             dayCycles[i] = new ButtonWidgetEx(20, 20, displayText, Component.translatable(sectionRoughLang + ".worldtime." + cycleName), null, screen.getTextRenderer(), b ->
             {
                 Long value = entry.getTime();
                 Long baseTime = 0L;
 
-                final boolean shiftHeld = Screen.hasShiftDown();
-                final boolean controlHeld = Screen.hasControlDown();
-                final boolean altHeld = Screen.hasAltDown();
+                final var shiftHeld = Screen.hasShiftDown();
+                final var controlHeld = Screen.hasControlDown();
+                final var altHeld = Screen.hasAltDown();
 
                 if (shiftHeld || controlHeld || altHeld)
                 {
@@ -100,21 +95,25 @@ public class StaticTime implements DayNightCycleBasis
                     // Shift just adds so no reason to do anything
                     // Control sets the value negative
                     if (controlHeld)
+                    {
                         value = -value;
+                    }
                     // Alt divides the value to half
                     if (altHeld)
+                    {
                         value /= 2L;
+                    }
                 }
 
-                final Long finalValue = baseTime + value;
-                worldTimeProp.setValue(finalValue.toString());
+                final var finalValue = baseTime + value;
+                worldTimeProp.setValue(Long.toString(finalValue));
             });
 
             ++i;
         }
-        worldTimeProp.setWidth(148 - (20 * setTimesSize));
+        worldTimeProp.setWidth(148 - 20 * setTimesSize);
 
-        GuiEventListener[] itemsToAdd = new GuiEventListener[1 + setTimesSize];
+        var itemsToAdd = new GuiEventListener[1 + setTimesSize];
         itemsToAdd[0] = worldTimeProp;
 
         return ArrayUtils.insert(1, itemsToAdd, dayCycles);
@@ -125,7 +124,7 @@ public class StaticTime implements DayNightCycleBasis
     {
         ImmutableSet.Builder<BaseProperty<?, ?>> prop = ImmutableSet.builderWithExpectedSize(2);
 
-        final String sectLang = "jugglestruggle.tcs.dnt.statictime.properties.";
+        final var sectLang = "jugglestruggle.tcs.dnt.statictime.properties.";
 
         prop.add(new FancySectionProperty("time", Component.translatable(sectLang + "time")));
         prop.add(new LongValue("worldtime", this.timeSet, null, null));
@@ -136,7 +135,7 @@ public class StaticTime implements DayNightCycleBasis
     @Override
     public void writePropertyValueToCycle(BaseProperty<?, ?> property)
     {
-        final String belongingKey = property.property();
+        final var belongingKey = property.property();
 
         if (property instanceof LongValue && belongingKey.equals("worldtime"))
         {
@@ -144,7 +143,7 @@ public class StaticTime implements DayNightCycleBasis
         }
     }
 
-    public static enum PresetSetTimes
+    public enum PresetSetTimes
     {
         NOON(6000L), MIDNIGHT(18000L), SUNRISE(0L), SUNSET(12000L), DAY(1000L, false, true), NIGHT(13000L, false, true);
 
@@ -152,12 +151,12 @@ public class StaticTime implements DayNightCycleBasis
         private final boolean showInQuickOptions;
         private final boolean showInCommand;
 
-        private PresetSetTimes(long time)
+        PresetSetTimes(long time)
         {
             this(time, true, true);
         }
 
-        private PresetSetTimes(long time, boolean showInQuickOptions, boolean showInCommand)
+        PresetSetTimes(long time, boolean showInQuickOptions, boolean showInCommand)
         {
             this.time = time;
             this.showInQuickOptions = showInQuickOptions;
@@ -176,7 +175,7 @@ public class StaticTime implements DayNightCycleBasis
 
         public boolean shouldShowInQuickOptions()
         {
-            return showInQuickOptions;
+            return this.showInQuickOptions;
         }
 
         public Component getQuickOptionsText()

@@ -30,16 +30,16 @@ public class SystemTime implements DayNightCycleBasis
     @Override
     public void tick()
     {
-        Calendar now = Calendar.getInstance();
+        var now = Calendar.getInstance();
 
         // int year = now.get(Calendar.YEAR);
-        int doy = now.get(Calendar.DAY_OF_YEAR);
+        var doy = now.get(Calendar.DAY_OF_YEAR);
 
         // TODO: Account for the current time instead of relying time in a day
         // int year = now.get(Calendar.YEAR);
         long hour = now.get(Calendar.HOUR_OF_DAY);
-        double mins = (double)now.get(Calendar.MINUTE);
-        double secs = (double)now.get(Calendar.SECOND);
+        double mins = now.get(Calendar.MINUTE);
+        double secs = now.get(Calendar.SECOND);
 
         hour -= 6;
 
@@ -57,7 +57,7 @@ public class SystemTime implements DayNightCycleBasis
         this.previousCachedTime = this.cachedTime;
         // TODO: Do something better here in minutes and seconds
         // this.cachedTime = (hour * (long)DaylightUtils.ONE_HOUR) + (long)(mins + secs);
-        this.cachedTime = /* ((long)year * (long)DaylightUtils.ONE_YEAR) + */(doy * (long)DaylightUtils.ONE_DAY) + (hour * (long)DaylightUtils.ONE_HOUR) + (long)(mins + secs);
+        this.cachedTime = /* ((long)year * (long)DaylightUtils.ONE_YEAR) + */doy * (long)DaylightUtils.ONE_DAY + hour * (long)DaylightUtils.ONE_HOUR + (long)(mins + secs);
     }
 
     @Override

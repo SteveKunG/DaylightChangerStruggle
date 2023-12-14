@@ -38,7 +38,9 @@ public enum EasingType implements InterchangeableFunction<EasingType, String>
     public static final EasingType parseFromString(String name)
     {
         if (name == null || name.isEmpty() || name.isBlank())
+        {
             return null;
+        }
 
         return switch (name.toLowerCase(Locale.ROOT))
         {

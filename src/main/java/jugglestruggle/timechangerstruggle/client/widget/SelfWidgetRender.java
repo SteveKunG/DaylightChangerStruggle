@@ -6,7 +6,6 @@ import jugglestruggle.timechangerstruggle.client.util.render.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.util.FormattedCharSequence;
 
 /**
  *
@@ -18,10 +17,10 @@ public class SelfWidgetRender<W extends AbstractWidget>
     private final W widget;
     private Font textRenderer;
 
-    private AbstractRGB textColoring;
+    private final AbstractRGB textColoring;
 
-    private float stripeScale;
-    private float rainbowSpeed;
+    private final float stripeScale;
+    private final float rainbowSpeed;
 
     private float rainbowOffset;
     private float previousRainbowOffset;
@@ -53,7 +52,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
          * ((ChromaRGB)this.hoveredColor[2]).setTicks(14);
          * ((ChromaRGB)this.hoveredColor[3]).setTicks(18);
          * ((ChromaRGB)this.hoveredColor[4]).setTicks(28);
-         * 
+         *
          * for (int i = 1; i < 5; ++i) {
          * ((ChromaRGB)this.hoveredColor[i]).setTicksForNextUpdate(42);
          * }
@@ -73,7 +72,7 @@ public class SelfWidgetRender<W extends AbstractWidget>
 
             // float maxOffset = 76.0f; // for scale 2 without any changes ( 6 colors)
             // float maxOffset = 152.0f; // for scale 1 without any changes ( 6 colors)
-            float maxOffset = 302.0f; // for scale 1 without any changes (12 colors)
+            var maxOffset = 302.0f; // for scale 1 without any changes (12 colors)
 
             if (this.stripeScale != 1.0f)
             {
@@ -101,14 +100,14 @@ public class SelfWidgetRender<W extends AbstractWidget>
 
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta)
     {
-        boolean stcwr = false;
+        var stcwr = false;
         int textColor;
 
         if (this.widget.active && this.widget.isHoveredOrFocused())
         {
             /*
              * textColor = this.hoveredColor[0].getInterpolatedColor(delta);
-             * 
+             *
              * RenderUtils.fillPointedGradient(matrices, this.widget.x, this.widget.y,
              * this.widget.x + this.widget.getWidth(), this.widget.y + this.widget.getHeight(), this.widget.getZOffset(),
              * this.hoveredColor[1].getInterpolatedColor(delta), this.hoveredColor[2].getInterpolatedColor(delta),
@@ -135,16 +134,16 @@ public class SelfWidgetRender<W extends AbstractWidget>
         else
         {
             textColor = this.widget.active ? 0xFFFFFF : 0xA0A0A0;
-            int enabledColor = this.widget.active ? 0xCC888888 : 0xCC333333;
+            var enabledColor = this.widget.active ? 0xCC888888 : 0xCC333333;
 
             graphics.fill(this.widget.getX(), this.widget.getY(), this.widget.getX() + this.widget.getWidth(), this.widget.getY() + this.widget.getHeight(), enabledColor);
         }
 
-        FormattedCharSequence message = this.widget.getMessage().getVisualOrderText();
-        int messageWidth = this.textRenderer.width(message);
+        var message = this.widget.getMessage().getVisualOrderText();
+        var messageWidth = this.textRenderer.width(message);
 
-        final float x = this.widget.getX() + (this.widget.getWidth() / 2) - (messageWidth / 2);
-        final float y = this.widget.getY() + ((this.widget.getHeight() - (this.textRenderer.lineHeight - 1)) / 2);
+        final float x = this.widget.getX() + this.widget.getWidth() / 2 - messageWidth / 2;
+        final float y = this.widget.getY() + (this.widget.getHeight() - (this.textRenderer.lineHeight - 1)) / 2;
 
         if (!stcwr)
         {

@@ -11,13 +11,12 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
  * @author JuggleStruggle
  * @implNote Created on 30-Jan-2022, Sunday
  */
-public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
-        extends GuiEventListener, Renderable, NarratableEntry, ClientTooltipComponent
+public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V> extends GuiEventListener, Renderable, NarratableEntry, ClientTooltipComponent
 {
     /**
-     * Gets whether the property set in the widget is valid 
-     * to use or save. 
-     * 
+     * Gets whether the property set in the widget is valid
+     * to use or save.
+     *
      * @return a boolean value
      */
     boolean isValid();
@@ -29,9 +28,9 @@ public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
     B getProperty();
 
     /**
-     * Gets the starting value when this config widget was 
+     * Gets the starting value when this config widget was
      * either created or replaced with a new value.
-     * 
+     *
      * @return a value which represents the property's type
      */
     V getInitialValue();
@@ -40,7 +39,7 @@ public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
      * Sets the starting value; usually this is done during
      * a write (like a save to the cycle type, not part if
      * there is there is an automatic apply).
-     * 
+     *
      * @param value the new value to apply into the widget
      */
     void setInitialValue(V value);
@@ -48,7 +47,7 @@ public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
     /**
      * Forces the current value of the widget to be reset back
      * to either initial or default of the property.
-     * 
+     *
      * @param justInitial if set to {@code true}, use the
      * initial value cached by the widget; otherwise use
      * the property's default value
@@ -58,7 +57,7 @@ public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
     /**
      * Sets the current value of the property to be reset back
      * to either initial or property default.
-     * 
+     *
      * @param justInitial if set to {@code true}, use the
      * initial value cached by the widget; otherwise use
      * the property's default value
@@ -67,10 +66,10 @@ public interface WidgetConfigInterface<B extends BaseProperty<B, V>, V>
 
     /**
      * Returns if the value within the {@link #getProperty()}'s
-     * {@linkplain BaseProperty#getDefaultValue() getDefaultValue()} 
+     * {@linkplain BaseProperty#getDefaultValue() getDefaultValue()}
      * is the same as the current value.
-     * 
-     * @return {@code true} if it is; otherwise it is 
+     *
+     * @return {@code true} if it is; otherwise it is
      * considered modified
      */
     boolean isDefaultValue();

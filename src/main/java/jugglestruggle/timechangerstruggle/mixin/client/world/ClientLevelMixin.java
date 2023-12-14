@@ -7,7 +7,6 @@ import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
 import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.DimensionType;
 
 /**
  * Client world mixin; the main class that handles our glorious time which cannot
@@ -57,25 +56,25 @@ public abstract class ClientLevelMixin extends Level
     @Override
     public float getTimeOfDay(float partialTick)
     {
-        final DimensionType dt = this.dimensionType();
+        final var dt = this.dimensionType();
 
-        final long lunarTime = this.dayTime();
-        float lunarAngle = dt.timeOfDay(lunarTime);
+        final var lunarTime = this.dayTime();
+        var lunarAngle = dt.timeOfDay(lunarTime);
 
         if (TimeChangerStruggleClient.smoothButterCycle)
         {
-            final long lunarTimePrev = this.getPreviousLunarTime();
-            float lunarAnglePrev = dt.timeOfDay(lunarTimePrev);
+            final var lunarTimePrev = this.getPreviousLunarTime();
+            var lunarAnglePrev = dt.timeOfDay(lunarTimePrev);
 
-            // This is important; not having it means that once either previous or current reaches higher 
-            // than 1.0 in its sky angle it will be reset immediately back to 0 point whatever as a result 
+            // This is important; not having it means that once either previous or current reaches higher
+            // than 1.0 in its sky angle it will be reset immediately back to 0 point whatever as a result
             // of MathHelper.fractionalPart in DimensionType.timeOfDay removing whole numbers and causing
             // it to transition backwards; so in the meantime this is the best that I could come up.
-            if ((lunarAnglePrev > lunarAngle) && (lunarTime > lunarTimePrev))
+            if (lunarAnglePrev > lunarAngle && lunarTime > lunarTimePrev)
             {
                 lunarAngle += 1f;
             }
-            else if ((lunarAngle > lunarAnglePrev) && (lunarTimePrev > lunarTime))
+            else if (lunarAngle > lunarAnglePrev && lunarTimePrev > lunarTime)
             {
                 lunarAnglePrev += 1f;
             }
@@ -87,7 +86,7 @@ public abstract class ClientLevelMixin extends Level
             return lunarAngle;
         }
     }
-    
+
     /*
     // Debug version; this is the main method that helped with debugging how the celestal / sky angles
     // worked to come up with a non-backwards solution
@@ -95,34 +94,34 @@ public abstract class ClientLevelMixin extends Level
     public float getTimeOfDay(float partialTick)
     {
         final DimensionType dt = this.dimensionType();
-        
+    
         final long lunarTime = this.getDayTime();
         final long lunarTimePrev = this.getPreviousLunarTime();
-        
+    
         float skyAngle = dt.timeOfDay(lunarTime);
         float skyAnglePrev = dt.timeOfDay(lunarTimePrev);
-        
+    
         float deltas = skyAnglePrev + (skyAngle - skyAnglePrev) * partialTick;
-        
+    
         if (Keybindings.toggleWorldTimeKey.consumeClick() && lunarTime != lunarTimePrev)
         {
             double dN = Mth.frac((double)lunarTime / 24000.0 - 0.25);
             double dP = Mth.frac((double)lunarTimePrev / 24000.0 - 0.25);
-            
+    
             jugglestruggle.timechangerstruggle.TimeChangerStruggle.LOGGER.info
             (
-                "lunar: {}, {} | prev: {}, {} | deltas: {} | tickDelta: {} | dN & P: {}, {}", 
-                lunarTime, skyAngle, lunarTimePrev, skyAnglePrev, 
+                "lunar: {}, {} | prev: {}, {} | deltas: {} | tickDelta: {} | dN & P: {}, {}",
+                lunarTime, skyAngle, lunarTimePrev, skyAnglePrev,
                 deltas, partialTick, dN, dP
             );
         }
-        
+    
         if ((skyAnglePrev > skyAngle) && (lunarTime > lunarTimePrev)) {
             skyAngle += 1f;
         } else if ((skyAngle > skyAnglePrev) && (lunarTimePrev > lunarTime)) {
             skyAnglePrev += 1f;
         }
-        
+    
         // return deltas;
         return skyAnglePrev + (skyAngle - skyAnglePrev) * partialTick;
     }

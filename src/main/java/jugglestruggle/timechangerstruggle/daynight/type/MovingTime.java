@@ -59,7 +59,7 @@ public class MovingTime extends MovingTimeBasis
     {
         ImmutableSet.Builder<BaseProperty<?, ?>> prop = ImmutableSet.builderWithExpectedSize(9);
 
-        final String sectLang = "jugglestruggle.tcs.dnt.movingtime.properties.";
+        final var sectLang = "jugglestruggle.tcs.dnt.movingtime.properties.";
 
         prop.add(new FancySectionProperty("updating", Component.translatable(sectLang + "updating")));
         prop.add(new LongValue("ticksUntilNextUpdate", super.ticksUntilNextCall, 0L, Long.MAX_VALUE));
@@ -70,9 +70,9 @@ public class MovingTime extends MovingTimeBasis
 
         prop.add(new FancySectionProperty("easings", Component.translatable(sectLang + "easings")));
         prop.add(new EnumValue<>("easingBetweenTicks", this.easingBetweenTicks, Easings.LINEAR, Easings.values())
-                .setVTT(easing -> easing.getFormattedText()));
+                .setVTT(Easings::getFormattedText));
         prop.add(new EnumValue<>("easingTypeBetweenTicks", this.easingType, EasingType.BETWEEN, EasingType.values())
-                .setVTT(easing -> easing.getFormattedText()));
+                .setVTT(EasingType::getFormattedText));
 
         return prop.build();
     }
@@ -80,7 +80,7 @@ public class MovingTime extends MovingTimeBasis
     @Override
     public void writePropertyValueToCycle(BaseProperty<?, ?> property)
     {
-        final String belongingKey = property.property();
+        final var belongingKey = property.property();
 
         if (property instanceof LongValue)
         {
@@ -89,10 +89,8 @@ public class MovingTime extends MovingTimeBasis
                 this.ticksUntilNextCall = ((LongValue)property).get();
             }
         }
-        else if (property instanceof IntValue)
+        else if (property instanceof IntValue prop)
         {
-            IntValue prop = (IntValue)property;
-
             switch (belongingKey)
             {
                 case "immediateSpeed":
@@ -103,10 +101,8 @@ public class MovingTime extends MovingTimeBasis
                     break;
             }
         }
-        else if (property instanceof EnumValue<?>)
+        else if (property instanceof EnumValue<?> prop)
         {
-            EnumValue<?> prop = (EnumValue<?>)property;
-
             if (prop.getDefaultValue() instanceof Easings)
             {
                 switch (belongingKey)

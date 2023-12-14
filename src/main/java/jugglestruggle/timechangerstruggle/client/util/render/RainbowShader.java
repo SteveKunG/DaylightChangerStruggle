@@ -20,7 +20,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceProvider;
 
 /**
- * 
+ *
  *
  * @author JuggleStruggle
  * @implNote Created on 20-Feb-2022, Sunday
@@ -63,12 +63,9 @@ public class RainbowShader extends ShaderInstance
         @Override
         public Optional<Resource> getResource(ResourceLocation id)
         {
-            if (id.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE))
+            if (id.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) && id.getPath().contains("shaders/core"))
             {
-                if (id.getPath().contains("shaders/core"))
-                {
-                    return Optional.of(new Resource(Minecraft.getInstance().getVanillaPackResources(), () -> TimeChangerStruggleClient.class.getResourceAsStream(BASE_LOCATION + id.getPath())));
-                }
+                return Optional.of(new Resource(Minecraft.getInstance().getVanillaPackResources(), () -> TimeChangerStruggleClient.class.getResourceAsStream(BASE_LOCATION + id.getPath())));
             }
 
             return Optional.empty();

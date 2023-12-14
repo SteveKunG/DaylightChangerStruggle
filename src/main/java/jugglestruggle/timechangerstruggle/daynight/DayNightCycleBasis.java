@@ -65,7 +65,8 @@ public interface DayNightCycleBasis
     /**
      * Called whenever a tick occurs.
      */
-    default void tick() {}
+    default void tick()
+    {}
 
     /**
      * By default when rendering the "date over ticks" option,
@@ -75,7 +76,8 @@ public interface DayNightCycleBasis
      *
      * @return a boolean value
      */
-    default boolean shouldAddDayForDateDisplay() {
+    default boolean shouldAddDayForDateDisplay()
+    {
         return true;
     }
 
