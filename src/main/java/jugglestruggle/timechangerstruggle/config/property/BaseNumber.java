@@ -10,6 +10,7 @@ import jugglestruggle.timechangerstruggle.client.config.widget.WidgetConfigInter
 import jugglestruggle.timechangerstruggle.client.screen.TimeChangerScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 
 /**
  * A base number type is a type that stores numbers alone as its value
@@ -151,7 +152,7 @@ public abstract class BaseNumber<N extends Number> extends BaseProperty<BaseNumb
     @Override
     public WidgetConfigInterface<BaseNumber<N>, N> createConfigElement(TimeChangerScreen screen, FancySectionProperty owningSection)
     {
-        var n = new NumericFieldWidgetConfig<>(screen.getTextRenderer(), 18, 18, this);
+        var n = new NumericFieldWidgetConfig<>(Minecraft.getInstance().font, 18, 18, this);
 
         StringValue.onCreateConfigElementAddTooltips(this, n, screen, owningSection);
 

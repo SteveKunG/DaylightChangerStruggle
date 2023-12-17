@@ -16,6 +16,7 @@ import jugglestruggle.timechangerstruggle.client.widget.PositionedTooltip;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 
@@ -114,7 +115,7 @@ public class StringValue extends BaseProperty<StringValue, String>
     @Override
     public WidgetConfigInterface<StringValue, String> createConfigElement(TimeChangerScreen screen, FancySectionProperty owningSection)
     {
-        var s = new TextFieldWidgetConfig(screen.getTextRenderer(), 18, 18, this, this.allowEmptyText);
+        var s = new TextFieldWidgetConfig(Minecraft.getInstance().font, 18, 18, this, this.allowEmptyText);
 
         StringValue.onCreateConfigElementAddTooltips(this, s, screen, owningSection);
 
@@ -127,7 +128,7 @@ public class StringValue extends BaseProperty<StringValue, String>
         {
             Component tooltipDescText = Component.translatable(String.format("%1$s.%2$s", ((TranslatableContents)owningSection.get().getContents()).getKey(), property.property().toLowerCase(Locale.ROOT)));
 
-            ((PositionedTooltip)widget).updateTooltip(tooltipDescText, null, screen.getTextRenderer());
+            ((PositionedTooltip)widget).updateTooltip(tooltipDescText, null, Minecraft.getInstance().font);
         }
     }
 

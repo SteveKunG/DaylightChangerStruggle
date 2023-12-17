@@ -19,6 +19,7 @@ import jugglestruggle.timechangerstruggle.daynight.DayNightCycleBuilder;
 import jugglestruggle.timechangerstruggle.daynight.DayNightGetterType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -79,7 +80,7 @@ public class StaticTime implements DayNightCycleBasis
             final var displayText = entry.getQuickOptionsText();
             final var cycleName = entry.name().toLowerCase(Locale.ROOT);
 
-            dayCycles[i] = new ButtonWidgetEx(20, 20, displayText, Component.translatable(sectionRoughLang + ".worldtime." + cycleName), null, screen.getTextRenderer(), b ->
+            dayCycles[i] = new ButtonWidgetEx(20, 20, displayText, Component.translatable(sectionRoughLang + ".worldtime." + cycleName), null, Minecraft.getInstance().font, b ->
             {
                 Long value = entry.getTime();
                 Long baseTime = 0L;
