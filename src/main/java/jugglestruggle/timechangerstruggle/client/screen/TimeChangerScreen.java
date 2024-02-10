@@ -435,7 +435,7 @@ public class TimeChangerScreen extends Screen
                     {
                         SwitchGetterBasisBuilderList<?> lobster = elemList[0];
 
-                        lobster.setLeftPos(10);
+                        lobster.setX(10);
                         lobster.setTopPos(listTop);
                         lobster.setWidth(this.width - 20);
                         lobster.setHeight(listHeight);
@@ -446,14 +446,14 @@ public class TimeChangerScreen extends Screen
                     {
                         SwitchGetterBasisBuilderList<?> leftLobster = elemList[0];
 
-                        leftLobster.setLeftPos(9);
+                        leftLobster.setX(9);
                         leftLobster.setTopPos(listTop);
                         leftLobster.setWidth(w - 11);
                         leftLobster.setHeight(listHeight);
 
                         SwitchGetterBasisBuilderList<?> rightLobster = elemList[1];
 
-                        rightLobster.setLeftPos(w + 1);
+                        rightLobster.setX(w + 1);
                         rightLobster.setTopPos(listTop);
                         rightLobster.setWidth(w - 11);
                         rightLobster.setHeight(listHeight);
@@ -2173,10 +2173,11 @@ public class TimeChangerScreen extends Screen
         protected final TimeChangerScreen parent;
         protected boolean visible;
         protected Component title;
+        private int bottom;
 
         public SwitchGetterBasisBuilderList(TimeChangerScreen parent, int itemSize)
         {
-            super(parent.minecraft, 0, 0, 0, 0, itemSize);
+            super(parent.minecraft, 0, 0, 0, itemSize);
 
             this.parent = parent;
             this.visible = true;
@@ -2189,17 +2190,17 @@ public class TimeChangerScreen extends Screen
 
         public int getLeft()
         {
-            return super.x0;
+            return super.getX();
         }
 
         public int getRight()
         {
-            return super.x1;
+            return super.getRight();
         }
 
         public int getBottom()
         {
-            return super.y1;
+            return bottom;
         }
 
         public int getHeight()
@@ -2209,20 +2210,20 @@ public class TimeChangerScreen extends Screen
 
         public void setTopPos(int y)
         {
-            super.y0 = y;
-            super.y1 = y + super.height;
+            this.setY(y);
+            bottom = y + super.height;
         }
 
         public void setWidth(int w)
         {
             super.width = w;
-            this.setLeftPos(this.x0);
+            this.setX(this.getX());
         }
 
         public void setHeight(int h)
         {
             super.height = h;
-            this.setTopPos(super.y0);
+            this.setTopPos(super.getY());
         }
 
         @Override
@@ -2234,7 +2235,7 @@ public class TimeChangerScreen extends Screen
         @Override
         public int getRowLeft()
         {
-            return super.x0;
+            return super.getX();
         }
 
         @Override
@@ -2246,13 +2247,13 @@ public class TimeChangerScreen extends Screen
         @Override
         protected int getRowTop(int index)
         {
-            return this.y0 - (int)this.getScrollAmount() + index * this.itemHeight;
+            return this.getY() - (int)this.getScrollAmount() + index * this.itemHeight;
         }
 
         @Override
         protected int getScrollbarPosition()
         {
-            return super.x1 - (this.getMaxScroll() > 0 ? 6 : 0);
+            return super.getRight() - (this.getMaxScroll() > 0 ? 6 : 0);
         }
 
         public boolean isVisible()
@@ -2309,20 +2310,20 @@ public class TimeChangerScreen extends Screen
                 return;
             }
 
-            graphics.fillGradient(this.x0, this.y0, this.x1, this.y1, 0xAA334400, 0x55002233);
+            graphics.fillGradient(this.getX(), this.getY(), this.getRight(), this.getBottom(), 0xAA334400, 0x55002233);
 
             if (this.title != null)
             {
-                var y = this.y0 - this.parent.font.lineHeight - 6;
-                graphics.fillGradient(this.x0, y, this.x1, y + this.parent.font.lineHeight + 4, 0xAA000000, 0x77000000);
-                TimeChangerScreen.renderText(graphics, this.parent.font, this.title, this.x0, y + 1, this.width, true, -1);
+                var y = this.getY() - this.parent.font.lineHeight - 6;
+                graphics.fillGradient(this.getX(), y, this.getRight(), y + this.parent.font.lineHeight + 4, 0xAA000000, 0x77000000);
+                TimeChangerScreen.renderText(graphics, this.parent.font, this.title, this.getX(), y + 1, this.width, true, -1);
             }
 
             final var scale = this.minecraft.getWindow().getGuiScale();
             // Has to conform to using OpenGL's way since it always starts bottom-left
-            final var selfTop = this.parent.height - (this.y0 + this.height);
+            final var selfTop = this.parent.height - (this.getY() + this.height);
 
-            RenderSystem.enableScissor((int)(this.x0 * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));
+            RenderSystem.enableScissor((int)(this.getX() * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));
 
             super.render(graphics, mouseX, mouseY, delta);
 
