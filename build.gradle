@@ -1,101 +1,11 @@
 plugins {
-    id "fabric-loom" version "1.5-SNAPSHOT"
+    id "fabric-loom" version "1.7-SNAPSHOT"
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-base {
-    archivesName = project.archives_base_name
-}
-
-version = project.mod_version
-group = project.maven_group
-
-loom {
-    def commonVmArgs = [
-            "-XX:+AllowEnhancedClassRedefinition",
-            "-XX:+IgnoreUnrecognizedVMOptions"
-    ]
-    def commonProperties = ["mixin.debug.export": "true", "mixin.hotSwap": "true"]
-
-    decompilers {
-        vineflower {
-            options.put("pll", "32767")
-            options.put("ind", "    ")
-        }
-    }
-
-	accessWidenerPath = file("src/main/resources/timechangerstruggle.accesswidener")
-
-	runs {
-        client {
-            properties commonProperties
-            vmArgs commonVmArgs
-            property "devauth.configDir", "${devauth_dir}"
-        }
-    }
-}
-
-repositories {
-    maven {
-        name "ParchmentMC"
-        url "https://maven.parchmentmc.org"
-        content {
-            includeGroup "org.parchmentmc.data"
-        }
-    }
-}
-
-dependencies {
-	minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchmentmc_version}@zip")
-    }
-	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    it.options.release = 17
-}
-
-java {
-	withSourcesJar()
-}
-
-String fileName = "${archives_base_name}-mc${minecraft_version}"
+apply from: "https://raw.githubusercontent.com/SteveKunG/GradleScripts/main/fabric.gradle"
 
 jar {
 	from("LICENSE.txt") {
 		rename { "${project.archivesBaseName}-${it}"}
 	}
-}
-
-remapJar {
-    archiveVersion = "v${project.version}"
-    archiveBaseName = fileName
-}
-
-afterEvaluate {
-    loom {
-        runs {
-            configureEach {
-                def mixinJarFile = configurations.compileClasspath.files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
-                vmArg("-javaagent:$mixinJarFile")
-            }
-        }
-    }
 }

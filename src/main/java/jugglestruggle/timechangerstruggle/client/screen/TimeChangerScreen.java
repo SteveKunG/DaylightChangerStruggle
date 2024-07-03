@@ -2182,7 +2182,6 @@ public class TimeChangerScreen extends Screen
             this.parent = parent;
             this.visible = true;
 
-            this.setRenderBackground(false);
             this.setRenderHeader(false, -4);
 
             this.centerListVertically = false;
