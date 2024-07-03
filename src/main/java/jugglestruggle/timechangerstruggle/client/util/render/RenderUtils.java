@@ -20,18 +20,15 @@ public final class RenderUtils
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
-        final var tess = Tesselator.getInstance();
-        final var bb = tess.getBuilder();
+        final var tess = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         final var mat = matrices.last().pose();
 
-        bb.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        RenderUtils.fillPoint(mat, tess, endX, startY, z, topRightColor);
+        RenderUtils.fillPoint(mat, tess, startX, startY, z, topLeftColor);
+        RenderUtils.fillPoint(mat, tess, startX, endY, z, bottomLeftColor);
+        RenderUtils.fillPoint(mat, tess, endX, endY, z, bottomRightColor);
 
-        RenderUtils.fillPoint(mat, bb, endX, startY, z, topRightColor);
-        RenderUtils.fillPoint(mat, bb, startX, startY, z, topLeftColor);
-        RenderUtils.fillPoint(mat, bb, startX, endY, z, bottomLeftColor);
-        RenderUtils.fillPoint(mat, bb, endX, endY, z, bottomRightColor);
-
-        tess.end();
+        BufferUploader.drawWithShader(tess.buildOrThrow());
 
         RenderSystem.disableBlend();
     }
@@ -43,6 +40,6 @@ public final class RenderUtils
         var g = (color >> 8 & 0xFF) / 255.0f;
         var b = (color & 0xFF) / 255.0f;
 
-        bb.vertex(mat, x, y, z).color(r, g, b, a).endVertex();
+        bb.addVertex(mat, x, y, z).setColor(r, g, b, a);
     }
 }
