@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
