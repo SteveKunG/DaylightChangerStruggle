@@ -9,3 +9,10 @@ jar {
 		rename { "${project.archivesBaseName}-${it}"}
 	}
 }
+
+String fileName = "${archives_base_name}-mc${minecraft_version}"
+
+remapJar {
+    archiveVersion = "v${version}"
+    archiveBaseName = fileName
+}
