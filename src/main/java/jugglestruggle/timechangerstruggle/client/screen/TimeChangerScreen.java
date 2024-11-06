@@ -152,6 +152,10 @@ public class TimeChangerScreen extends Screen
         this.initSelf();
     }
 
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
+    {}
+
     @SuppressWarnings("unchecked")
     private <T extends GuiEventListener & Renderable & NarratableEntry> void initSelf()
     {
