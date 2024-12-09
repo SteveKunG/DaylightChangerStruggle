@@ -20,7 +20,7 @@ public abstract class ClientLevelMixin extends Level
 {
     ClientLevelMixin()
     {
-        super(null, null, null, null, null, false, false, 0, 0);
+        super(null, null, null, null, false, false, 0, 0);
     }
 
     @Override

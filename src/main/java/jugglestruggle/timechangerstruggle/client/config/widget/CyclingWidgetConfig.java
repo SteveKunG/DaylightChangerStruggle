@@ -67,6 +67,12 @@ public class CyclingWidgetConfig<B extends BaseProperty<B, T>, T> extends CycleB
     }
 
     @Override
+    public int getHeight(Font font)
+    {
+        return this.getHeight();
+    }
+
+    @Override
     public int getWidth(Font font)
     {
         return this.getWidth();

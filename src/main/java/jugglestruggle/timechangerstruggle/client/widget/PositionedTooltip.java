@@ -32,7 +32,7 @@ public interface PositionedTooltip extends ClientTooltipComponent
     int getTooltipHeight();
 
     @Override
-    default int getHeight()
+    default int getHeight(Font font)
     {
         return this.getTooltipHeight();
     }

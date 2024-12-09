@@ -2186,8 +2186,6 @@ public class TimeChangerScreen extends Screen
             this.parent = parent;
             this.visible = true;
 
-            this.setRenderHeader(false, -4);
-
             this.centerListVertically = false;
         }
 
@@ -2232,7 +2230,7 @@ public class TimeChangerScreen extends Screen
         @Override
         public int getRowWidth()
         {
-            return super.width - (this.getMaxScroll() > 0 ? 6 : 0);
+            return super.width - (this.maxScrollAmount() > 0 ? 6 : 0);
         }
 
         @Override
@@ -2248,15 +2246,15 @@ public class TimeChangerScreen extends Screen
         }
 
         @Override
-        protected int getRowTop(int index)
+        public int getRowTop(int index)
         {
-            return this.getY() - (int)this.getScrollAmount() + index * this.itemHeight;
+            return this.getY() - (int)this.scrollAmount() + index * this.itemHeight;
         }
 
         @Override
-        protected int getScrollbarPosition()
+        protected int scrollBarX()
         {
-            return super.getRight() - (this.getMaxScroll() > 0 ? 6 : 0);
+            return super.getRight() - (this.maxScrollAmount() > 0 ? 6 : 0);
         }
 
         public boolean isVisible()
