@@ -31,7 +31,7 @@ public class Configuration
 
         var builder = new GsonBuilder();
 
-        builder.setPrettyPrinting().setLenient();
+        builder.setPrettyPrinting().setStrictness(Strictness.LENIENT);
 
         this.configDataBaseGson = builder.create();
     }
