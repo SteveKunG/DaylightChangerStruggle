@@ -2181,7 +2181,7 @@ public class TimeChangerScreen extends Screen
 
         public SwitchGetterBasisBuilderList(TimeChangerScreen parent, int itemSize)
         {
-            super(parent.minecraft, 0, 0, 0, itemSize);
+            super(parent.minecraft, 0, 0, 0, itemSize, -4);
 
             this.parent = parent;
             this.visible = true;
