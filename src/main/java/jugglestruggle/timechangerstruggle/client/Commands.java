@@ -116,8 +116,8 @@ public class Commands
 
                 useCycle.withStyle(style -> style
                         .withColor(isCurrentCycle ? 0xFF5511 : 0x55FF11)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tcs cycle " + baseName))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("jugglestruggle.tcs.cmd.cycle.listing.use", displayName)))
+                        .withClickEvent(new ClickEvent.RunCommand("/tcs cycle " + baseName))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.translatable("jugglestruggle.tcs.cmd.cycle.listing.use", displayName)))
                         .withBold(true));
 
                 options.withStyle(style ->
@@ -126,8 +126,8 @@ public class Commands
 
                     if (cycle.hasOptionsToEdit())
                     {
-                        currentStyle = currentStyle.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("jugglestruggle.tcs.cmd.cycle.listing.option", displayName)))
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tcs cycle " + baseName + " option"));
+                        currentStyle = currentStyle.withHoverEvent(new HoverEvent.ShowText(Component.translatable("jugglestruggle.tcs.cmd.cycle.listing.option", displayName)))
+                                .withClickEvent(new ClickEvent.RunCommand("/tcs cycle " + baseName + " option"));
                     }
 
                     return currentStyle;
@@ -145,7 +145,7 @@ public class Commands
                     }
                     else
                     {
-                        return style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, displayDesc));
+                        return style.withHoverEvent(new HoverEvent.ShowText(displayDesc));
                     }
                 });
 
@@ -438,8 +438,8 @@ public class Commands
                 var clickableText = Component.literal(realCmd);
 
                 clickableText.withStyle(style -> style.withColor(0xDD44FF).withUnderlined(true).withBold(false)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, realCmd))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable(langCmd + ".hover"))));
+                        .withClickEvent(new ClickEvent.RunCommand(realCmd))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.translatable(langCmd + ".hover"))));
 
                 Commands.sendTextToChat(ctx, style -> style.withColor(0xFFDD00).withBold(true), langCmd, clickableText);
             }
@@ -603,11 +603,11 @@ public class Commands
                     var prevTicks = Component.translatable(langCmd + "ticks", previousTimeOfDay);
 
                     myTimeTicks.withStyle(style -> style.withColor(0xFFDD22).withBold(false).withUnderlined(true)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/%1$s time %2$s %3$s", starterCommand, modeName, timeTicks))));
+                            .withClickEvent(new ClickEvent.RunCommand(String.format("/%1$s time %2$s %3$s", starterCommand, modeName, timeTicks))));
                     totalTicks.withStyle(style -> style.withColor(0xFF22DD).withBold(false).withUnderlined(true)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/%1$s time set %2$s", starterCommand, totalTimeOfDay))));
+                            .withClickEvent(new ClickEvent.RunCommand(String.format("/%1$s time set %2$s", starterCommand, totalTimeOfDay))));
                     prevTicks.withStyle(style -> style.withColor(0x22DDFF).withBold(false).withUnderlined(true)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, String.format("/%1$s time set %2$s", starterCommand, previousTimeOfDay))));
+                            .withClickEvent(new ClickEvent.RunCommand(String.format("/%1$s time set %2$s", starterCommand, previousTimeOfDay))));
 
                     Commands.sendTextToChat(ctx, style -> style.withColor(0x22FF22).withBold(true), langCmd + modeName, myTimeTicks, totalTicks, prevTicks);
                 }
