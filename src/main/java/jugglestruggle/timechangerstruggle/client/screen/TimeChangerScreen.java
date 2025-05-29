@@ -32,6 +32,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -1499,7 +1500,7 @@ public class TimeChangerScreen extends Screen
             y = mouseY;
         }
 
-        graphics.renderTooltip(parent.font, tooltipText, x, y);
+        graphics.renderTooltip(parent.font, tooltipText.stream().map(ClientTooltipComponent::create).toList(), x, y, DefaultTooltipPositioner.INSTANCE, null);
     }
 
     //
@@ -1864,7 +1865,7 @@ public class TimeChangerScreen extends Screen
                 colorTextDesc = 0xFFAAAAAA;
             }
 
-            graphics.fillGradient(x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd, 0);
+            graphics.fillGradient(x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd);
 
             var maxRenderTextWidth = entryWidth - 56;
 
@@ -2091,7 +2092,7 @@ public class TimeChangerScreen extends Screen
                 colorTextName = -1;
             }
 
-            graphics.fillGradient(x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd, 0);
+            graphics.fillGradient(x, y, x + entryWidth, y + entryHeight + 4, colorStart, colorEnd);
 
             var maxRenderTextWidth = entryWidth - 30;
 
@@ -2324,11 +2325,11 @@ public class TimeChangerScreen extends Screen
             // Has to conform to using OpenGL's way since it always starts bottom-left
             final var selfTop = this.parent.height - (this.getY() + this.height);
 
-            RenderSystem.enableScissor((int)(this.getX() * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));
+//            RenderSystem.enableScissor((int)(this.getX() * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));TODO
 
             super.render(graphics, mouseX, mouseY, delta);
 
-            RenderSystem.disableScissor();
+//            RenderSystem.disableScissor();TODO
         }
 
         @Override
