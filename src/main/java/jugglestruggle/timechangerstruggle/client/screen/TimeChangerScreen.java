@@ -2325,11 +2325,11 @@ public class TimeChangerScreen extends Screen
             // Has to conform to using OpenGL's way since it always starts bottom-left
             final var selfTop = this.parent.height - (this.getY() + this.height);
 
-//            RenderSystem.enableScissor((int)(this.getX() * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));TODO
+            graphics.enableScissor((int)(this.getX() * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));
 
             super.render(graphics, mouseX, mouseY, delta);
 
-//            RenderSystem.disableScissor();TODO
+            graphics.disableScissor();
         }
 
         @Override
