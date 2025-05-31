@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import jugglestruggle.timechangerstruggle.client.TimeChangerStruggleClient;
 import jugglestruggle.timechangerstruggle.client.config.property.FancySectionProperty;
@@ -2321,15 +2320,7 @@ public class TimeChangerScreen extends Screen
                 TimeChangerScreen.renderText(graphics, this.parent.font, this.title, this.getX(), y + 1, this.width, true, -1);
             }
 
-            final var scale = this.minecraft.getWindow().getGuiScale();
-            // Has to conform to using OpenGL's way since it always starts bottom-left
-            final var selfTop = this.parent.height - (this.getY() + this.height);
-
-            graphics.enableScissor((int)(this.getX() * scale), (int)(selfTop * scale), (int)(this.width * scale), (int)(this.height * scale));
-
             super.render(graphics, mouseX, mouseY, delta);
-
-            graphics.disableScissor();
         }
 
         @Override
